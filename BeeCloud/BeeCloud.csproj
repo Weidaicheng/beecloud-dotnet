@@ -47,6 +47,7 @@
     <Compile Include="BCCache.cs" />
     <Compile Include="BCConstants.cs" />
     <Compile Include="BCPay.cs" />
+    <Compile Include="BCPrivateUtil.cs" />
     <Compile Include="BCUtil.cs" />
     <Compile Include="BeeCloud.cs" />
     <Compile Include="Model\BCAliQrcodePayResult.cs" />
@@ -54,6 +55,8 @@
     <Compile Include="Model\BCBill.cs" />
     <Compile Include="Model\BCPayQueryResult.cs" />
     <Compile Include="Model\BCPayResult.cs" />
+    <Compile Include="Model\BCRefund.cs" />
+    <Compile Include="Model\BCRefundQuerytResult.cs" />
     <Compile Include="Model\BCRefundResult.cs" />
     <Compile Include="Model\BCUnWebPayResult.cs" />
     <Compile Include="Model\BCWxJSAPIPayResult.cs" />

@@ -38,8 +38,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BeeCloud">
-      <HintPath>..\BeeCloud\bin\Release\BeeCloud.dll</HintPath>
+    <Reference Include="BeeCloud, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BeeCloud\bin\Debug\BeeCloud.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -59,6 +60,7 @@
     <Content Include="Default.aspx" />
     <Content Include="pay.aspx" />
     <Content Include="query.aspx" />
+    <Content Include="return.aspx" />
     <Content Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -86,6 +88,13 @@
     </Compile>
     <Compile Include="query.aspx.designer.cs">
       <DependentUpon>query.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="return.aspx.cs">
+      <DependentUpon>return.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="return.aspx.designer.cs">
+      <DependentUpon>return.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

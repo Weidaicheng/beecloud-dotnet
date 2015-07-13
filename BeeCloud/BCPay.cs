@@ -19,19 +19,16 @@ namespace BeeCloud
             UN_WEB
         };
 
-        public static long GetTimeStamp(DateTime date)
+        public enum RefundChannel
         {
-            long unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
-            unixTimestamp /= TimeSpan.TicksPerMillisecond;
-            return unixTimestamp;
-        }
-
-        private static DateTime GetDateTime(long timestamp)
-        {
-            DateTime time = DateTime.MinValue;
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
-            time = startTime.AddMilliseconds(timestamp);
-            return time;
+            WX_APP,
+            WX_NATIVE,
+            WX_JSAPI,
+            ALI_APP,
+            ALI_WEB,
+            ALI_QRCODE,
+            UN_APP,
+            UN_WE
         }
 
         /// <summary>
@@ -50,11 +47,11 @@ namespace BeeCloud
         /// <returns></returns>
         public static BCPayResult BCPayByChannel(long timestamp, string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode)
         {
-            string payUrl = "http://192.168.1.103:8080/1/rest/pay";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string payUrl = "http://58.211.191.123:8080/1/rest/pay";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
             data["total_fee"] = totalFee;
@@ -80,9 +77,9 @@ namespace BeeCloud
 
             try
             {
-                HttpWebResponse response = BCUtil.CreatePostHttpResponse(payUrl, paraString);
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString);
 
-                string respString = BCUtil.GetResponseString(response);
+                string respString = BCPrivateUtil.GetResponseString(response);
 
                 JsonData responseData = JsonMapper.ToObject(respString);
 
@@ -172,7 +169,7 @@ namespace BeeCloud
             catch (Exception e)
             {
                 BCWxNativePayResult result = new BCWxNativePayResult();
-                result.resultCode = 100;
+                result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
             }
@@ -196,7 +193,7 @@ namespace BeeCloud
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
             data["type"] = type;
@@ -216,8 +213,8 @@ namespace BeeCloud
 
             try
             {
-                HttpWebResponse response = BCUtil.CreatePostHttpResponse(refundUrl, paraString);
-                string respString = BCUtil.GetResponseString(response);
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(refundUrl, paraString);
+                string respString = BCPrivateUtil.GetResponseString(response);
                 JsonData responseData = JsonMapper.ToObject(respString);
                 BCRefundResult result = new BCRefundResult();
                 result.resultCode = int.Parse(responseData["result_code"].ToString());
@@ -238,7 +235,7 @@ namespace BeeCloud
             catch(Exception e)
             {
                 BCRefundResult result = new BCRefundResult();
-                result.resultCode = 100;
+                result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
             }            
@@ -246,11 +243,11 @@ namespace BeeCloud
 
         public static BCPayQueryResult BCPayQueryByCondition(long timestamp, string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
         {
-            string payQueryUrl = "http://192.168.1.103:8080/1/rest/pay/query";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string payQueryUrl = "http://58.211.191.123:8080/1/rest/pay/query";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
             data["bill_no"] = billNo;
@@ -264,8 +261,8 @@ namespace BeeCloud
             try
             {
                 string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-                HttpWebResponse response = BCUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
-                string respString = BCUtil.GetResponseString(response);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                string respString = BCPrivateUtil.GetResponseString(response);
                 JsonData responseData = JsonMapper.ToObject(respString);
 
                 BCPayQueryResult result = new BCPayQueryResult();
@@ -283,7 +280,7 @@ namespace BeeCloud
                             BCBill bill = new BCBill();
                             bill.title = billData["title"].ToString();
                             bill.totalFee = int.Parse(billData["total_fee"].ToString());
-                            bill.createdTime = GetDateTime((long)billData["created_time"]);
+                            bill.createdTime = BCUtil.GetDateTime((long)billData["created_time"]);
                             bill.billNo = billData["bill_no"].ToString();
                             bill.result = (bool)billData["spay_result"];
                             bills.Add(bill);
@@ -301,7 +298,74 @@ namespace BeeCloud
             catch(Exception e)
             {
                 BCPayQueryResult result = new BCPayQueryResult();
-                result.resultCode = 100;
+                result.resultCode = 99;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
+
+        public static BCRefundQuerytResult BCRefundQueryByCondition(long timestamp, string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
+        {
+            string payQueryUrl = "http://58.211.191.123:8080/1/rest/refund/query";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["bill_no"] = billNo;
+            data["refund_no"] = refundNo;
+            data["start_time"] = startTime;
+            data["end_time"] = endTime;
+            data["skip"] = skip;
+            data["limit"] = limit;
+
+            string paraString = data.ToJson();
+
+            try
+            {
+                string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                BCRefundQuerytResult result = new BCRefundQuerytResult();
+
+                result.resultCode = int.Parse(responseData["result_code"].ToString());
+                result.resultMsg = responseData["result_msg"].ToString();
+                if (result.resultCode == 0)
+                {
+                    result.count = int.Parse(responseData["count"].ToString());
+                    if (responseData["refunds"].IsArray)
+                    {
+                        List<BCRefund> refunds = new List<BCRefund>();
+                        foreach (JsonData refundData in responseData["refunds"])
+                        {
+                            BCRefund refund = new BCRefund();
+                            refund.title = refundData["title"].ToString();
+                            refund.billNo = refundData["bill_no"].ToString();
+                            refund.refundNo = refundData["refund_no"].ToString();
+                            refund.totalFee = int.Parse(refundData["total_fee"].ToString());
+                            refund.refundFee = int.Parse(refundData["refund_fee"].ToString());
+                            refund.finish = (bool)refundData["finish"];
+                            refund.result = (bool)refundData["result"];
+                            refund.createdTime = BCUtil.GetDateTime((long)refundData["created_time"]);
+                            refunds.Add(refund);
+                        }
+                        result.refunds = refunds;
+                    }
+                }
+                else
+                {
+                    result.errDetail = responseData["err_detail"].ToString();
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                BCRefundQuerytResult result = new BCRefundQuerytResult();
+                result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
             }
@@ -332,7 +396,7 @@ namespace BeeCloud
 
             RedPackPara para = new RedPackPara();
             para.appId = BCCache.Instance.appId;
-            para.appSign = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCPay.GetTimeStamp(DateTime.Now).ToString());
+            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
             para.mch_billno = mch_billno;
             para.re_openid = re_openid;
             para.total_amount = total_amount;
@@ -343,13 +407,13 @@ namespace BeeCloud
             para.act_name = act_name;
 
 
-            string paraString = BCUtil.ObjectToJson(para);
+            string paraString = BCPrivateUtil.ObjectToJson(para);
             string url = wx_redpack_url + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-            HttpWebResponse response = BCUtil.CreateGetHttpResponse(url, 0, null, null);
-            string respString = BCUtil.GetResponseString(response);
+            HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
+            string respString = BCPrivateUtil.GetResponseString(response);
 
             object result = new RedPackResult();
-            result = BCUtil.JsonToObject(respString, result);
+            result = BCPrivateUtil.JsonToObject(respString, result);
 
             return result as RedPackResult;
         }
@@ -384,7 +448,7 @@ namespace BeeCloud
 
             RedPackExtraPara para = new RedPackExtraPara();
             para.appId = BCCache.Instance.appId;
-            para.appSign = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCPay.GetTimeStamp(DateTime.Now).ToString());
+            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
             para.mch_billno = mch_billno;
             para.re_openid = re_openid;
             para.total_amount = total_amount;
@@ -399,13 +463,13 @@ namespace BeeCloud
             para.probability = probability;
             para.period = period;
 
-            string paraString = BCUtil.ObjectToJson(para);
+            string paraString = BCPrivateUtil.ObjectToJson(para);
             string url = wx_redpack_extra_url + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-            HttpWebResponse response = BCUtil.CreateGetHttpResponse(url, 0, null, null);
-            string respString = BCUtil.GetResponseString(response);
+            HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
+            string respString = BCPrivateUtil.GetResponseString(response);
 
             object result = new RedPackResult();
-            result = BCUtil.JsonToObject(respString, result);
+            result = BCPrivateUtil.JsonToObject(respString, result);
 
             return result as RedPackResult;
         }
@@ -416,7 +480,7 @@ namespace BeeCloud
             //mchPayUrl = "http://192.168.1.103:8080/1/pay/wxmp/mchPay";
             MchPayPara para = new MchPayPara();
             para.appId = BCCache.Instance.appId;
-            para.appSign = BCUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCPay.GetTimeStamp(DateTime.Now).ToString());
+            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
             para.partner_trade_no = partner_trade_no;
             para.openid = openid;
             para.check_name = check_name;
@@ -424,21 +488,21 @@ namespace BeeCloud
             para.amount = amount;
             para.desc = desc;
 
-            string paraString = BCUtil.ObjectToJson(para);
+            string paraString = BCPrivateUtil.ObjectToJson(para);
             string url = mchPayUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
             try
             {
-                HttpWebResponse response = BCUtil.CreateGetHttpResponse(url, 0, null, null);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
                 if (response != null && response.StatusCode == HttpStatusCode.OK)
                 {
-                    string respString = BCUtil.GetResponseString(response);
+                    string respString = BCPrivateUtil.GetResponseString(response);
                     object result = new MchPayResult();
-                    result = BCUtil.JsonToObject(respString, result);
+                    result = BCPrivateUtil.JsonToObject(respString, result);
                     return result as MchPayResult;
                 }
                 else
                 {
-                    BCUtil.checkBestHostForFail();
+                    BCPrivateUtil.checkBestHostForFail();
                     MchPayResult result = new MchPayResult();
                     result.resultCode = -1;
                     result.errMsg = "服务器错误";
@@ -447,7 +511,7 @@ namespace BeeCloud
             }
             catch
             {
-                BCUtil.checkBestHostForFail();
+                BCPrivateUtil.checkBestHostForFail();
                 MchPayResult result = new MchPayResult();
                 result.resultCode = -1;
                 result.errMsg = "服务器错误";

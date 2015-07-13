@@ -132,7 +132,7 @@
             <input type="submit" class="button" value="确认付款"/>
         </div>
     </form>
-    <div>------------------------------------------查询：-----------------------------------------------------------</div>
+    <div>------------------------------------------支付查询：-----------------------------------------------------------</div>
     <form action="/query.aspx" method="post" target="_blank">
         <div>
             <ul class="clear" style="margin-top: 20px">
@@ -146,6 +146,28 @@
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="unionquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt=""/>
+                </li>
+            </ul>
+        </div>
+        <div style="clear: both;">
+            <input type="submit" class="button" value="查询"/>
+        </div>
+    </form>
+    <div>------------------------------------------退款查询：-----------------------------------------------------------</div>
+    <form action="/query.aspx" method="post" target="_blank">
+        <div>
+            <ul class="clear" style="margin-top: 20px">
+                <li class="clicked" onclick="paySwitch(this)">
+                    <input type="radio" value="alirefundquery" name="querytype" checked="checked"/>
+                    <img src="http://beeclouddoc.qiniudn.com/ali.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="wxrefundquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/wechats.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="unionrefundquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt=""/>
                 </li>
             </ul>

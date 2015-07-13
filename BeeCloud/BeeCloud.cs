@@ -16,9 +16,9 @@ namespace BeeCloud
             BCCache.Instance.appSecret = appSecret;
 
             Random random = new Random();
-            BCCache.Instance.bestHost = BCUtil.mLocalDefaultHosts[random.Next(0,4)];
+            BCCache.Instance.bestHost = BCPrivateUtil.mLocalDefaultHosts[random.Next(0,4)];
 
-            BCUtil.getBestHost();
+            BCPrivateUtil.getBestHost();
         }
 
         public static void setNetworkTimeout(int timeout)

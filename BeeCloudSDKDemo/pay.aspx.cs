@@ -16,7 +16,7 @@ namespace BeeCloudSDKDemo
             string type = Request.Form["paytype"];
             if (type == "alipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_WEB.ToString(), 1, "20150708abcdef001", "自来水", null, null, null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "自来水", null, "http://localhost/return.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -29,7 +29,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "wechatQr")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_NATIVE.ToString(), 1, "20150520abcdef001", "自制自来水", null, null, null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, null, null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -41,7 +41,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "unionpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.GetTimeStamp(DateTime.Now), BCPay.PayChannel.UN_WEB.ToString(), 1, "20150520abcdef001", "自制自来水", null, "http://localhost:8088", null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, "http://localhost/return.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -53,7 +53,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "qralipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_QRCODE.ToString(), 1, "20150520abcdef001", "自制自来水", null, null, null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, "http://localhost/return.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -65,7 +65,7 @@ namespace BeeCloudSDKDemo
             }
             else
             {
-                BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCPay.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_JSAPI.ToString(), 1, "20150520abcdef004", "自制自来水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null) as BCWxJSAPIPayResult;
+                BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null) as BCWxJSAPIPayResult;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 if (result.resultCode == 0)
