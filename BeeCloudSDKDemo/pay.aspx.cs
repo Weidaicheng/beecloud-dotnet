@@ -6,6 +6,11 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using BeeCloud;
 using BeeCloud.Model;
+using ThoughtWorks.QRCode.Codec;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Text;
+using System.Drawing;
 
 namespace BeeCloudSDKDemo
 {
@@ -16,7 +21,7 @@ namespace BeeCloudSDKDemo
             string type = Request.Form["paytype"];
             if (type == "alipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "自来水", null, "http://localhost/return.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -29,19 +34,37 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "wechatQr")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, null, null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, null, null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
                 if (result.resultCode == 0)
                 {
                     BCWxNativePayResult payResult = result as BCWxNativePayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.codeURL + "</span><br/>");
+                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.codeURL + "</span><br/>");
+                    string str = payResult.codeURL;
+
+                    //初始化二维码生成工具
+                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+                    qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+                    qrCodeEncoder.QRCodeVersion = 0;
+                    qrCodeEncoder.QRCodeScale = 4;
+
+                    //将字符串生成二维码图片
+                    Bitmap image = qrCodeEncoder.Encode(str, Encoding.Default);
+                    //保存为PNG到内存流  
+                    MemoryStream ms = new MemoryStream();
+                    image.Save(ms, ImageFormat.Png);
+
+                    //输出二维码图片
+                    Response.BinaryWrite(ms.GetBuffer());
+                    Response.ContentType = "image/Png";
                 }
             }
             else if (type == "unionpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, "http://localhost/return.aspx", null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -53,19 +76,19 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "qralipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, "http://localhost/return.aspx", null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
                 if (result.resultCode == 0)
                 {
                     BCAliQrcodePayResult payResult = result as BCAliQrcodePayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
+                    Response.Write("<a href="+ payResult.url +"/>");
                 }
             }
             else
             {
-                BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "自制自来水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null) as BCWxJSAPIPayResult;
+                BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null) as BCWxJSAPIPayResult;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 if (result.resultCode == 0)

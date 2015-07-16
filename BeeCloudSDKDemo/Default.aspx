@@ -136,13 +136,13 @@
     <form action="/query.aspx" method="post" target="_blank">
         <div>
             <ul class="clear" style="margin-top: 20px">
-                <li class="clicked" onclick="paySwitch(this)">
-                    <input type="radio" value="aliquery" name="querytype" checked="checked"/>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="aliquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/ali.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="wxquery" name="querytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/wechats.png" alt=""/>
+                    <img src="http://beeclouddoc.qiniudn.com/wechat.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="unionquery" name="querytype"/>
@@ -155,16 +155,16 @@
         </div>
     </form>
     <div>------------------------------------------退款查询：-----------------------------------------------------------</div>
-    <form action="/query.aspx" method="post" target="_blank">
+    <form action="/refundQuery.aspx" method="post" target="_blank">
         <div>
             <ul class="clear" style="margin-top: 20px">
-                <li class="clicked" onclick="paySwitch(this)">
-                    <input type="radio" value="alirefundquery" name="querytype" checked="checked"/>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="alirefundquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/ali.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="wxrefundquery" name="querytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/wechats.png" alt=""/>
+                    <img src="http://beeclouddoc.qiniudn.com/wechat.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="unionrefundquery" name="querytype"/>

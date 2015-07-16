@@ -19,8 +19,11 @@ namespace BeeCloud
             UN_WEB
         };
 
-        public enum RefundChannel
+        public enum QueryChannel
         {
+            WX,
+            ALI,
+            UN,
             WX_APP,
             WX_NATIVE,
             WX_JSAPI,
@@ -28,26 +31,78 @@ namespace BeeCloud
             ALI_WEB,
             ALI_QRCODE,
             UN_APP,
-            UN_WE
+            UN_WEB
         }
 
+        public enum RefundChannel
+        {
+            WX,
+            ALI,
+            UN
+        };
+
         /// <summary>
-        /// 
+        /// 支付
         /// </summary>
-        /// <param name="timestamp"></param>
-        /// <param name="channel"></param>
-        /// <param name="totalFee"></param>
-        /// <param name="billNo"></param>
-        /// <param name="title"></param>
-        /// <param name="optional"></param>
-        /// <param name="returnUrl"></param>
-        /// <param name="openId"></param>
-        /// <param name="showURL"></param>
-        /// <param name="qrPayMode"></param>
-        /// <returns></returns>
+        /// <param name="timestamp">签名生成时间
+        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     必填
+        /// </param>
+        /// <param name="channel">渠道类型
+        ///     根据不同场景选择不同的支付方式
+        ///     必填
+        ///     可以通过enum BCPay.PayChannel获取
+        ///     channel的参数值含义：
+        ///     WX_APP: 微信手机APP支付
+        ///     WX_NATIVE: 微信公众号二维码支付
+        ///     WX_JSAPI: 微信公众号支付
+        ///     ALI_APP: 支付宝APP支付
+        ///     ALI_WEB: 支付宝网页支付 ALI_QRCODE: 支付宝内嵌二维码支付
+        ///     UN_APP: 银联APP支付
+        ///     UN_WEB: 银联网页支付
+        /// </param>
+        /// <param name="totalFee">订单总金额
+        ///     只能为整数，单位为分
+        ///     必填
+        /// </param>
+        /// <param name="billNo">商户订单号
+        ///     32个字符内，数字和/或字母组合，确保在商户系统中唯一
+        ///     必填
+        /// </param>
+        /// <param name="title">订单标题
+        ///     32个字节内，最长支持16个汉字
+        ///     必填
+        /// </param>
+        /// <param name="optional">附加数据
+        ///     用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据
+        ///     {"key1":"value1","key2":"value2",...}
+        ///     可空
+        /// </param>
+        /// <param name="returnUrl">同步返回页面
+        ///     支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。
+        ///     当channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填
+        /// </param>
+        /// <param name="openId">用户相对于微信公众号的唯一id
+        ///     例如'0950c062-5e41-44e3-8f52-f89d8cf2b6eb'
+        ///     微信公众号支付(WX_JSAPI)的必填参数
+        /// </param>
+        /// <param name="showURL">商品展示地址
+        ///     以http://开头,例如'http://beecloud.cn'
+        ///     支付宝网页支付(ALI_WEB)的选填参数
+        /// </param>
+        /// <param name="qrPayMode">二维码类型
+        ///     支付宝内嵌二维码支付(ALI_QRCODE)的选填参数
+        ///     二维码类型含义
+        ///     0： 订单码-简约前置模式,对应 iframe 宽度不能小于 600px, 高度不能小于 300px
+        ///     1： 订单码-前置模式,对应 iframe 宽度不能小于 300px, 高度不能小于 600px
+        ///     3： 订单码-迷你前置模式,对应 iframe 宽度不能小于 75px, 高度不能小于 75px
+        /// </param>
+        /// <returns>
+        ///     BCPayResult， 根据不同的支付渠道有各自对应的result类型
+        /// </returns>
         public static BCPayResult BCPayByChannel(long timestamp, string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode)
         {
-            string payUrl = "http://58.211.191.123:8080/1/rest/pay";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string payUrl = "http://58.211.191.123:8080/1/rest/bill";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billURL;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -176,31 +231,53 @@ namespace BeeCloud
         }
 
         /// <summary>
-        /// 
+        /// 退款
         /// </summary>
-        /// <param name="timestamp"></param>
-        /// <param name="channel"></param>
-        /// <param name="type"></param>
-        /// <param name="refundNo"></param>
-        /// <param name="billNo"></param>
-        /// <param name="refundFee"></param>
-        /// <param name="agree"></param>
-        /// <param name="optional"></param>
-        /// <returns></returns>
-        public static BCRefundResult BCRefundByChannel(long timestamp, string channel, string type, string refundNo, string billNo, string refundFee, bool agree, Dictionary<string, string> optional)
+        /// <param name="timestamp">签名生成时间
+        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     必填
+        /// </param>
+        /// <param name="channel">渠道类型   
+        ///     根据不同场景选择不同的支付方式
+        ///     必填
+        ///     可以通过enum BCPay.RefundChannel获取
+        ///     ALI:支付宝
+        ///     WX:微信
+        ///     UN:银联
+        /// </param>
+        /// <param name="refundNo">商户退款单号
+        ///     格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
+        ///     必填
+        ///     例如：201506101035040000001
+        /// </param>
+        /// <param name="billNo">商户订单号
+        ///     32个字符内，数字和/或字母组合，确保在商户系统中唯一
+        ///     DIRECT_REFUND和PRE_REFUND时必填
+        /// </param>
+        /// <param name="refundFee">退款金额
+        ///     只能为整数，单位为分
+        ///     DIRECT_REFUND和PRE_REFUND时必填
+        /// </param>
+        /// <param name="optional">附加数据
+        ///     用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据
+        ///     选填
+        ///     {"key1":"value1","key2":"value2",...}
+        /// </param>
+        /// <returns>
+        ///     BCRefundResult
+        /// </returns>
+        public static BCRefundResult BCRefundByChannel(long timestamp, string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional)
         {
-            string refundUrl = "http://58.211.191.123:8080/1/rest/refund";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string refundUrl = "http://58.211.191.123:8080/1/rest/refund";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundURL;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
             data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
-            data["type"] = type;
             data["refund_no"] = refundNo;
             data["bill_no"] = billNo;
             data["refund_fee"] = refundFee;
-            data["agree"] = agree;
             if (optional != null && optional.Count > 0)
             {
                 data["optional"] = new JsonData();
@@ -221,7 +298,7 @@ namespace BeeCloud
                 result.resultMsg = responseData["result_msg"].ToString();
                 if (responseData["result_code"].ToString() == "0")
                 {
-                    if (channel.Contains("ALI") && (type == "CONFIRM_REFUND" || type == "DIRECT_REFUND"))
+                    if (channel.Contains("ALI"))
                     {
                         result.url = responseData["url"].ToString();
                     }
@@ -241,9 +318,52 @@ namespace BeeCloud
             }            
         }
 
+        /// <summary>
+        /// 支付订单查询
+        /// </summary>
+        /// <param name="timestamp">签名生成时间
+        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     必填
+        /// </param>
+        /// <param name="channel">渠道类型
+        ///     根据不同场景选择不同的支付方式
+        ///     必填
+        ///     可以通过enum BCPay.QueryChannel获取
+        ///     channel的参数值含义：
+        ///     WX: 微信所有类型支付
+        ///     WX_APP: 微信手机APP支付
+        ///     WX_NATIVE: 微信公众号二维码支付
+        ///     WX_JSAPI: 微信公众号支付
+        ///     ALI: 支付宝所有类型支付
+        ///     ALI_APP: 支付宝APP支付
+        ///     ALI_WEB: 支付宝网页支付 
+        ///     ALI_QRCODE: 支付宝内嵌二维码支付
+        ///     UN: 银联所有类型支付
+        ///     UN_APP: 银联APP支付
+        ///     UN_WEB: 银联网页支付
+        /// </param>
+        /// <param name="billNo">商户订单号
+        /// </param>
+        /// <param name="startTime">起始时间
+        ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     选填
+        /// </param>
+        /// <param name="endTime">结束时间
+        ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     选填
+        /// </param>
+        /// <param name="skip">查询起始位置
+        ///     默认为0。设置为10表示忽略满足条件的前10条数据
+        ///     选填
+        /// </param>
+        /// <param name="limit">查询的条数
+        ///     默认为10，最大为50。设置为10表示只返回满足条件的10条数据
+        ///     选填
+        /// </param>
+        /// <returns></returns>
         public static BCPayQueryResult BCPayQueryByCondition(long timestamp, string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
         {
-            string payQueryUrl = "http://58.211.191.123:8080/1/rest/pay/query";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string payQueryUrl = "http://58.211.191.123:8080/1/rest/bills";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billsURL;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -283,6 +403,7 @@ namespace BeeCloud
                             bill.createdTime = BCUtil.GetDateTime((long)billData["created_time"]);
                             bill.billNo = billData["bill_no"].ToString();
                             bill.result = (bool)billData["spay_result"];
+                            bill.channel = billData["channel"].ToString();
                             bills.Add(bill);
                         }
                         result.bills = bills;
@@ -304,9 +425,53 @@ namespace BeeCloud
             }
         }
 
+        /// <summary>
+        /// 退款订单查询
+        /// </summary>
+        /// <param name="timestamp">签名生成时间
+        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     必填
+        /// </param>
+        /// <param name="channel">渠道类型
+        ///     根据不同场景选择不同的支付方式
+        ///     必填
+        ///     可以通过enum BCPay.QueryChannel获取
+        ///     channel的参数值含义：
+        ///     WX: 微信所有类型支付
+        ///     WX_APP: 微信手机APP支付
+        ///     WX_NATIVE: 微信公众号二维码支付
+        ///     WX_JSAPI: 微信公众号支付
+        ///     ALI: 支付宝所有类型支付
+        ///     ALI_APP: 支付宝APP支付
+        ///     ALI_WEB: 支付宝网页支付 
+        ///     ALI_QRCODE: 支付宝内嵌二维码支付
+        ///     UN: 银联所有类型支付
+        ///     UN_APP: 银联APP支付
+        ///     UN_WEB: 银联网页支付</param>
+        /// <param name="billNo">商户订单号
+        /// </param>
+        /// <param name="refundNo">商户退款单号
+        /// </param>
+        /// <param name="startTime">起始时间
+        ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     选填</param>
+        /// <param name="endTime">结束时间
+        ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     选填</param>
+        /// <param name="skip">查询起始位置
+        ///     默认为0。设置为10表示忽略满足条件的前10条数据
+        ///     选填
+        /// </param>
+        /// <param name="limit">查询的条数
+        ///     默认为10，最大为50。设置为10表示只返回满足条件的10条数据
+        ///     选填
+        /// </param>
+        /// <returns>
+        ///     BCRefundQuerytResult
+        /// </returns>
         public static BCRefundQuerytResult BCRefundQueryByCondition(long timestamp, string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
         {
-            string payQueryUrl = "http://58.211.191.123:8080/1/rest/refund/query";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.rest_pay;
+            string payQueryUrl = "http://58.211.191.123:8080/1/rest/refunds";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundsURL;
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -347,6 +512,7 @@ namespace BeeCloud
                             refund.refundNo = refundData["refund_no"].ToString();
                             refund.totalFee = int.Parse(refundData["total_fee"].ToString());
                             refund.refundFee = int.Parse(refundData["refund_fee"].ToString());
+                            refund.channel = refundData["channel"].ToString();
                             refund.finish = (bool)refundData["finish"];
                             refund.result = (bool)refundData["result"];
                             refund.createdTime = BCUtil.GetDateTime((long)refundData["created_time"]);
@@ -365,6 +531,61 @@ namespace BeeCloud
             catch (Exception e)
             {
                 BCRefundQuerytResult result = new BCRefundQuerytResult();
+                result.resultCode = 99;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
+
+        /// <summary>
+        ///退款状态查询"(只支持微信)
+        /// </summary>
+        /// <param name="timestamp">签名生成时间
+        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
+        ///     必填
+        /// </param>
+        /// <param name="channel">渠道类型
+        ///     暂时只能填WX
+        /// </param>
+        /// <param name="refundNo">商户退款单号
+        /// </param>
+        /// <returns>
+        ///     BCRefundStatusQueryResult
+        /// </returns>
+        public static BCRefundStatusQueryResult BCRefundStatusQuery(long timestamp, string channel, string refundNo)
+        {
+            string refundStatusUrl = "http://58.211.191.123:8080/1/rest/refund/status";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundStatusURL;
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["refund_no"] = refundNo;
+
+            string paraString = data.ToJson();
+            string url = refundStatusUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+                BCRefundStatusQueryResult result = new BCRefundStatusQueryResult();
+                result.resultCode = int.Parse(responseData["result_code"].ToString());
+                result.resultMsg = responseData["result_msg"].ToString();
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    result.refundStatus = responseData["refund_status"].ToString();
+                }
+                else
+                {
+                    result.errDetail = responseData["err_detail"].ToString();
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                BCRefundStatusQueryResult result = new BCRefundStatusQueryResult();
                 result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
@@ -474,6 +695,16 @@ namespace BeeCloud
             return result as RedPackResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="partner_trade_no"></param>
+        /// <param name="openid"></param>
+        /// <param name="check_name"></param>
+        /// <param name="re_user_name"></param>
+        /// <param name="amount"></param>
+        /// <param name="desc"></param>
+        /// <returns></returns>
         public static MchPayResult BCMchPay(string partner_trade_no, string openid, string check_name, string re_user_name, int amount, string desc) 
         {
             string mchPayUrl = BCCache.Instance.bestHost + BCConstants.version + BCConstants.wx_mch_pay_url;

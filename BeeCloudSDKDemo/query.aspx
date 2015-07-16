@@ -13,6 +13,7 @@
             <asp:BoundField DataField="billNo" HeaderText="订单号" />
             <asp:BoundField DataField="title" HeaderText="订单标题" />
             <asp:BoundField DataField="totalFee" HeaderText="总金额" />
+            <asp:BoundField DataField="channel" HeaderText="渠道" />
             <asp:BoundField DataField="result" HeaderText="订单是否成功" />
             <asp:BoundField DataField="createdTime" HeaderText="创建时间" />
             <asp:ButtonField CommandName="refund" Text="申请退款" />

@@ -40,7 +40,7 @@
   <ItemGroup>
     <Reference Include="BeeCloud, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\BeeCloud\bin\Debug\BeeCloud.dll</HintPath>
+      <HintPath>..\BeeCloud\bin\Release\BeeCloud.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -55,11 +55,16 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
+    <Reference Include="ThoughtWorks.QRCode, Version=1.0.3990.25764, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="pay.aspx" />
     <Content Include="query.aspx" />
+    <Content Include="refundQuery.aspx" />
     <Content Include="return.aspx" />
     <Content Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -88,6 +93,13 @@
     </Compile>
     <Compile Include="query.aspx.designer.cs">
       <DependentUpon>query.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="refundQuery.aspx.cs">
+      <DependentUpon>refundQuery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="refundQuery.aspx.designer.cs">
+      <DependentUpon>refundQuery.aspx</DependentUpon>
     </Compile>
     <Compile Include="return.aspx.cs">
       <DependentUpon>return.aspx</DependentUpon>
