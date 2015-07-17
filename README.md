@@ -1,13 +1,15 @@
 # beecloud-dotnet-sdk
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.0.0 beta-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
-1. 从BeeCloud官网[下载](https://beecloud.cn/download/net.php)dll文件,然后导入自己工程。
->下载的BeeCloud.xml文件为dll注释文件，请一起放入项目文件夹中，方便查看注释。
+1.从BeeCloud官网[下载](https://beecloud.cn/download/net.php)dll文件,然后导入自己工程。
+
+>下载的BeeCloud.xml文件为dll注释文件，请一起放入项目文件夹中，方便查看注释。  
 >.net SDK使用了第三方Json库LitJson.dll，请一起引入项目。 
-2. 按需修改本工程之后编译获得dll文件(包括BeeCloud.dll, BeeCloud.xml,LitJson.dll)，导入自己工程即可。
+
+2.按需修改本工程之后编译获得dll文件(包括BeeCloud.dll, BeeCloud.xml,LitJson.dll)，导入自己工程即可。
 
 ## 注册
 三个步骤，2分钟轻松搞定：
