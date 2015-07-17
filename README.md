@@ -4,7 +4,7 @@
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
-1.从BeeCloud官网[下载](https://beecloud.cn/download/net.php)dll文件,然后导入自己工程。
+1.从BeeCloud官网[下载](https://beecloud.cn/download/net.php)dll文件,然后导入自己工程。（**请注意beta版本不支持从官网下载**）
 
 >下载的BeeCloud.xml文件为dll注释文件，请一起放入项目文件夹中，方便查看注释。  
 >.net SDK使用了第三方Json库LitJson.dll，请一起引入项目。 
