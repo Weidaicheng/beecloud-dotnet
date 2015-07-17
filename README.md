@@ -23,7 +23,8 @@ BeeCloud.BeeCloud.registerApp(appid, appsecret);
 
 ## 使用方法
 >具体使用请参考项目中的`BeeCloudSDKDemo`工程
-1. 支付
+
+1.支付
 
 方法原型：
 
@@ -40,7 +41,7 @@ if (result.resultCode == 0)
 
 }
 ```
-2. 退款
+2.退款
 
 方法原型：
 
@@ -56,7 +57,8 @@ if (refundResult.resultCode == 0)
     Response.Redirect(refundResult.url);
 }
 ```
-3. 查询
+3.查询
+
 * 查询支付订单
 
 方法原型：
