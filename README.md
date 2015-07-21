@@ -29,12 +29,12 @@ BeeCloud.BeeCloud.registerApp(appid, appsecret);
 方法原型：
 
 ```.net
-public static BCPayResult BCPayByChannel(long timestamp, string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode);
+public static BCPayResult BCPayByChannel(string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode);
 ```
 调用：
 
 ```.net
-BCPayResult result = BCPay.BCPayByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
+BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
 if (result.resultCode == 0)
 {
     BCUnWebPayResult payResult = result as BCUnWebPayResult;
@@ -46,12 +46,12 @@ if (result.resultCode == 0)
 方法原型：
 
 ```.net
-public static BCRefundResult BCRefundByChannel(long timestamp, string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional);
+public static BCRefundResult BCRefundByChannel(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional);
 ```
 调用：
 
 ```.net
-BCRefundResult refundResult = BCPay.BCRefundByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
 if (refundResult.resultCode == 0)
 {
     Response.Redirect(refundResult.url);
@@ -64,42 +64,53 @@ if (refundResult.resultCode == 0)
 方法原型：
 
 ```.net
-public static BCPayQueryResult BCPayQueryByCondition(long timestamp, string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit);
+public static BCPayQueryResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit);
 ```
 调用：
 
 ```.net
-BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "ALI", null, null, null, null, 50);
+BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp("ALI", null, null, null, null, 50);
 ```
 * 查询退款订单
 
 方法原型：
 
 ```.net
-public static BCRefundQuerytResult BCRefundQueryByCondition(long timestamp, string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit);
+public static BCRefundQuerytResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit);
 ```
 调用：
 
 ```.net
-BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "ALI", null, null, null, null, null, 50);
+BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, 50);
 ```
 * 查询退款状态（只支持微信）
 
 方法原型：
 
 ```.net
-public static BCRefundStatusQueryResult BCRefundStatusQuery(long timestamp, string channel, string refundNo);
+public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, string refundNo);
 ```
 调用：
 
 ```.net
-BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery(BCUtil.GetTimeStamp(DateTime.Now), "WX", refundNo);
+BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 ```
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
 在demo工程中添加BeeCloud工程的dll引用，设置demo工程为启动项后F5即可运行调试
 >每次修改过BeeCloud工程后请先build BeeCloud工程再运行demo调试
+
+- 关于支付宝的return_url
+
+请参考demo中的`return_ali_url.aspx`
+- 关于银联的return_url
+
+请参考demo中的`return_un_url.aspx`
+- 关于weekhook的接收
+
+请参考demo中的`notify.asxp`
+文档请阅读 [webhook](https://beecloud.cn/doc/java.php#webhook)
 
 ## 测试
 TODO
