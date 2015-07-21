@@ -22,21 +22,21 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "Ali";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "Ali" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "ALI", null, null, null, null, null, 50);
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "wxrefundquery")
             {
                 typeChannel = "WX";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "WX" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "WX", null, null, null, null, null, 50);
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("WX", null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "unionrefundquery")
             {
                 typeChannel = "UN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "UN" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "UN", null, null, null, null, null, 50);
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("UN", null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             this.bind();
@@ -62,7 +62,7 @@ namespace BeeCloudSDKDemo
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 string refundNo = refunds[rowIndex].refundNo.ToString();
-                BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery(BCUtil.GetTimeStamp(DateTime.Now), "WX", refundNo);
+                BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");

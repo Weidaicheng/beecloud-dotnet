@@ -21,7 +21,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "Ali";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "Ali" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "ALI", null, null, null, null, 50);
+                BCPayQueryResult result = BCPay.BCPayQueryByCondition("ALI", null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -31,7 +31,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "WX";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "WX" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "WX", null, null, null, null, 50);
+                BCPayQueryResult result = BCPay.BCPayQueryByCondition("WX", null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -41,7 +41,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "UN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "UN" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp(DateTime.Now.ToUniversalTime()), "UN", null, null, null, null, 50);
+                BCPayQueryResult result = BCPay.BCPayQueryByCondition("UN", null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -73,7 +73,7 @@ namespace BeeCloudSDKDemo
                 int totalFee = bills[rowIndex].totalFee;
                 if (typeChannel == "Ali")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Redirect(refundResult.url);
@@ -87,7 +87,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "WX")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.RefundChannel.WX.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.WX.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");
@@ -101,7 +101,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "UN")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCUtil.GetTimeStamp(DateTime.Now), BCPay.RefundChannel.UN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.UN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");

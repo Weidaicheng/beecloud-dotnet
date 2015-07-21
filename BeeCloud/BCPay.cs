@@ -100,9 +100,11 @@ namespace BeeCloud
         /// <returns>
         ///     BCPayResult， 根据不同的支付渠道有各自对应的result类型
         /// </returns>
-        public static BCPayResult BCPayByChannel(long timestamp, string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode)
+        public static BCPayResult BCPayByChannel(string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode)
         {
             string payUrl = "http://58.211.191.123:8080/1/rest/bill";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -266,9 +268,11 @@ namespace BeeCloud
         /// <returns>
         ///     BCRefundResult
         /// </returns>
-        public static BCRefundResult BCRefundByChannel(long timestamp, string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional)
+        public static BCRefundResult BCRefundByChannel(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional)
         {
             string refundUrl = "http://58.211.191.123:8080/1/rest/refund";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -361,9 +365,11 @@ namespace BeeCloud
         ///     选填
         /// </param>
         /// <returns></returns>
-        public static BCPayQueryResult BCPayQueryByCondition(long timestamp, string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
+        public static BCPayQueryResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
         {
             string payQueryUrl = "http://58.211.191.123:8080/1/rest/bills";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billsURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -469,9 +475,11 @@ namespace BeeCloud
         /// <returns>
         ///     BCRefundQuerytResult
         /// </returns>
-        public static BCRefundQuerytResult BCRefundQueryByCondition(long timestamp, string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
+        public static BCRefundQuerytResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
         {
             string payQueryUrl = "http://58.211.191.123:8080/1/rest/refunds";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundsURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
@@ -552,9 +560,11 @@ namespace BeeCloud
         /// <returns>
         ///     BCRefundStatusQueryResult
         /// </returns>
-        public static BCRefundStatusQueryResult BCRefundStatusQuery(long timestamp, string channel, string refundNo)
+        public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, string refundNo)
         {
             string refundStatusUrl = "http://58.211.191.123:8080/1/rest/refund/status";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundStatusURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;

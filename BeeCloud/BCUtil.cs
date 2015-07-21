@@ -9,7 +9,7 @@ namespace BeeCloud
     {
         public static long GetTimeStamp(DateTime date)
         {
-            long unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
+            long unixTimestamp = date.ToUniversalTime().Ticks - new DateTime(1970, 1, 1, 0,0,0, DateTimeKind.Utc).Ticks;
             unixTimestamp /= TimeSpan.TicksPerMillisecond;
             return unixTimestamp;
         }
