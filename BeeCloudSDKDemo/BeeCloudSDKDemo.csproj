@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\BeeCloud\bin\Release\BeeCloud.dll</HintPath>
     </Reference>
+    <Reference Include="LitJson, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\LitJson.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
@@ -62,10 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="notify.aspx" />
     <Content Include="pay.aspx" />
     <Content Include="query.aspx" />
     <Content Include="refundQuery.aspx" />
-    <Content Include="return.aspx" />
+    <Content Include="return_ali_url.aspx" />
+    <Content Include="return_un_url.aspx" />
     <Content Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -78,6 +84,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="notify.aspx.cs">
+      <DependentUpon>notify.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="notify.aspx.designer.cs">
+      <DependentUpon>notify.aspx</DependentUpon>
     </Compile>
     <Compile Include="pay.aspx.cs">
       <DependentUpon>pay.aspx</DependentUpon>
@@ -101,12 +114,19 @@
     <Compile Include="refundQuery.aspx.designer.cs">
       <DependentUpon>refundQuery.aspx</DependentUpon>
     </Compile>
-    <Compile Include="return.aspx.cs">
-      <DependentUpon>return.aspx</DependentUpon>
+    <Compile Include="return_ali_url.aspx.cs">
+      <DependentUpon>return_ali_url.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="return.aspx.designer.cs">
-      <DependentUpon>return.aspx</DependentUpon>
+    <Compile Include="return_ali_url.aspx.designer.cs">
+      <DependentUpon>return_ali_url.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="return_un_url.aspx.cs">
+      <DependentUpon>return_un_url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="return_un_url.aspx.designer.cs">
+      <DependentUpon>return_un_url.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

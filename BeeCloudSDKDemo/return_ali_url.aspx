@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="return.aspx.cs" Inherits="BeeCloudSDKDemo._return" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="return_ali_url.aspx.cs" Inherits="BeeCloudSDKDemo._return" %>
 
 <!DOCTYPE html>
 

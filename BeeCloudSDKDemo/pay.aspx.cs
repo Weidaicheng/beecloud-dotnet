@@ -21,7 +21,7 @@ namespace BeeCloudSDKDemo
             string type = Request.Form["paytype"];
             if (type == "alipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -64,7 +64,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "unionpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_un_url.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -76,7 +76,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "qralipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_un_url.aspx", null, null, "2");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");

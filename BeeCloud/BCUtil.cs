@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 
 namespace BeeCloud
 {
@@ -27,6 +28,13 @@ namespace BeeCloud
             Guid g = Guid.NewGuid();
             string uuid = g.ToString().Replace("-", "");
             return uuid;
+        }
+
+        public static string GetSign()
+        {
+            string input = BCCache.Instance.appId + BCCache.Instance.appSecret + BCUtil.GetTimeStamp(DateTime.Now).ToString();
+            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
+            return sign;
         }
     }
 }
