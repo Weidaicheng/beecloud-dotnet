@@ -35,9 +35,9 @@ namespace BeeCloudSDKDemo
             else if (type == "wechatQr")
             {
                 BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, null, null, null, "2");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
                 if (result.resultCode == 0)
                 {
                     BCWxNativePayResult payResult = result as BCWxNativePayResult;
@@ -84,6 +84,19 @@ namespace BeeCloudSDKDemo
                 {
                     BCAliQrcodePayResult payResult = result as BCAliQrcodePayResult;
                     Response.Write("<a href="+ payResult.url +"/>");
+                }
+            }
+            else if (type == "aliwappay")
+            {
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                if (result.resultCode == 0)
+                {
+                    BCAliWebPayResult payResult = result as BCAliWebPayResult;
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
                 }
             }
             else

@@ -16,6 +16,7 @@ namespace BeeCloud
             WX_JSAPI,
             ALI_WEB,
             ALI_QRCODE,
+            ALI_WAP,
             UN_WEB
         };
 
@@ -30,6 +31,7 @@ namespace BeeCloud
             ALI_APP,
             ALI_WEB,
             ALI_QRCODE,
+            ALI_WAP,
             UN_APP,
             UN_WEB
         }
@@ -176,6 +178,22 @@ namespace BeeCloud
                     return result;
                 }
                 if (channel == "ALI_WEB")
+                {
+                    BCAliWebPayResult result = new BCAliWebPayResult();
+                    result.resultCode = int.Parse(responseData["result_code"].ToString());
+                    result.resultMsg = responseData["result_msg"].ToString();
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        result.html = responseData["html"].ToString();
+                        result.url = responseData["url"].ToString();
+                    }
+                    else
+                    {
+                        result.errDetail = responseData["err_detail"].ToString();
+                    }
+                    return result;
+                }
+                if (channel == "ALI_WAP")
                 {
                     BCAliWebPayResult result = new BCAliWebPayResult();
                     result.resultCode = int.Parse(responseData["result_code"].ToString());
