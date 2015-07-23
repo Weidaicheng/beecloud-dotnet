@@ -46,10 +46,6 @@ namespace BeeCloud
         /// <summary>
         /// 支付
         /// </summary>
-        /// <param name="timestamp">签名生成时间
-        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     必填
-        /// </param>
         /// <param name="channel">渠道类型
         ///     根据不同场景选择不同的支付方式
         ///     必填
@@ -253,10 +249,6 @@ namespace BeeCloud
         /// <summary>
         /// 退款
         /// </summary>
-        /// <param name="timestamp">签名生成时间
-        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     必填
-        /// </param>
         /// <param name="channel">渠道类型   
         ///     根据不同场景选择不同的支付方式
         ///     必填
@@ -343,10 +335,6 @@ namespace BeeCloud
         /// <summary>
         /// 支付订单查询
         /// </summary>
-        /// <param name="timestamp">签名生成时间
-        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     必填
-        /// </param>
         /// <param name="channel">渠道类型
         ///     根据不同场景选择不同的支付方式
         ///     必填
@@ -452,10 +440,6 @@ namespace BeeCloud
         /// <summary>
         /// 退款订单查询
         /// </summary>
-        /// <param name="timestamp">签名生成时间
-        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     必填
-        /// </param>
         /// <param name="channel">渠道类型
         ///     根据不同场景选择不同的支付方式
         ///     必填
@@ -566,10 +550,6 @@ namespace BeeCloud
         /// <summary>
         ///退款状态查询"(只支持微信)
         /// </summary>
-        /// <param name="timestamp">签名生成时间
-        ///     时间戳，毫秒数，13位， 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     必填
-        /// </param>
         /// <param name="channel">渠道类型
         ///     暂时只能填WX
         /// </param>
