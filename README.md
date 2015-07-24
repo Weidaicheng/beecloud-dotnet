@@ -116,7 +116,7 @@ BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 TODO
 
 ## 常见问题
-待补充
+- `LitJson.dll`和`ThoughtWorks.QRCode.dll`可以在项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
 
 ## 代码贡献
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。
