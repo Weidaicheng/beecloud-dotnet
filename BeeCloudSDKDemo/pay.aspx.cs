@@ -76,7 +76,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "qralipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_un_url.aspx", null, null, "0");
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, "0");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");

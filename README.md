@@ -1,10 +1,10 @@
 # BeeCloud .Net SDK (Open Source)
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.0.0 beta-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
-1.从BeeCloud官网[下载](https://beecloud.cn/download/net.php)dll文件,然后导入自己工程。（**请注意beta版本不支持从官网下载**）
+1.从BeeCloud [release](https://github.com/beecloud/beecloud-dotnet/releases)中下载dll文件,然后导入自己工程。（**请注意beta版本不支持从release下载**）
 
 >下载的BeeCloud.xml文件为dll注释文件，请一起放入项目文件夹中，方便查看注释。  
 >.net SDK使用了第三方Json库LitJson.dll，请一起引入项目。 
@@ -118,8 +118,8 @@ TODO
 ## 常见问题
 - `LitJson.dll`和`ThoughtWorks.QRCode.dll`可以在项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
 - 网页在手机上如何使用微信支付？
-1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）
-2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)
+1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
+2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
 3.示例代码，调用js方法`callpay()`即可使用
 
 ```js

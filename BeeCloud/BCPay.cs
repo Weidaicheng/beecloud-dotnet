@@ -9,7 +9,7 @@ using System;
 namespace BeeCloud
 {
     public static class BCPay
-    {
+    {   
         public enum PayChannel
         {
             WX_NATIVE,
@@ -100,7 +100,8 @@ namespace BeeCloud
         /// </returns>
         public static BCPayResult BCPayByChannel(string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode)
         {
-            string payUrl = "http://58.211.191.123:8080/1/rest/bill";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billURL;
+            Random random = new Random();
+            string payUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.billURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -280,7 +281,8 @@ namespace BeeCloud
         /// </returns>
         public static BCRefundResult BCRefundByChannel(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional)
         {
-            string refundUrl = "http://58.211.191.123:8080/1/rest/refund";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundURL;
+            Random random = new Random();
+            string refundUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -373,7 +375,8 @@ namespace BeeCloud
         /// <returns></returns>
         public static BCPayQueryResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
         {
-            string payQueryUrl = "http://58.211.191.123:8080/1/rest/bills";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.billsURL;
+            Random random = new Random();
+            string payQueryUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.billsURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -479,7 +482,8 @@ namespace BeeCloud
         /// </returns>
         public static BCRefundQuerytResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
         {
-            string payQueryUrl = "http://58.211.191.123:8080/1/rest/refunds";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundsURL;
+            Random random = new Random();
+            string payQueryUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundsURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -560,7 +564,8 @@ namespace BeeCloud
         /// </returns>
         public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, string refundNo)
         {
-            string refundStatusUrl = "http://58.211.191.123:8080/1/rest/refund/status";//BCCache.Instance.bestHost + BCConstants.version + BCConstants.refundStatusURL;
+            Random random = new Random();
+            string refundStatusUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundStatusURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -621,7 +626,8 @@ namespace BeeCloud
            </returns>*/
         public static RedPackResult BCRedPack(string mch_billno, string re_openid, int total_amount, string nick_name, string send_name, string wishing, string act_name, string remark)
         {
-            string wx_redpack_url = BCCache.Instance.bestHost + BCConstants.version + BCConstants.wx_red_url;
+            Random random = new Random();
+            string wx_redpack_url = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_red_url;
 
             RedPackPara para = new RedPackPara();
             para.appId = BCCache.Instance.appId;
@@ -673,7 +679,8 @@ namespace BeeCloud
            </returns>*/
         public static RedPackResult BCRedPackExtra(string mch_billno, string re_openid, int? total_amount, string nick_name, string send_name, string wishing, string act_name, string remark, int? countPerUser, int? minA, int? maxA, double? probability, long? period)
         {
-            string wx_redpack_extra_url = BCCache.Instance.bestHost + BCConstants.version + BCConstants.wx_red_extra_url;
+            Random random = new Random();
+            string wx_redpack_extra_url = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_red_extra_url;
 
             RedPackExtraPara para = new RedPackExtraPara();
             para.appId = BCCache.Instance.appId;
@@ -715,7 +722,8 @@ namespace BeeCloud
         /// <returns></returns>
         public static MchPayResult BCMchPay(string partner_trade_no, string openid, string check_name, string re_user_name, int amount, string desc) 
         {
-            string mchPayUrl = BCCache.Instance.bestHost + BCConstants.version + BCConstants.wx_mch_pay_url;
+            Random random = new Random();
+            string mchPayUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_mch_pay_url;
             //mchPayUrl = "http://192.168.1.103:8080/1/pay/wxmp/mchPay";
             MchPayPara para = new MchPayPara();
             para.appId = BCCache.Instance.appId;
@@ -741,18 +749,18 @@ namespace BeeCloud
                 }
                 else
                 {
-                    BCPrivateUtil.checkBestHostForFail();
+                    //BCPrivateUtil.checkBestHostForFail();
                     MchPayResult result = new MchPayResult();
-                    result.resultCode = -1;
+                    result.resultCode = 99;
                     result.errMsg = "服务器错误";
                     return result;
                 }
             }
             catch
             {
-                BCPrivateUtil.checkBestHostForFail();
+                //BCPrivateUtil.checkBestHostForFail();
                 MchPayResult result = new MchPayResult();
-                result.resultCode = -1;
+                result.resultCode = 99;
                 result.errMsg = "服务器错误";
                 return result;
             }

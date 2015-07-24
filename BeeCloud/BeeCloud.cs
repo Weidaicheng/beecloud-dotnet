@@ -15,8 +15,8 @@ namespace BeeCloud
             BCCache.Instance.appId = appID;
             BCCache.Instance.appSecret = appSecret;
 
-            Random random = new Random();
-            BCCache.Instance.bestHost = BCPrivateUtil.mLocalDefaultHosts[random.Next(0,4)];
+            //Random random = new Random();
+            //BCCache.Instance.bestHost = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)];
 
             //BCPrivateUtil.getBestHost();
         }
