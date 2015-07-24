@@ -11,7 +11,7 @@ namespace BeeCloudSDKDemo
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            BeeCloud.BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
+            BeeCloud.BeeCloud.registerApp("5b24c3c9-9491-4cdf-95ac-ddeee4aa5cec", "11069a6b-1170-4b98-a420-d685fd229fe9");
         }
     }
 }
