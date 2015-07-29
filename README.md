@@ -110,7 +110,7 @@ BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 - 关于weekhook的接收
 
 请参考demo中的`notify.asxp`
-文档请阅读 [webhook](https://beecloud.cn/doc/java.php#webhook)
+文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
 ## 测试
 TODO
