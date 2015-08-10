@@ -1,6 +1,5 @@
-﻿﻿BeeCloud .Net Changelog
+BeeCloud .Net Changelog
 ==========================
-
 
 V1.0.0 发布日期：2015年7月27日
 随机选取后台api服务器实现负载均衡
