@@ -15,6 +15,7 @@ namespace BeeCloud
             WX_NATIVE,
             WX_JSAPI,
             ALI_WEB,
+            ALI_OFFLINE_QRCODE,
             ALI_QRCODE,
             ALI_WAP,
             UN_WEB
@@ -31,6 +32,7 @@ namespace BeeCloud
             ALI_APP,
             ALI_WEB,
             ALI_QRCODE,
+            ALI_OFFLINE_QRCODE,
             ALI_WAP,
             UN_APP,
             UN_WEB
@@ -55,7 +57,9 @@ namespace BeeCloud
         ///     WX_NATIVE: 微信公众号二维码支付
         ///     WX_JSAPI: 微信公众号支付
         ///     ALI_APP: 支付宝APP支付
-        ///     ALI_WEB: 支付宝网页支付 ALI_QRCODE: 支付宝内嵌二维码支付
+        ///     ALI_WEB: 支付宝网页支付 
+        ///     ALI_OFFLINE_QRCODE: 支付宝线下二维码支付
+        ///     ALI_QRCODE: 支付宝内嵌二维码支付
         ///     UN_APP: 银联APP支付
         ///     UN_WEB: 银联网页支付
         /// </param>
@@ -64,7 +68,7 @@ namespace BeeCloud
         ///     必填
         /// </param>
         /// <param name="billNo">商户订单号
-        ///     32个字符内，数字和/或字母组合，确保在商户系统中唯一
+        ///     32个字符内，数字和/或字母组合，确保在商户系统中唯一（即所有渠道所有订单号不同）
         ///     必填
         /// </param>
         /// <param name="title">订单标题
@@ -174,7 +178,7 @@ namespace BeeCloud
                     }
                     return result;
                 }
-                if (channel == "ALI_WEB")
+                if (channel == "ALI_WEB" || channel == "ALI_WAP")
                 {
                     BCAliWebPayResult result = new BCAliWebPayResult();
                     result.resultCode = int.Parse(responseData["result_code"].ToString());
@@ -190,15 +194,14 @@ namespace BeeCloud
                     }
                     return result;
                 }
-                if (channel == "ALI_WAP")
+                if (channel == "ALI_OFFLINE_QRCODE")
                 {
-                    BCAliWebPayResult result = new BCAliWebPayResult();
+                    BCAliOffLineQrcodePayResult result = new BCAliOffLineQrcodePayResult();
                     result.resultCode = int.Parse(responseData["result_code"].ToString());
                     result.resultMsg = responseData["result_msg"].ToString();
                     if (responseData["result_code"].ToString() == "0")
                     {
-                        result.html = responseData["html"].ToString();
-                        result.url = responseData["url"].ToString();
+                        result.qrCode = responseData["qr_code"].ToString();
                     }
                     else
                     {
@@ -251,12 +254,12 @@ namespace BeeCloud
         /// 退款
         /// </summary>
         /// <param name="channel">渠道类型   
-        ///     根据不同场景选择不同的支付方式
-        ///     必填
+        ///     选填
         ///     可以通过enum BCPay.RefundChannel获取
         ///     ALI:支付宝
         ///     WX:微信
         ///     UN:银联
+        ///     注意：不传channel也能退款的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
         /// </param>
         /// <param name="refundNo">商户退款单号
         ///     格式为:退款日期(8位) + 流水号(3~24 位)。不可重复，且退款日期必须是当天日期。流水号可以接受数字或英文字符，建议使用数字，但不可接受“000”。
@@ -338,8 +341,7 @@ namespace BeeCloud
         /// 支付订单查询
         /// </summary>
         /// <param name="channel">渠道类型
-        ///     根据不同场景选择不同的支付方式
-        ///     必填
+        ///     选填
         ///     可以通过enum BCPay.QueryChannel获取
         ///     channel的参数值含义：
         ///     WX: 微信所有类型支付
@@ -353,6 +355,7 @@ namespace BeeCloud
         ///     UN: 银联所有类型支付
         ///     UN_APP: 银联APP支付
         ///     UN_WEB: 银联网页支付
+        ///     注意：不传channel也能查询的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
         /// </param>
         /// <param name="billNo">商户订单号
         /// </param>
@@ -605,166 +608,5 @@ namespace BeeCloud
             }
         }
 
-        /// <summary>
-        /// 微信红包支付（定额红包）
-        /// </summary>
-        /// <param name="mch_billno">红包id， 格式： mch_id+yyyyMMdd+10位数字， 共28位， 10位数字每天不能重复。</param>
-        /// <param name="re_openid">红包接收者的openid</param>
-        /// <param name="total_amount">固定红包金额,单位为分, 取值100~20000之间</param>
-        /// <param name="nick_name">商家昵称</param>
-        /// <param name="send_name">红包发送方名称</param>
-        /// <param name="wishing">红包祝福语</param>
-        /// <param name="act_name">活动名称</param>
-        /// <param name="remark">备注</param>
-        /* <returns>resultCode	int	    BeeCloud返回码，0为正常，其他为错误
-                    errMsg	    String	BeeCloud错误信息，正常为空串，详细错误信息参见下表
-                    sendStatus	boolean	红包是否已发送， true为已发送
-                    sendMsg	    String	红包发送的错误信息，包括：‘该用户已达到发送红包上限: count_per_user’，‘该用户随机未成功， 概率为: probability’
-                    return_code	String	微信红包状态，SUCCESS代表发送成功或者该mch_billno对应的红包之前已发送成功
-                    result_code	String	本次发送是否成功，与return_code都是SUCCESS代表本次红包发送成功（之前没有发过）
-                    return_msg	String	红包发送的消息返还，例如"发送成功"，"失败原因"等
-           </returns>*/
-        public static RedPackResult BCRedPack(string mch_billno, string re_openid, int total_amount, string nick_name, string send_name, string wishing, string act_name, string remark)
-        {
-            Random random = new Random();
-            string wx_redpack_url = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_red_url;
-
-            RedPackPara para = new RedPackPara();
-            para.appId = BCCache.Instance.appId;
-            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
-            para.mch_billno = mch_billno;
-            para.re_openid = re_openid;
-            para.total_amount = total_amount;
-            para.nick_name = nick_name;
-            para.send_name = send_name;
-            para.wishing = wishing;
-            para.remark = remark;
-            para.act_name = act_name;
-
-
-            string paraString = BCPrivateUtil.ObjectToJson(para);
-            string url = wx_redpack_url + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-            HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
-            string respString = BCPrivateUtil.GetResponseString(response);
-
-            object result = new RedPackResult();
-            result = BCPrivateUtil.JsonToObject(respString, result);
-
-            return result as RedPackResult;
-        }
-
-        /// <summary>
-        /// 微信红包支付（支持随机红包）
-        /// </summary>
-        /// <param name="mch_billno">红包id， 格式： mch_id+yyyyMMdd+10位数字， 共28位， 10位数字每天不能重复。</param>
-        /// <param name="re_openid">红包接收者的openid</param>
-        /// <param name="total_amount">固定红包金额,单位为分, 取值100~20000之间</param>
-        /// <param name="nick_name">商家昵称</param>
-        /// <param name="send_name">红包发送方名称</param>
-        /// <param name="wishing">红包祝福语</param>
-        /// <param name="act_name">活动名称</param>
-        /// <param name="remark">备注</param>
-        /// <param name="countPerUser">每个用户在一定时间范围内所能获取的红包个数, 与period配合生效	默认值1</param>
-        /// <param name="minA">随机红包下限, 单位为分，取值100~20000，小于或等于max</param>
-        /// <param name="maxA">随机红包上限, 大于或等于min, 当total_amount不传， 且max, min都存在时，随机红包生效</param>
-        /// <param name="probability">代表用户有多大的可能抢到该红包，0.0-1.0之间	默认值1.0，表示一定能抢到红包</param>
-        /// <param name="period">与count_per_user配合生效，代表过去一定时间范围内每个用户所能获取的最大红包数，单位为毫秒，比如3600000代表过去一个小时内，每个用户最多只能获得count_per_user个红包	默认值当前时间戳，表示无时间限制</param>
-        /* <returns>resultCode	int	    BeeCloud返回码，0为正常，其他为错误
-                    errMsg	    String	BeeCloud错误信息，正常为空串，详细错误信息参见下表
-                    sendStatus	boolean	红包是否已发送， true为已发送
-                    sendMsg	    String	红包发送的错误信息，包括：‘该用户已达到发送红包上限: count_per_user’，‘该用户随机未成功， 概率为: probability’
-                    return_code	String	微信红包状态，SUCCESS代表发送成功或者该mch_billno对应的红包之前已发送成功
-                    result_code	String	本次发送是否成功，与return_code都是SUCCESS代表本次红包发送成功（之前没有发过）
-                    return_msg	String	红包发送的消息返还，例如"发送成功"，"失败原因"等
-           </returns>*/
-        public static RedPackResult BCRedPackExtra(string mch_billno, string re_openid, int? total_amount, string nick_name, string send_name, string wishing, string act_name, string remark, int? countPerUser, int? minA, int? maxA, double? probability, long? period)
-        {
-            Random random = new Random();
-            string wx_redpack_extra_url = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_red_extra_url;
-
-            RedPackExtraPara para = new RedPackExtraPara();
-            para.appId = BCCache.Instance.appId;
-            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
-            para.mch_billno = mch_billno;
-            para.re_openid = re_openid;
-            para.total_amount = total_amount;
-            para.nick_name = nick_name;
-            para.send_name = send_name;
-            para.wishing = wishing;
-            para.remark = remark;
-            para.act_name = act_name;
-            para.count_per_user = countPerUser;
-            para.min = minA;
-            para.max = maxA;
-            para.probability = probability;
-            para.period = period;
-
-            string paraString = BCPrivateUtil.ObjectToJson(para);
-            string url = wx_redpack_extra_url + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-            HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
-            string respString = BCPrivateUtil.GetResponseString(response);
-
-            object result = new RedPackResult();
-            result = BCPrivateUtil.JsonToObject(respString, result);
-
-            return result as RedPackResult;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="partner_trade_no"></param>
-        /// <param name="openid"></param>
-        /// <param name="check_name"></param>
-        /// <param name="re_user_name"></param>
-        /// <param name="amount"></param>
-        /// <param name="desc"></param>
-        /// <returns></returns>
-        public static MchPayResult BCMchPay(string partner_trade_no, string openid, string check_name, string re_user_name, int amount, string desc) 
-        {
-            Random random = new Random();
-            string mchPayUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.wx_mch_pay_url;
-            //mchPayUrl = "http://192.168.1.103:8080/1/pay/wxmp/mchPay";
-            MchPayPara para = new MchPayPara();
-            para.appId = BCCache.Instance.appId;
-            para.appSign = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, BCUtil.GetTimeStamp(DateTime.Now).ToString());
-            para.partner_trade_no = partner_trade_no;
-            para.openid = openid;
-            para.check_name = check_name;
-            para.re_user_name = re_user_name;
-            para.amount = amount;
-            para.desc = desc;
-
-            string paraString = BCPrivateUtil.ObjectToJson(para);
-            string url = mchPayUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-            try
-            {
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, 0, null, null);
-                if (response != null && response.StatusCode == HttpStatusCode.OK)
-                {
-                    string respString = BCPrivateUtil.GetResponseString(response);
-                    object result = new MchPayResult();
-                    result = BCPrivateUtil.JsonToObject(respString, result);
-                    return result as MchPayResult;
-                }
-                else
-                {
-                    //BCPrivateUtil.checkBestHostForFail();
-                    MchPayResult result = new MchPayResult();
-                    result.resultCode = 99;
-                    result.errMsg = "服务器错误";
-                    return result;
-                }
-            }
-            catch
-            {
-                //BCPrivateUtil.checkBestHostForFail();
-                MchPayResult result = new MchPayResult();
-                result.resultCode = 99;
-                result.errMsg = "服务器错误";
-                return result;
-            }
-            
-        }
     }
 }

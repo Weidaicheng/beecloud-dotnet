@@ -116,7 +116,7 @@ BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 TODO
 
 ## 常见问题
-- `LitJson.dll`和`ThoughtWorks.QRCode.dll`可以在项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
+- `LitJson.dll`和`ThoughtWorks.QRCode.dll`可以在demo项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
 - 网页在手机上如何使用微信支付？  
 1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
 2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
