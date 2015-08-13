@@ -193,6 +193,27 @@
                  BCRefundStatusQueryResult
              </returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCTransfer(System.String,System.String,System.String,System.Collections.Generic.List{BeeCloud.Model.BCTransferData})">
+            <summary>
+            批量打款
+            </summary>
+            <param name="channel">渠道
+                必填
+                现在只支持支付宝（TransferChannel.ALI）</param>
+            <param name="batchNo">批量付款批号
+                必填
+                此次批量付款的唯一标示，11-32位数字字母组合
+            </param>
+            <param name="accountName">付款方的支付宝账户名
+                必填
+            </param>
+            <param name="transferData">付款的详细数据
+                必填
+                每一个Map对应一笔付款的详细数据, list size 小于等于 1000。
+                具体参BCTransferData类
+            </param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.getAppSignature(System.String,System.String,System.String)">
             <summary>
             生成AppSign

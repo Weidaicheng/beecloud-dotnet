@@ -13,7 +13,7 @@ namespace BeeCloud.Model
         public string resultMsg { get; set; }
         //具体错误信息
         public string errDetail { get; set; }
-        //需要跳转到支付宝输入密码确认批量打款
+        //需要跳转到支付宝输入密码确认批量打款（支付宝独占字段）
         public string url { get; set; }
     }
 }

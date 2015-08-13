@@ -95,6 +95,34 @@ public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, stri
 ```.net
 BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 ```
+## 4.批量打款
+* 支付宝批量打款
+
+方法原型:
+
+```.net
+public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+```
+调用：
+
+```.net
+BCTransferData data = new BCTransferData();
+data.transferId = BCUtil.GetUUID();
+data.receiverAccount = "xx@xx.com";
+data.receiverName = "某某某";
+data.transferFee = 100;
+data.transferNote = "note";
+BCTransferData data2 = new BCTransferData();
+data2.transferId = BCUtil.GetUUID();
+data2.receiverAccount = "xx@xx.com";
+data2.receiverName = "某某";
+data2.transferFee = 100;
+data2.transferNote = "note";
+List<BCTransferData> list = new List<BCTransferData>();
+list.Add(data);
+list.Add(data2);
+BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+```
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
@@ -153,6 +181,10 @@ function callpay()
     }
 }
 ```
+
+- 查询，退款方法没有传channel但是报错了
+要不传channel查询，退款必须保证所有渠道所有订单号不同，否则会报错告诉开发者，传入channel以区分。
+
 
 ## 代码贡献
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。

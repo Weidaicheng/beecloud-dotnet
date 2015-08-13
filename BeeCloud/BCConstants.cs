@@ -14,5 +14,6 @@ namespace BeeCloud
         public const string refundURL = "rest/refund";
         public const string refundsURL = "rest/refunds";
         public const string refundStatusURL = "rest/refund/status";
+        public const string transfersURL = "rest/transfers";
     }
 }

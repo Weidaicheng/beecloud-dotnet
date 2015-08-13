@@ -45,6 +45,12 @@ namespace BeeCloud
             UN
         };
 
+        public enum TransferChannel
+        {
+            ALI,
+            WX
+        };
+
         /// <summary>
         /// 支付
         /// </summary>
@@ -608,5 +614,77 @@ namespace BeeCloud
             }
         }
 
+        /// <summary>
+        /// 批量打款
+        /// </summary>
+        /// <param name="channel">渠道
+        ///     必填
+        ///     现在只支持支付宝（TransferChannel.ALI）</param>
+        /// <param name="batchNo">批量付款批号
+        ///     必填
+        ///     此次批量付款的唯一标示，11-32位数字字母组合
+        /// </param>
+        /// <param name="accountName">付款方的支付宝账户名
+        ///     必填
+        /// </param>
+        /// <param name="transferData">付款的详细数据
+        ///     必填
+        ///     每一个Map对应一笔付款的详细数据, list size 小于等于 1000。
+        ///     具体参BCTransferData类
+        /// </param>
+        /// <returns></returns>
+        public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+        {
+            Random random = new Random();
+            string transferUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["batch_no"] = batchNo;
+            data["account_name"] = accountName;
+            JsonData list = new JsonData();
+            foreach (var transfer in transferData)
+            {
+                JsonData d = new JsonData();
+                d["transfer_id"] = transfer.transferId;
+                d["receiver_account"] = transfer.receiverAccount;
+                d["receiver_name"] = transfer.receiverName;
+                d["transfer_fee"] = transfer.transferFee;
+                d["transfer_note"] = transfer.transferNote;
+                list.Add(d);
+            }
+            data["transfer_data"] = list;
+            string paraString = data.ToJson();
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+                BCTransferResult result = new BCTransferResult();
+                result.resultCode = int.Parse(responseData["result_code"].ToString());
+                result.resultMsg = responseData["result_msg"].ToString();
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    if (channel == "ALI")
+                    {
+                        result.url = responseData["url"].ToString();
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                BCTransferResult result = new BCTransferResult();
+                result.resultCode = 99;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
     }
 }
