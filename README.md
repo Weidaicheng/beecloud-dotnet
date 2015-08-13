@@ -182,7 +182,7 @@ function callpay()
 }
 ```
 
-- 查询，退款方法没有传channel但是报错了
+- 查询，退款方法没有传channel但是报错了  
 要不传channel查询，退款必须保证所有渠道所有订单号不同，否则会报错告诉开发者，传入channel以区分。
 
 
