@@ -1,7 +1,7 @@
 ﻿
 namespace BeeCloud.Model
 {
-    public class BCAliWebPayResult:BCPayResult
+    public class BCAliWebPayResult : BCPayResult
     {
         //支付宝跳转form，是一段HTML代码，自动提交
         public string html { get; set; }

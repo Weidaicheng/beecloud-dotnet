@@ -180,6 +180,24 @@
             <input type="submit" class="button" value="查询"/>
         </div>
     </form>
+    <div>------------------------------------------批量打款：-----------------------------------------------------------</div>
+    <form action="/pay.aspx" method="post" target="_blank">
+        <div>
+            <ul class="clear" style="margin-top: 20px">
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="alitransfer" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="wxtransfer" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/wxtransfer.png" alt=""/>
+                </li>
+            </ul>
+        </div>
+        <div style="clear: both;">
+            <input type="submit" class="button" value="付款"/>
+        </div>
+    </form>
 </body>
 <script type="text/javascript">
     function paySwitch(that) {

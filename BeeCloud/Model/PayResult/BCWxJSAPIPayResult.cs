@@ -1,7 +1,7 @@
 ﻿
 namespace BeeCloud.Model
 {
-    public class BCWxJSAPIPayResult:BCPayResult
+    public class BCWxJSAPIPayResult : BCPayResult
     {
         //微信应用APPID
         public string appId { get; set; }

@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.1.0-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
@@ -95,6 +95,34 @@ public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, stri
 ```.net
 BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 ```
+## 4.批量打款
+* 支付宝批量打款
+
+方法原型:
+
+```.net
+public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+```
+调用：
+
+```.net
+BCTransferData data = new BCTransferData();
+data.transferId = BCUtil.GetUUID();
+data.receiverAccount = "xx@xx.com";
+data.receiverName = "某某某";
+data.transferFee = 100;
+data.transferNote = "note";
+BCTransferData data2 = new BCTransferData();
+data2.transferId = BCUtil.GetUUID();
+data2.receiverAccount = "xx@xx.com";
+data2.receiverName = "某某";
+data2.transferFee = 100;
+data2.transferNote = "note";
+List<BCTransferData> list = new List<BCTransferData>();
+list.Add(data);
+list.Add(data2);
+BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+```
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
@@ -116,7 +144,10 @@ BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
 TODO
 
 ## 常见问题
-- `LitJson.dll`和`ThoughtWorks.QRCode.dll`可以在项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
+- demo的支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  
+由于政策原因，支付宝账号不能提供给用户做测试，请替换成自己的账号即可，微信银联不受限，可使用demo本身的账号测试。
+- `LitJson.dll`和`ThoughtWorks.QRCode.dll`哪里有下？  
+可以在demo项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
 - 网页在手机上如何使用微信支付？  
 1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
 2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
@@ -153,6 +184,10 @@ function callpay()
     }
 }
 ```
+
+- 查询/退款方法没有传channel但是报错了？  
+要不传channel完成查询/退款必须保证所有渠道所有订单号不同，否则会报错告诉开发者，要求传入channel以区分。
+
 
 ## 代码贡献
 我们非常欢迎大家来贡献代码，我们会向贡献者致以最诚挚的敬意。

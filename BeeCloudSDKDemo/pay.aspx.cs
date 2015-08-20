@@ -99,6 +99,35 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
                 }
             }
+            else if (type == "alitransfer")
+            {
+                BCTransferData data = new BCTransferData();
+                data.transferId = BCUtil.GetUUID();
+                data.receiverAccount = "xx@xx.com";
+                data.receiverName = "某某某";
+                data.transferFee = 100;
+                data.transferNote = "note";
+                BCTransferData data2 = new BCTransferData();
+                data2.transferId = BCUtil.GetUUID();
+                data2.receiverAccount = "xx@xx.com";
+                data2.receiverName = "某某";
+                data2.transferFee = 100;
+                data2.transferNote = "note";
+                List<BCTransferData> list = new List<BCTransferData>();
+                list.Add(data);
+                list.Add(data2);
+                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                if (result.resultCode == 0)
+                {
+                    Response.Write("<a href=" + result.url + ">付款地址</a><br/>");
+                }
+            }
+            else if (type == "wxtransfer")
+            {
+                Response.Write("<span style='color:#00CD00;font-size:20px'>即将支持</span><br/>");
+            }
             else
             {
                 BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, null, "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null) as BCWxJSAPIPayResult;
