@@ -99,36 +99,6 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
                 }
             }
-            else if (type == "aliofflineqrpay")
-            {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_OFFLINE_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
-                {
-                    BCAliOffLineQrcodePayResult payResult = result as BCAliOffLineQrcodePayResult;
-                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.codeURL + "</span><br/>");
-                    string str = payResult.qrCode;
-
-                    //初始化二维码生成工具
-                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
-                    qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
-                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-                    qrCodeEncoder.QRCodeVersion = 0;
-                    qrCodeEncoder.QRCodeScale = 4;
-
-                    //将字符串生成二维码图片
-                    Bitmap image = qrCodeEncoder.Encode(str, Encoding.Default);
-                    //保存为PNG到内存流  
-                    MemoryStream ms = new MemoryStream();
-                    image.Save(ms, ImageFormat.Png);
-
-                    //输出二维码图片
-                    Response.BinaryWrite(ms.GetBuffer());
-                    Response.ContentType = "image/Png";
-                }
-            }
             else if (type == "alitransfer")
             {
                 BCTransferData data = new BCTransferData();

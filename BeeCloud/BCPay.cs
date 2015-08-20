@@ -15,7 +15,6 @@ namespace BeeCloud
             WX_NATIVE,
             WX_JSAPI,
             ALI_WEB,
-            ALI_OFFLINE_QRCODE,
             ALI_QRCODE,
             ALI_WAP,
             UN_WEB
@@ -32,7 +31,6 @@ namespace BeeCloud
             ALI_APP,
             ALI_WEB,
             ALI_QRCODE,
-            ALI_OFFLINE_QRCODE,
             ALI_WAP,
             UN_APP,
             UN_WEB
@@ -64,7 +62,6 @@ namespace BeeCloud
         ///     WX_JSAPI: 微信公众号支付
         ///     ALI_APP: 支付宝APP支付
         ///     ALI_WEB: 支付宝网页支付 
-        ///     ALI_OFFLINE_QRCODE: 支付宝线下二维码支付
         ///     ALI_QRCODE: 支付宝内嵌二维码支付
         ///     UN_APP: 银联APP支付
         ///     UN_WEB: 银联网页支付
@@ -193,21 +190,6 @@ namespace BeeCloud
                     {
                         result.html = responseData["html"].ToString();
                         result.url = responseData["url"].ToString();
-                    }
-                    else
-                    {
-                        result.errDetail = responseData["err_detail"].ToString();
-                    }
-                    return result;
-                }
-                if (channel == "ALI_OFFLINE_QRCODE")
-                {
-                    BCAliOffLineQrcodePayResult result = new BCAliOffLineQrcodePayResult();
-                    result.resultCode = int.Parse(responseData["result_code"].ToString());
-                    result.resultMsg = responseData["result_msg"].ToString();
-                    if (responseData["result_code"].ToString() == "0")
-                    {
-                        result.qrCode = responseData["qr_code"].ToString();
                     }
                     else
                     {
@@ -636,7 +618,7 @@ namespace BeeCloud
         public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
         {
             Random random = new Random();
-            string transferUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundURL;
+            string transferUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.transfersURL;
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
