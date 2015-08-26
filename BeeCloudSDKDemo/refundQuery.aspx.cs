@@ -39,6 +39,27 @@ namespace BeeCloudSDKDemo
                 BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("UN", null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
+            if (type == "jdrefundquery")
+            {
+                typeChannel = "JD";
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "JD" + "</span><br/>");
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("JD", null, null, null, null, null, 50);
+                refunds = result.refunds;
+            }
+            if (type == "ybrefundquery")
+            {
+                typeChannel = "YEE";
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "YEE" + "</span><br/>");
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("YEE", null, null, null, null, null, 50);
+                refunds = result.refunds;
+            }
+            if (type == "kqrefundquery")
+            {
+                typeChannel = "KUAIQIAN";
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "KUAIQIAN" + "</span><br/>");
+                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("KUAIQIAN", null, null, null, null, null, 50);
+                refunds = result.refunds;
+            }
             this.bind();
         }
 
@@ -50,7 +71,11 @@ namespace BeeCloudSDKDemo
 
         protected void QueryGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (typeChannel != "WX" || e.Row.Cells[5].Text != "False")
+            if (typeChannel == "WX" || typeChannel == "YEE" || typeChannel == "KUAIQIAN" || e.Row.Cells[5].Text == "False")
+            {
+                //e.Row.Cells[8].Visible = true;
+            }
+            else
             {
                 e.Row.Cells[8].Visible = false;
             }
@@ -60,13 +85,36 @@ namespace BeeCloudSDKDemo
         {
             if (e.CommandName == "refundStatus")
             {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                string refundNo = refunds[rowIndex].refundNo.ToString();
-                BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                if (typeChannel == "WX")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    string refundNo = refunds[rowIndex].refundNo.ToString();
+                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                }
+                if (typeChannel == "YEE")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    string refundNo = refunds[rowIndex].refundNo.ToString();
+                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("YEE", refundNo);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                }
+                if (typeChannel == "KUAIQIAN")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument);
+                    string refundNo = refunds[rowIndex].refundNo.ToString();
+                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("KUAIQIAN", refundNo);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                }
             }
         }
     }

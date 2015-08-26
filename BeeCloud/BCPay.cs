@@ -17,7 +17,13 @@ namespace BeeCloud
             ALI_WEB,
             ALI_QRCODE,
             ALI_WAP,
-            UN_WEB
+            UN_WEB,
+            JD_WAP,
+            JD_WEB,
+            YEE_WAP,
+            YEE_WEB,
+            KUAIQIAN_WAP,
+            KUAIQIAN_WEB
         };
 
         public enum QueryChannel
@@ -33,14 +39,30 @@ namespace BeeCloud
             ALI_QRCODE,
             ALI_WAP,
             UN_APP,
-            UN_WEB
+            UN_WEB,
+            JD_WAP,
+            JD_WEB,
+            YEE_WAP,
+            YEE_WEB,
+            KUAIQIAN_WAP,
+            KUAIQIAN_WEB
         }
 
         public enum RefundChannel
         {
             WX,
             ALI,
-            UN
+            UN,
+            JD,
+            YEE,
+            KUAIQIAN
+        };
+
+        public enum RefundStatusChannel
+        {
+            WX,
+            YEE,
+            KUAIQIAN
         };
 
         public enum TransferChannel
@@ -57,14 +79,20 @@ namespace BeeCloud
         ///     必填
         ///     可以通过enum BCPay.PayChannel获取
         ///     channel的参数值含义：
-        ///     WX_APP: 微信手机APP支付
-        ///     WX_NATIVE: 微信公众号二维码支付
-        ///     WX_JSAPI: 微信公众号支付
-        ///     ALI_APP: 支付宝APP支付
-        ///     ALI_WEB: 支付宝网页支付 
-        ///     ALI_QRCODE: 支付宝内嵌二维码支付
-        ///     UN_APP: 银联APP支付
-        ///     UN_WEB: 银联网页支付
+        ///     WX_APP:       微信手机APP支付
+        ///     WX_NATIVE:    微信公众号二维码支付
+        ///     WX_JSAPI:     微信公众号支付
+        ///     ALI_APP:      支付宝APP支付
+        ///     ALI_WEB:      支付宝网页支付 
+        ///     ALI_QRCODE:   支付宝内嵌二维码支付
+        ///     UN_APP:       银联APP支付
+        ///     UN_WEB:       银联网页支付
+        ///     JD_WAP:       京东wap支付
+        ///     JD_WEB:       京东web支付
+        ///     YEE_WAP:      易宝wap支付 
+        ///     YEE_WEB:      易宝web支付
+        ///     KUAIQIAN_WAP: 快钱wap支付
+        ///     KUAIQIAN_WEB: 快钱web支付
         /// </param>
         /// <param name="totalFee">订单总金额
         ///     只能为整数，单位为分
@@ -227,11 +255,71 @@ namespace BeeCloud
                     }
                     return result;
                 }
+                if (channel == "JD_WAP" || channel == "JD_WEB")
+                {
+                    BCJDPayResult result = new BCJDPayResult();
+                    result.resultCode = int.Parse(responseData["result_code"].ToString());
+                    result.resultMsg = responseData["result_msg"].ToString();
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        result.html = responseData["html"].ToString();
+                    }
+                    else
+                    {
+                        result.errDetail = responseData["err_detail"].ToString();
+                    }
+                    return result;
+                }
+                if (channel == "KUAIQIAN_WAP" || channel == "KUAIQIAN_WEB")
+                {
+                    BCKuaiQianPayResult result = new BCKuaiQianPayResult();
+                    result.resultCode = int.Parse(responseData["result_code"].ToString());
+                    result.resultMsg = responseData["result_msg"].ToString();
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        result.html = responseData["html"].ToString();
+                    }
+                    else
+                    {
+                        result.errDetail = responseData["err_detail"].ToString();
+                    }
+                    return result;
+                }
+                if (channel == "YEE_WAP")
+                {
+                    BCYEEWapPayResult result = new BCYEEWapPayResult();
+                    result.resultCode = int.Parse(responseData["result_code"].ToString());
+                    result.resultMsg = responseData["result_msg"].ToString();
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        result.url = responseData["url"].ToString();
+                    }
+                    else
+                    {
+                        result.errDetail = responseData["err_detail"].ToString();
+                    }
+                    return result;
+                }
+                if (channel == "YEE_WEB")
+                {
+                    BCYEEWebPayResult result = new BCYEEWebPayResult();
+                    result.resultCode = int.Parse(responseData["result_code"].ToString());
+                    result.resultMsg = responseData["result_msg"].ToString();
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        result.html = responseData["html"].ToString();
+                    }
+                    else
+                    {
+                        result.errDetail = responseData["err_detail"].ToString();
+                    }
+                    return result;
+                }
                 return new BCPayResult();
             }
             catch (Exception e)
             {
-                BCWxNativePayResult result = new BCWxNativePayResult();
+                BCPayResult result = new BCPayResult();
                 result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
@@ -244,9 +332,12 @@ namespace BeeCloud
         /// <param name="channel">渠道类型   
         ///     选填
         ///     可以通过enum BCPay.RefundChannel获取
-        ///     ALI:支付宝
-        ///     WX:微信
-        ///     UN:银联
+        ///     ALI:      支付宝
+        ///     WX:       微信
+        ///     UN:       银联
+        ///     JD:       京东
+        ///     YEE:      易宝
+        ///     KUAIQIAN: 快钱
         ///     注意：不传channel也能退款的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
         /// </param>
         /// <param name="refundNo">商户退款单号
@@ -332,17 +423,20 @@ namespace BeeCloud
         ///     选填
         ///     可以通过enum BCPay.QueryChannel获取
         ///     channel的参数值含义：
-        ///     WX: 微信所有类型支付
-        ///     WX_APP: 微信手机APP支付
-        ///     WX_NATIVE: 微信公众号二维码支付
-        ///     WX_JSAPI: 微信公众号支付
-        ///     ALI: 支付宝所有类型支付
-        ///     ALI_APP: 支付宝APP支付
-        ///     ALI_WEB: 支付宝网页支付 
-        ///     ALI_QRCODE: 支付宝内嵌二维码支付
-        ///     UN: 银联所有类型支付
-        ///     UN_APP: 银联APP支付
-        ///     UN_WEB: 银联网页支付
+        ///     WX_APP:       微信手机APP支付
+        ///     WX_NATIVE:    微信公众号二维码支付
+        ///     WX_JSAPI:     微信公众号支付
+        ///     ALI_APP:      支付宝APP支付
+        ///     ALI_WEB:      支付宝网页支付 
+        ///     ALI_QRCODE:   支付宝内嵌二维码支付
+        ///     UN_APP:       银联APP支付
+        ///     UN_WEB:       银联网页支付
+        ///     JD_WAP:       京东wap支付
+        ///     JD_WEB:       京东web支付
+        ///     YEE_WAP:      易宝wap支付 
+        ///     YEE_WEB:      易宝web支付
+        ///     KUAIQIAN_WAP: 快钱wap支付
+        ///     KUAIQIAN_WEB: 快钱web支付
         ///     注意：不传channel也能查询的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
         /// </param>
         /// <param name="billNo">商户订单号
@@ -439,17 +533,22 @@ namespace BeeCloud
         ///     必填
         ///     可以通过enum BCPay.QueryChannel获取
         ///     channel的参数值含义：
-        ///     WX: 微信所有类型支付
-        ///     WX_APP: 微信手机APP支付
-        ///     WX_NATIVE: 微信公众号二维码支付
-        ///     WX_JSAPI: 微信公众号支付
-        ///     ALI: 支付宝所有类型支付
-        ///     ALI_APP: 支付宝APP支付
-        ///     ALI_WEB: 支付宝网页支付 
-        ///     ALI_QRCODE: 支付宝内嵌二维码支付
-        ///     UN: 银联所有类型支付
-        ///     UN_APP: 银联APP支付
-        ///     UN_WEB: 银联网页支付</param>
+        ///     WX_APP:       微信手机APP支付
+        ///     WX_NATIVE:    微信公众号二维码支付
+        ///     WX_JSAPI:     微信公众号支付
+        ///     ALI_APP:      支付宝APP支付
+        ///     ALI_WEB:      支付宝网页支付 
+        ///     ALI_QRCODE:   支付宝内嵌二维码支付
+        ///     UN_APP:       银联APP支付
+        ///     UN_WEB:       银联网页支付
+        ///     JD_WAP:       京东wap支付
+        ///     JD_WEB:       京东web支付
+        ///     YEE_WAP:      易宝wap支付 
+        ///     YEE_WEB:      易宝web支付
+        ///     KUAIQIAN_WAP: 快钱wap支付
+        ///     KUAIQIAN_WEB: 快钱web支付
+        ///     注意：不传channel也能查询的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
+        /// </param>
         /// <param name="billNo">商户订单号
         /// </param>
         /// <param name="refundNo">商户退款单号
