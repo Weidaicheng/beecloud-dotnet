@@ -56,8 +56,7 @@
     <Compile Include="Model\BCTransferResult.cs" />
     <Compile Include="Model\PayResult\BCJDPayResult.cs" />
     <Compile Include="Model\PayResult\BCKuaiQianPayResult.cs" />
-    <Compile Include="Model\PayResult\BCYEEWebPayResult.cs" />
-    <Compile Include="Model\PayResult\BCYEEWapPayResult.cs" />
+    <Compile Include="Model\PayResult\BCYEEPayResult.cs" />
     <Compile Include="Model\QueryResult\BCRefundStatusQueryResult.cs" />
     <Compile Include="Model\PayResult\BCAliQrcodePayResult.cs" />
     <Compile Include="Model\PayResult\BCAliWebPayResult.cs" />

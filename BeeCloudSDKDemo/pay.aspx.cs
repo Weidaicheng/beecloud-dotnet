@@ -131,8 +131,8 @@ namespace BeeCloudSDKDemo
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
                 if (result.resultCode == 0)
                 {
-                    BCYEEWebPayResult payResult = result as BCYEEWebPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCYEEPayResult payResult = result as BCYEEPayResult;
+                    Response.Write("<a href=" + payResult.url + ">付款地址</a><br/>");
                 }
             }
             else if (type == "ybwappay")
@@ -143,7 +143,7 @@ namespace BeeCloudSDKDemo
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
                 if (result.resultCode == 0)
                 {
-                    BCYEEWapPayResult payResult = result as BCYEEWapPayResult;
+                    BCYEEPayResult payResult = result as BCYEEPayResult;
                     Response.Write("<a href=" + payResult.url + ">付款地址</a><br/>");
                 }
             }

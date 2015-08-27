@@ -287,7 +287,7 @@ namespace BeeCloud
                 }
                 if (channel == "YEE_WAP")
                 {
-                    BCYEEWapPayResult result = new BCYEEWapPayResult();
+                    BCYEEPayResult result = new BCYEEPayResult();
                     result.resultCode = int.Parse(responseData["result_code"].ToString());
                     result.resultMsg = responseData["result_msg"].ToString();
                     if (responseData["result_code"].ToString() == "0")
@@ -302,12 +302,12 @@ namespace BeeCloud
                 }
                 if (channel == "YEE_WEB")
                 {
-                    BCYEEWebPayResult result = new BCYEEWebPayResult();
+                    BCYEEPayResult result = new BCYEEPayResult();
                     result.resultCode = int.Parse(responseData["result_code"].ToString());
                     result.resultMsg = responseData["result_msg"].ToString();
                     if (responseData["result_code"].ToString() == "0")
                     {
-                        result.html = responseData["html"].ToString();
+                        result.url = responseData["url"].ToString();
                     }
                     else
                     {

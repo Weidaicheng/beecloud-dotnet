@@ -71,7 +71,7 @@ namespace BeeCloudSDKDemo
 
         protected void QueryGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (typeChannel == "WX" || typeChannel == "YEE" || typeChannel == "KUAIQIAN" || e.Row.Cells[5].Text == "False")
+            if ((typeChannel == "WX" || typeChannel == "YEE" || typeChannel == "KUAIQIAN") && e.Row.Cells[5].Text == "False")
             {
                 //e.Row.Cells[8].Visible = true;
             }
