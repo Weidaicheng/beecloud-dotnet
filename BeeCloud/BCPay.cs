@@ -170,7 +170,7 @@ namespace BeeCloud
                     {
                         result.appId = responseData["app_id"].ToString();
                         result.package = responseData["package"].ToString();
-                        result.noncestr = responseData["noncestr"].ToString();
+                        result.noncestr = responseData["nonce_str"].ToString();
                         result.timestamp = responseData["timestamp"].ToString();
                         result.paySign = responseData["pay_sign"].ToString();
                         result.signType = responseData["sign_type"].ToString();
@@ -231,7 +231,7 @@ namespace BeeCloud
             }
             catch (Exception e)
             {
-                BCWxNativePayResult result = new BCWxNativePayResult();
+                BCPayResult result = new BCPayResult();
                 result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
