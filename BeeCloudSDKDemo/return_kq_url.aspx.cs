@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 namespace BeeCloudSDKDemo
 {
-    public partial class return_jd_url : System.Web.UI.Page
+    public partial class return_kq_url : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,13 +18,13 @@ namespace BeeCloudSDKDemo
             {
                 //商户订单号
 
-                string out_trade_no = Request.QueryString["tradeNum"];
+                string out_trade_no = Request.QueryString["orderId"];
 
                 //交易状态
-                string trade_status = Request.QueryString["tradeStatus"];
+                string trade_status = Request.QueryString["payResult"];
 
 
-                if (trade_status == "0")
+                if (trade_status == "10")
                 {
                     Response.Write("支付成功");
                 }
@@ -40,7 +40,7 @@ namespace BeeCloudSDKDemo
         }
 
         /// <summary>
-        /// 获取京东GET过来通知消息，并以“参数名=参数值”的形式组成数组
+        /// 获取快钱GET过来通知消息，并以“参数名=参数值”的形式组成数组
         /// </summary>
         /// <returns>request回来的信息组成的数组</returns>
         public SortedDictionary<string, string> GetRequestGet()

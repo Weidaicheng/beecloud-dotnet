@@ -101,7 +101,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "jdpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_jd_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -113,7 +113,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "jdwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_jd_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -125,7 +125,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "ybpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_yee_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -137,7 +137,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "ybwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, null, null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -149,7 +149,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "kqpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_kq_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
@@ -161,7 +161,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "kqwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", null, null, null);
+                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_kq_url.aspx", null, null, null);
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
