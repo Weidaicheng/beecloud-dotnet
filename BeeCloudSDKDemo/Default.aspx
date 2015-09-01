@@ -130,6 +130,31 @@
                     <input type="radio" value="aliwappay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/aliwap.png" alt=""/>
                 </li>
+                <br />
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="jdpay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/jd.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="jdwappay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/jdwap.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="ybpay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/yb.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="ybwappay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="kqpay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/kq.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="kqwappay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt=""/>
+                </li>
             </ul>
         </div>
         <div style="clear: both;">
@@ -152,6 +177,18 @@
                     <input type="radio" value="unionquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt=""/>
                 </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="jdquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/jd.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="ybquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/yb.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="kqquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/kq.png" alt=""/>
+                </li>
             </ul>
         </div>
         <div style="clear: both;">
@@ -173,6 +210,18 @@
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="unionrefundquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt=""/>
+                </li>
+                 <li onclick="paySwitch(this)">
+                    <input type="radio" value="jdrefundquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/jd.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="ybrefundquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/yb.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="kqrefundquery" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/kq.png" alt=""/>
                 </li>
             </ul>
         </div>

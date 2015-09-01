@@ -54,6 +54,9 @@
     <Compile Include="BeeCloud.cs" />
     <Compile Include="Model\BCTransferData.cs" />
     <Compile Include="Model\BCTransferResult.cs" />
+    <Compile Include="Model\PayResult\BCJDPayResult.cs" />
+    <Compile Include="Model\PayResult\BCKuaiQianPayResult.cs" />
+    <Compile Include="Model\PayResult\BCYEEPayResult.cs" />
     <Compile Include="Model\QueryResult\BCRefundStatusQueryResult.cs" />
     <Compile Include="Model\PayResult\BCAliQrcodePayResult.cs" />
     <Compile Include="Model\PayResult\BCAliWebPayResult.cs" />

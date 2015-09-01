@@ -16,8 +16,8 @@
             <asp:BoundField DataField="totalFee" HeaderText="总金额" />
             <asp:BoundField DataField="refundFee" HeaderText="退款金额金额" />
             <asp:BoundField DataField="channel" HeaderText="渠道" />
-            <asp:BoundField DataField="finish" HeaderText="是否成功" />
-            <asp:BoundField DataField="result" HeaderText="是否退款" />
+            <asp:BoundField DataField="finish" HeaderText="是否完成" />
+            <asp:BoundField DataField="result" HeaderText="是否成功" />
             <asp:BoundField DataField="createdTime" HeaderText="创建时间" />
             <asp:ButtonField CommandName="refundStatus" Text="查看退款状态" />
         </Columns>

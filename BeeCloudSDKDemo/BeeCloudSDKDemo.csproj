@@ -71,7 +71,10 @@
     <Content Include="query.aspx" />
     <Content Include="refundQuery.aspx" />
     <Content Include="return_ali_url.aspx" />
+    <Content Include="return_jd_url.aspx" />
+    <Content Include="return_kq_url.aspx" />
     <Content Include="return_un_url.aspx" />
+    <Content Include="return_yee_return.aspx" />
     <Content Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -121,12 +124,33 @@
     <Compile Include="return_ali_url.aspx.designer.cs">
       <DependentUpon>return_ali_url.aspx</DependentUpon>
     </Compile>
+    <Compile Include="return_jd_url.aspx.cs">
+      <DependentUpon>return_jd_url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="return_jd_url.aspx.designer.cs">
+      <DependentUpon>return_jd_url.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="return_kq_url.aspx.cs">
+      <DependentUpon>return_kq_url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="return_kq_url.aspx.designer.cs">
+      <DependentUpon>return_kq_url.aspx</DependentUpon>
+    </Compile>
     <Compile Include="return_un_url.aspx.cs">
       <DependentUpon>return_un_url.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="return_un_url.aspx.designer.cs">
       <DependentUpon>return_un_url.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="return_yee_return.aspx.cs">
+      <DependentUpon>return_yee_return.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="return_yee_return.aspx.designer.cs">
+      <DependentUpon>return_yee_return.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
