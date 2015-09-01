@@ -20,10 +20,6 @@ namespace BeeCloud
             "https://apihz.beecloud.cn",    //杭州
             "https://apiqd.beecloud.cn",    //青岛
             "https://apibj.beecloud.cn"     //北京
-            //"http://58.211.191.123:8080",
-            //"http://58.211.191.123:8080",
-            //"http://58.211.191.123:8080",
-            //"http://58.211.191.123:8080"
             };
 
         /// <summary>
