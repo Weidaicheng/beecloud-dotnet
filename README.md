@@ -1,7 +1,11 @@
-## BeeCloud .Net SDK (Open Source)
+## BeeCloud .NET SDK (Open Source)
 ![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.2.0-blue.svg)
 
-本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+## 简介
+
+本项目的官方GitHub地址是 [https://github.com/beecloud/beecloud-dotnet](https://github.com/beecloud/beecloud-dotnet)
+
+本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .NET SDK, 适用于 .NET framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
 1.从BeeCloud [release](https://github.com/beecloud/beecloud-dotnet/releases)中下载dll文件,然后导入自己工程。  
