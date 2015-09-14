@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -14,6 +15,8 @@ namespace BeeCloudSDKDemo
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            BeeCloud.BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c");
+
             byte[] byts = new byte[Request.InputStream.Length];
             Request.InputStream.Read(byts, 0, byts.Length);
             string req = System.Text.Encoding.Default.GetString(byts);
@@ -29,12 +32,11 @@ namespace BeeCloudSDKDemo
 
             //检查timestamp是否在可信时间段内，阻止重放
             TimeSpan ts = DateTime.Now - BCUtil.GetDateTime(timestamp);
+            
             //验签， 确保来自BeeCloud
-            string mySign = BCUtil.GetSign();
-
-            if (ts.TotalSeconds < 300 &&　mySign == sign)
+            string mySign = BCUtil.GetSign(requestData["timestamp"].ToString());
+            if (ts.TotalSeconds < 300 && mySign == sign)
             {
-                //webhook中的各个字段含义和使用请参考 https://beecloud.cn/doc/java.php#webhook 
                 JsonData messageDetail = requestData["messageDetail"];
                 if (channelType == "AlI")
                 {

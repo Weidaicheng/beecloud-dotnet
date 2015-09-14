@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.2.0-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.2.1-blue.svg)
 
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .net SDK, 适用于 .net framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
@@ -126,17 +126,20 @@ BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(),
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
+demo使用framework4.5  
 在demo工程中添加BeeCloud工程的dll引用，设置demo工程为启动项后F5即可运行调试
 >每次修改过BeeCloud工程后请先build BeeCloud工程再运行demo调试
 
+- 关于微信的return_url
+微信没有return_url，如果用户需要支付完成做类似同步跳转的形式，需要自行完成。
+
 - 关于支付宝的return_url
-
 请参考demo中的`return_ali_url.aspx`
+
 - 关于银联的return_url
-
 请参考demo中的`return_un_url.aspx`
-- 关于weekhook的接收
 
+- 关于weekhook的接收
 请参考demo中的`notify.asxp`
 文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
@@ -145,45 +148,14 @@ TODO
 
 ## 常见问题
 - demo的支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  
-由于政策原因，支付宝账号不能提供给用户做测试，请替换成自己的账号即可，微信银联不受限，可使用demo本身的账号测试。
+由于政策原因，一些渠道的账号不能提供给用户测试，所以有遇到没有权限，渠道未开通等报错是正常的。
+
 - `LitJson.dll`和`ThoughtWorks.QRCode.dll`哪里有下？  
-可以在demo项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。
+可以在demo项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。  
+
 - 网页在手机上如何使用微信支付？  
 1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
 2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
-3.示例代码，调用js方法`callpay()`即可使用
-
-```js
-function onBridgeReady(){
-   WeixinJSBridge.invoke(
-       'getBrandWCPayRequest', {
-           //以下参数的值由BCPayByChannel方法返回来的数据填入即可
-           "appId" : "wx2421b1c4370ec43b",          
-           "timeStamp":" 1395712654",              
-           "nonceStr" : "e61463f8efa94090b1f366cccfbbb444",
-           "package" : "prepay_id=u802345jgfjsdfgsdg888",  
-           "signType" : "MD5",     
-           "paySign" : "70EA570631E4BB79628FBCA90534C63FF7FADD89" 
-       },
-       function(res){     
-           if(res.err_msg == "get_brand_wcpay_request:ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
-       }
-   ); 
-}
-function callpay()
-{
-    if (typeof WeixinJSBridge == "undefined"){
-        if( document.addEventListener ){
-            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
-        }else if (document.attachEvent){
-            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
-            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
-        }
-    }else{
-        jsApiCall();
-    }
-}
-```
 
 - 查询/退款方法没有传channel但是报错了？  
 要不传channel完成查询/退款必须保证所有渠道所有订单号不同，否则会报错告诉开发者，要求传入channel以区分。

@@ -30,9 +30,16 @@ namespace BeeCloud
             return uuid;
         }
 
-        public static string GetSign()
+        public static string GetSign(string timestamp)
         {
-            string input = BCCache.Instance.appId + BCCache.Instance.appSecret + BCUtil.GetTimeStamp(DateTime.Now).ToString();
+            string input = BCCache.Instance.appId + BCCache.Instance.appSecret + timestamp;
+            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
+            return sign;
+        }
+
+        public static string GetPaySignForJSAPI(string appid, string titile, string amount, string outTradeNo, string secret)
+        {
+            string input = appid + titile + amount + outTradeNo + secret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
         }

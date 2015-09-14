@@ -130,7 +130,6 @@
                     <input type="radio" value="aliwappay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/aliwap.png" alt=""/>
                 </li>
-                <br />
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="jdpay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/jd.png" alt=""/>
@@ -156,6 +155,9 @@
                     <img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt=""/>
                 </li>
             </ul>
+        </div>
+        <div>
+            <a href="/wxjsapi/wxjsapi.aspx">微信公众号在微信内支付</a>
         </div>
         <div style="clear: both;">
             <input type="submit" class="button" value="确认付款"/>
