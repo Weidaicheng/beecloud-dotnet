@@ -163,6 +163,16 @@
             <input type="submit" class="button" value="确认付款"/>
         </div>
     </form>
+    <div>------------------------------------------海外支付：-----------------------------------------------------------</div>
+        <div>
+            <a href="/PAYPAL/PAYPAL.aspx">PayPal支付</a>
+        </div>
+        <div>
+            <a href="/PAYPAL/PAYPAL_CREDITCARD.aspx">PayPal信用卡支付</a>
+        </div>
+        <div>
+            <a href="/PAYPAL/PAYPAL_SAVED_CREDITCARD.aspx">PayPal已存储的信用卡支付</a>
+        </div>
     <div>------------------------------------------支付查询：-----------------------------------------------------------</div>
     <form action="/query.aspx" method="post" target="_blank">
         <div>

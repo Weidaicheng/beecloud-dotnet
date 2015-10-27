@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.2.1-blue.svg)
+![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.3.0-blue.svg)
 
 
 ## 简介
@@ -31,6 +31,8 @@ BeeCloud.BeeCloud.registerApp(appid, appsecret);
 
 ### 1.支付
 
+- 境内支付
+
 方法原型：
 
 ```.net
@@ -46,6 +48,28 @@ if (result.resultCode == 0)
 
 }
 ```
+
+- 境外支付
+
+方法原型：
+
+```.net
+public static BCPayResult BCInternationalPay(string channel, int totalFee, string billNo, string title, string currency, BCCreditCardInfo info,  string creditCardId, string returnUrl)
+```
+
+调用：
+
+```.net
+//通过登录paypal账号付款
+BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_PAYPAL.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", null, null, "http://localhost:50003/paypal/return_paypal_url.aspx");
+
+//使用信用卡付款
+BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", info, null, null);
+
+//使用存储的信用卡信息付款
+BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", null, "CARD-1K997489XXXXXXXXXXXXXXX", null);
+```
+
 ### 2.退款
 
 方法原型：
@@ -148,8 +172,6 @@ demo使用framework4.5
 请参考demo中的`notify.asxp`
 文档请阅读 [webhook](https://github.com/beecloud/beecloud-webhook)
 
-## 测试
-TODO
 
 ## 常见问题
 - demo的支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  

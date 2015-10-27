@@ -26,6 +26,13 @@ namespace BeeCloud
             KUAIQIAN_WEB
         };
 
+        public enum InternationalPay
+        {
+            PAYPAL_PAYPAL,
+            PAYPAL_CREDITCARD,
+            PAYPAL_SAVED_CREDITCARD
+        };
+
         public enum QueryChannel
         {
             WX,
@@ -45,8 +52,9 @@ namespace BeeCloud
             YEE_WAP,
             YEE_WEB,
             KUAIQIAN_WAP,
-            KUAIQIAN_WEB
-        }
+            KUAIQIAN_WEB,
+            PAYPAL
+        };
 
         public enum RefundChannel
         {
@@ -762,6 +770,136 @@ namespace BeeCloud
             catch (Exception e)
             {
                 BCTransferResult result = new BCTransferResult();
+                result.resultCode = 99;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 境外支付
+        /// </summary>
+        /// <param name="channel">渠道类型
+        ///     enum InternationalPay提供了三个境外支付渠道类型，分别是：
+        ///     PAYPAL_PAYPAL ： 跳转到paypal使用paypal内支付
+        ///     PAYPAL_CREDITCARD ： 直接使用信用卡支付（paypal渠道）
+        ///     PAYPAL_SAVED_CREDITCARD ： 使用存储的行用卡id支付（信用卡信息存储在PAYPAL)
+        /// </param>
+        /// <param name="totalFee">订单总金额
+        ///     只能为整数，单位为分
+        ///     必填
+        /// </param>
+        /// <param name="billNo">商户订单号
+        ///     32个字符内，数字和/或字母组合，确保在商户系统中唯一（即所有渠道所有订单号不同）
+        ///     必填
+        /// </param>
+        /// <param name="title">订单标题
+        ///     32个字节内，最长支持16个汉字
+        ///     必填
+        /// </param>
+        /// <param name="currency">三位货币种类代码
+        ///     必填
+        ///     类型如下：
+        ///         Australian dollar	AUD
+        ///         Brazilian real**	BRL
+        ///         Canadian dollar	    CAD
+        ///         Czech koruna	    CZK
+        ///         Danish krone	    DKK
+        ///         Euro	            EUR
+        ///         Hong Kong dollar	HKD
+        ///         Hungarian forint	HUF
+        ///         Israeli new shekel	ILS
+        ///         Japanese yen	    JPY
+        ///         Malaysian ringgit	MYR
+        ///         Mexican peso	    MXN
+        ///         New Taiwan dollar	TWD
+        ///         New Zealand dollar	NZD
+        ///         Norwegian krone	    NOK
+        ///         Philippine peso	    PHP
+        ///         Polish złoty	    PLN
+        ///         Pound sterling	    GBP
+        ///         Singapore dollar	SGD
+        ///         Swedish krona	    SEK
+        ///         Swiss franc	        CHF
+        ///         Thai baht	        THB
+        ///         Turkish lira	    TRY
+        ///         United States dollar	USD
+        /// </param>
+        /// <param name="info">信用卡信息
+        ///     具体查看BCCreditCardInfo类
+        ///     当channel 为PAYPAL_CREDITCARD必填
+        /// </param>
+        /// <param name="creditCardId">
+        ///     当使用PAYPAL_CREDITCARD支付完成后会返回一个credit_card_id，商家可以存储这个id方便下次通过这个id发起支付无需再输入卡面信息
+        /// </param>
+        /// <param name="returnUrl">同步返回页面
+        ///     支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。
+        ///     当channel参数为PAYPAL_PAYPAL时为必填
+        /// </param>
+        /// <returns></returns>
+        public static BCPayResult BCInternationalPay(string channel, int totalFee, string billNo, string title, string currency, BCCreditCardInfo info,  string creditCardId, string returnUrl)
+        {
+            Random random = new Random();
+            string payUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.internationalURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["total_fee"] = totalFee;
+            data["bill_no"] = billNo;
+            data["title"] = title;
+            data["currency"] = currency;
+            if (info != null)
+            {
+                data["credit_card_info"] = JsonMapper.ToObject(JsonMapper.ToJson(info));
+            }
+            if (creditCardId != null)
+            {
+                data["credit_card_id"] = creditCardId;
+            }
+            if (returnUrl != null)
+            {
+                data["return_url"] = returnUrl;
+            }
+       
+            string paraString = data.ToJson();
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                BCPayPalResult result = new BCPayPalResult();
+                result.resultCode = int.Parse(responseData["result_code"].ToString());
+                result.resultMsg = responseData["result_msg"].ToString();
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    if (channel == "PAYPAL_PAYPAL")
+                    {
+                        result.url = responseData["url"].ToString();
+                    }
+                    if (channel == "PAYPAL_CREDITCARD")
+                    {
+                        result.creditCardId = responseData["credit_card_id"].ToString();
+                    }
+                }
+                else
+                {
+                    result.errDetail = responseData["err_detail"].ToString();
+                }
+                return result;
+                
+            }
+            catch (Exception e)
+            {
+                BCPayResult result = new BCPayResult();
                 result.resultCode = 99;
                 result.resultMsg = e.Message;
                 return result;
