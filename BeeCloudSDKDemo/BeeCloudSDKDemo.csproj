@@ -73,6 +73,12 @@
     <Content Include="Default.aspx" />
     <Content Include="notify.aspx" />
     <Content Include="pay.aspx" />
+    <Content Include="PAYPAL\payWithCreditCard.aspx" />
+    <Content Include="PAYPAL\PAYPAL.aspx" />
+    <Content Include="PAYPAL\PAYPAL_CREDITCARD.aspx" />
+    <Content Include="PAYPAL\PAYPAL_SAVED_CREDITCARD.aspx" />
+    <Content Include="PAYPAL\payWithSavedCreditcard.aspx" />
+    <Content Include="PAYPAL\return_paypal_url.aspx" />
     <Content Include="query.aspx" />
     <Content Include="refundQuery.aspx" />
     <Content Include="return_ali_url.aspx" />
@@ -107,6 +113,48 @@
     </Compile>
     <Compile Include="pay.aspx.designer.cs">
       <DependentUpon>pay.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\payWithCreditCard.aspx.cs">
+      <DependentUpon>payWithCreditCard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\payWithCreditCard.aspx.designer.cs">
+      <DependentUpon>payWithCreditCard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL.aspx.cs">
+      <DependentUpon>PAYPAL.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL.aspx.designer.cs">
+      <DependentUpon>PAYPAL.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL_CREDITCARD.aspx.cs">
+      <DependentUpon>PAYPAL_CREDITCARD.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL_CREDITCARD.aspx.designer.cs">
+      <DependentUpon>PAYPAL_CREDITCARD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL_SAVED_CREDITCARD.aspx.cs">
+      <DependentUpon>PAYPAL_SAVED_CREDITCARD.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\PAYPAL_SAVED_CREDITCARD.aspx.designer.cs">
+      <DependentUpon>PAYPAL_SAVED_CREDITCARD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\payWithSavedCreditcard.aspx.cs">
+      <DependentUpon>payWithSavedCreditcard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\payWithSavedCreditcard.aspx.designer.cs">
+      <DependentUpon>payWithSavedCreditcard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PAYPAL\return_paypal_url.aspx.cs">
+      <DependentUpon>return_paypal_url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PAYPAL\return_paypal_url.aspx.designer.cs">
+      <DependentUpon>return_paypal_url.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="query.aspx.cs">

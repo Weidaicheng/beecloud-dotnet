@@ -230,6 +230,69 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCInternationalPay(System.String,System.Int32,System.String,System.String,System.String,BeeCloud.Model.BCCreditCardInfo,System.String,System.String)">
+            <summary>
+            境外支付
+            </summary>
+            <param name="channel">渠道类型
+                enum InternationalPay提供了三个境外支付渠道类型，分别是：
+                PAYPAL_PAYPAL ： 跳转到paypal使用paypal内支付
+                PAYPAL_CREDITCARD ： 直接使用信用卡支付（paypal渠道）
+                PAYPAL_SAVED_CREDITCARD ： 使用存储的行用卡id支付（信用卡信息存储在PAYPAL)
+            </param>
+            <param name="totalFee">订单总金额
+                只能为整数，单位为分
+                必填
+            </param>
+            <param name="billNo">商户订单号
+                32个字符内，数字和/或字母组合，确保在商户系统中唯一（即所有渠道所有订单号不同）
+                必填
+            </param>
+            <param name="title">订单标题
+                32个字节内，最长支持16个汉字
+                必填
+            </param>
+            <param name="currency">三位货币种类代码
+                必填
+                类型如下：
+                    Australian dollar	AUD
+                    Brazilian real**	BRL
+                    Canadian dollar	    CAD
+                    Czech koruna	    CZK
+                    Danish krone	    DKK
+                    Euro	            EUR
+                    Hong Kong dollar	HKD
+                    Hungarian forint	HUF
+                    Israeli new shekel	ILS
+                    Japanese yen	    JPY
+                    Malaysian ringgit	MYR
+                    Mexican peso	    MXN
+                    New Taiwan dollar	TWD
+                    New Zealand dollar	NZD
+                    Norwegian krone	    NOK
+                    Philippine peso	    PHP
+                    Polish złoty	    PLN
+                    Pound sterling	    GBP
+                    Singapore dollar	SGD
+                    Swedish krona	    SEK
+                    Swiss franc	        CHF
+                    Thai baht	        THB
+                    Turkish lira	    TRY
+                    United States dollar	USD
+            </param>
+            <param name="info">信用卡信息
+                具体查看BCCreditCardInfo类
+                当channel 为PAYPAL_CREDITCARD必填
+            </param>
+            <param name="creditCardId">
+                当使用PAYPAL_CREDITCARD支付完成后会返回一个credit_card_id，商家可以存储这个id方便下次通过这个id发起支付无需再输入卡面信息
+            </param>
+            <param name="returnUrl">同步返回页面
+                支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。
+                当channel参数为PAYPAL_PAYPAL时为必填
+            </param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.getAppSignature(System.String,System.String,System.String)">
             <summary>
             生成AppSign
