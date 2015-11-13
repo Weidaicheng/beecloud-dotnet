@@ -103,7 +103,7 @@ namespace BeeCloudSDKDemo
                 int totalFee = bills[rowIndex].totalFee;
                 if (typeChannel == "Ali")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null, false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Redirect(refundResult.url);
@@ -117,7 +117,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "WX")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.WX.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.WX.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null, false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");
@@ -131,7 +131,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "UN")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.UN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.UN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null, false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");
@@ -145,7 +145,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "JD")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.JD.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.JD.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null, false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");
@@ -159,7 +159,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "YEE")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.YEE.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.YEE.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null, false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");
@@ -173,7 +173,7 @@ namespace BeeCloudSDKDemo
                 }
                 if (typeChannel == "KUAIQIAN")
                 {
-                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.KUAIQIAN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
+                    BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.KUAIQIAN.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null,false);
                     if (refundResult.resultCode == 0)
                     {
                         Response.Write("<script>alert('退款成功！')</script>");

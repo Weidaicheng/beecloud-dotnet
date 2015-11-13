@@ -33,7 +33,7 @@ namespace BeeCloudSDKDemo.WXJSAPI
                     //ViewState["openid"] = jsApiPay.openid;
                     Response.Write(jsApiPay.openid);
 
-                    BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotnet", null, null, jsApiPay.openid, null, null) as BCWxJSAPIPayResult;
+                    BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotnet", null, null, null, jsApiPay.openid, null, null) as BCWxJSAPIPayResult;
                     //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                     //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                     if (result.resultCode == 0)
