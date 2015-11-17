@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace BeeCloud
 {
-    internal class BCPrivateUtil
+    public class BCPrivateUtil
     {
         private delegate void getBestHostDelegate();
         
@@ -35,26 +35,26 @@ namespace BeeCloud
         /// <summary>
         /// 从一个对象信息生成Json串
         /// </summary>
-        public static string ObjectToJson(object obj)
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream stream = new MemoryStream();
-            serializer.WriteObject(stream, obj);
-            byte[] dataBytes = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(dataBytes, 0, (int)stream.Length);
-            return Encoding.UTF8.GetString(dataBytes);
-        }
+        //public static string ObjectToJson(object obj)
+        //{
+        //    DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+        //    MemoryStream stream = new MemoryStream();
+        //    serializer.WriteObject(stream, obj);
+        //    byte[] dataBytes = new byte[stream.Length];
+        //    stream.Position = 0;
+        //    stream.Read(dataBytes, 0, (int)stream.Length);
+        //    return Encoding.UTF8.GetString(dataBytes);
+        //}
 
         /// <summary>
         /// 从一个Json串生成对象信息
         /// </summary>
-        public static object JsonToObject(string jsonString, object obj)
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream mStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
-            return serializer.ReadObject(mStream);
-        }
+        //public static object JsonToObject(string jsonString, object obj)
+        //{
+        //    DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+        //    MemoryStream mStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+        //    return serializer.ReadObject(mStream);
+        //}
 
         /// <summary>
         /// 创建GET方式的HTTP请求 
@@ -108,61 +108,61 @@ namespace BeeCloud
             
         }
 
-        public static Dictionary<string, int> bestHostDic = new Dictionary<string, int>();
+        //public static Dictionary<string, int> bestHostDic = new Dictionary<string, int>();
 
         /// <summary>
         /// 获取当前最佳的BeeCloud服务器地址
         /// </summary>
-        public static void getBestHost()
-        {
-            bestHostDic.Clear();
-            foreach (string host in mLocalDefaultHosts)
-            {
-                bestHostDic.Add(host, getLtt(host));
-            }
-            bestHostDic = (from entry in bestHostDic orderby entry.Value ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-            BCCache.Instance.bestHost = bestHostDic.First().Key;
-        }
+        //public static void getBestHost()
+        //{
+        //    bestHostDic.Clear();
+        //    foreach (string host in mLocalDefaultHosts)
+        //    {
+        //        bestHostDic.Add(host, getLtt(host));
+        //    }
+        //    bestHostDic = (from entry in bestHostDic orderby entry.Value ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
+        //    BCCache.Instance.bestHost = bestHostDic.First().Key;
+        //}
 
-        private static int getLtt(string host)
-        {
-            string url = host + "/status";
-            DateTime startTime = DateTime.Now;
-            try
-            {
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
-                if (response != null && response.StatusCode == HttpStatusCode.OK)
-                {
-                    return (DateTime.Now - startTime).Milliseconds;
-                }
-                else
-                {
-                    return BCCache.Instance.networkTimeout;
-                }
-            }
-            catch (Exception e)
-            {
-                return BCCache.Instance.networkTimeout;
-            }
+        //private static int getLtt(string host)
+        //{
+        //    string url = host + "/status";
+        //    DateTime startTime = DateTime.Now;
+        //    try
+        //    {
+        //        HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+        //        if (response != null && response.StatusCode == HttpStatusCode.OK)
+        //        {
+        //            return (DateTime.Now - startTime).Milliseconds;
+        //        }
+        //        else
+        //        {
+        //            return BCCache.Instance.networkTimeout;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BCCache.Instance.networkTimeout;
+        //    }
 
-        }
+        //}
 
-        public static void startMeasurement()
-        {
-            getBestHostDelegate task = BCPrivateUtil.getBestHost;
-            IAsyncResult asyncResult = task.BeginInvoke(getBestHostCallback, task);
-        }
+        //public static void startMeasurement()
+        //{
+        //    getBestHostDelegate task = BCPrivateUtil.getBestHost;
+        //    IAsyncResult asyncResult = task.BeginInvoke(getBestHostCallback, task);
+        //}
 
-        public static void checkBestHostForFail()
-        {
-            BCCache.Instance.bestHost = BCPrivateUtil.bestHostDic.ElementAtOrDefault(1).Key;
-            startMeasurement();
-        }
+        //public static void checkBestHostForFail()
+        //{
+        //    BCCache.Instance.bestHost = BCPrivateUtil.bestHostDic.ElementAtOrDefault(1).Key;
+        //    startMeasurement();
+        //}
 
-        private static void getBestHostCallback(IAsyncResult ar)
-        {
-            getBestHostDelegate dlgt = (getBestHostDelegate)ar.AsyncState;
-            dlgt.EndInvoke(ar);
-        }
+        //private static void getBestHostCallback(IAsyncResult ar)
+        //{
+        //    getBestHostDelegate dlgt = (getBestHostDelegate)ar.AsyncState;
+        //    dlgt.EndInvoke(ar);
+        //}
     }
 }

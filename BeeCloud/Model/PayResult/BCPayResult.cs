@@ -7,7 +7,10 @@ namespace BeeCloud.Model
     /// 保存共有返回值
     /// </summary>
     public class BCPayResult
-    {   
+    {
+        //成功发起支付后返回支付表记录唯一标识
+        public string id { get; set; }
+
         /*
            result_code	result_msg	        含义
                     0	OK	                调用成功

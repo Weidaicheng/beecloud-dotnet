@@ -4,7 +4,7 @@
         <name>BeeCloud</name>
     </assembly>
     <members>
-        <member name="M:BeeCloud.BCPay.BCPayByChannel(System.String,System.Int32,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String,System.String,System.String)">
+        <member name="M:BeeCloud.BCPay.BCPayByChannel(System.String,System.Int32,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Nullable{System.Int32},System.String,System.String,System.String)">
             <summary>
             支付
             </summary>
@@ -27,6 +27,8 @@
                 YEE_WEB:      易宝web支付
                 KUAIQIAN_WAP: 快钱wap支付
                 KUAIQIAN_WEB: 快钱web支付
+                BD_WEB:       百度web支付
+                BD_WAP:       百度wap支付
             </param>
             <param name="totalFee">订单总金额
                 只能为整数，单位为分
@@ -49,6 +51,11 @@
                 支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。
                 当channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填
             </param>
+            <param name="billTimeout">订单失效时间
+                必须为非零正整数，单位为秒，建议最短失效时间间隔必须大于300秒
+                可空
+                京东系列支付不支持该参数，填空
+            </param>
             <param name="openId">用户相对于微信公众号的唯一id
                 例如'0950c062-5e41-44e3-8f52-f89d8cf2b6eb'
                 微信公众号支付(WX_JSAPI)的必填参数
@@ -68,7 +75,7 @@
                 BCPayResult， 根据不同的支付渠道有各自对应的result类型
             </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCRefundByChannel(System.String,System.String,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:BeeCloud.BCPay.BCRefundByChannel(System.String,System.String,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
             <summary>
             退款
             </summary>
@@ -81,6 +88,7 @@
                 JD:       京东
                 YEE:      易宝
                 KUAIQIAN: 快钱
+                BD:       百度
                 注意：不传channel也能退款的前提是保证所有渠道所有订单号不同，如果出现两个订单号重复，会报错提示传入channel进行区分
             </param>
             <param name="refundNo">商户退款单号
@@ -101,8 +109,42 @@
                 选填
                 {"key1":"value1","key2":"value2",...}
             </param>
+            <param name="needApproval">是否为预退款
+                预退款need_approval值传true,直接退款传false
+            </param>
             <returns>
                 BCRefundResult
+            </returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.BCApproveRefund(System.String,System.Collections.Generic.List{System.String},System.Boolean,System.String)">
+            <summary>
+             预退款(批量)审核
+            </summary>
+            <param name="channel">渠道类型
+                根据不同渠道选不同的值
+                必填
+                可以通过enum BCPay.RefundChannel获取
+                ALI:      支付宝
+                WX:       微信
+                UN:       银联
+                JD:       京东
+                YEE:      易宝
+                KUAIQIAN: 快钱
+                BD:       百度
+            </param>
+            <param name="ids">退款记录id列表
+                批量审核的退款记录的唯一标识符集合
+                必填
+            </param>
+            <param name="agree">同意或者驳回
+                批量驳回传false，批量同意传true
+                必填
+            </param>
+            <param name="denyReason">驳回理由
+                可空
+            </param>
+            <returns>
+                参考BCApproveRefundResult
             </returns>
         </member>
         <member name="M:BeeCloud.BCPay.BCPayQueryByCondition(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32},System.Nullable{System.Int32})">
@@ -198,10 +240,10 @@
         </member>
         <member name="M:BeeCloud.BCPay.BCRefundStatusQuery(System.String,System.String)">
              <summary>
-            退款状态查询"(只支持微信)
+            退款状态查询"
              </summary>
              <param name="channel">渠道类型
-                 暂时只能填WX
+                 只有WX、YEE、KUAIQIAN、BD需要
              </param>
              <param name="refundNo">商户退款单号
              </param>
@@ -298,16 +340,6 @@
             生成AppSign
             </summary>
         </member>
-        <member name="M:BeeCloud.BCPrivateUtil.ObjectToJson(System.Object)">
-            <summary>
-            从一个对象信息生成Json串
-            </summary>
-        </member>
-        <member name="M:BeeCloud.BCPrivateUtil.JsonToObject(System.String,System.Object)">
-            <summary>
-            从一个Json串生成对象信息
-            </summary>
-        </member>
         <member name="M:BeeCloud.BCPrivateUtil.CreateGetHttpResponse(System.String,System.Int32,System.String,System.Net.CookieCollection)">
             <summary>
             创建GET方式的HTTP请求 
@@ -316,11 +348,6 @@
         <member name="M:BeeCloud.BCPrivateUtil.GetResponseString(System.Net.HttpWebResponse)">
             <summary>
             获取请求的数据
-            </summary>
-        </member>
-        <member name="M:BeeCloud.BCPrivateUtil.getBestHost">
-            <summary>
-            获取当前最佳的BeeCloud服务器地址
             </summary>
         </member>
         <member name="T:BeeCloud.Model.BCPayResult">
@@ -332,7 +359,7 @@
         </member>
         <member name="T:BeeCloud.Model.BCRefundResult">
             <summary>
-            退款完成结果类
+            退款（预退款）完成结果类
             </summary>
         </member>
     </members>

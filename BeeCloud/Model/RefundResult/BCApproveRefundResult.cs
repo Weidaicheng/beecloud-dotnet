@@ -5,13 +5,8 @@ using System.Text;
 
 namespace BeeCloud.Model
 {
-    /// <summary>
-    /// 退款（预退款）完成结果类
-    /// </summary>
-    public class BCRefundResult
+    public class BCApproveRefundResult
     {
-        //成功发起退款(预退款)后返回支付表记录唯一标识
-        public string id { get; set; }
         /*
          result_code	result_msg	            含义
                    8	NO_SUCH_BILL	        没有该订单
@@ -26,6 +21,8 @@ namespace BeeCloud.Model
         public string resultMsg { get; set; }
         //具体错误信息
         public string errDetail { get; set; }
+        //每条退款请求的状态
+        public Dictionary<string, BCBaseResponse> status { get; set; }
 
         //当channel为ALI_APP、ALI_WEB、ALI_QRCODE时，以下字段在result_code为0时有返回
         //支付宝退款地址，需用户在支付宝平台上手动输入支付密码处理

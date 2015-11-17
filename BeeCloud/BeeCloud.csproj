@@ -52,9 +52,11 @@
     <Compile Include="BCPrivateUtil.cs" />
     <Compile Include="BCUtil.cs" />
     <Compile Include="BeeCloud.cs" />
+    <Compile Include="Model\BCBaseResponse.cs" />
     <Compile Include="Model\BCCreditCardInfo.cs" />
     <Compile Include="Model\BCTransferData.cs" />
     <Compile Include="Model\BCTransferResult.cs" />
+    <Compile Include="Model\PayResult\BCBDPayResult.cs" />
     <Compile Include="Model\PayResult\BCJDPayResult.cs" />
     <Compile Include="Model\PayResult\BCKuaiQianPayResult.cs" />
     <Compile Include="Model\PayResult\BCPayPalResult.cs" />
@@ -67,10 +69,11 @@
     <Compile Include="Model\PayResult\BCPayResult.cs" />
     <Compile Include="Model\BCRefund.cs" />
     <Compile Include="Model\QueryResult\BCRefundQuerytResult.cs" />
-    <Compile Include="Model\RefundResult\BCRefundResult.cs" />
+    <Compile Include="Model\RefundResult\BCApproveRefundResult.cs" />
     <Compile Include="Model\PayResult\BCUnWebPayResult.cs" />
     <Compile Include="Model\PayResult\BCWxJSAPIPayResult.cs" />
     <Compile Include="Model\PayResult\BCWxNativePayResult.cs" />
+    <Compile Include="Model\RefundResult\BCRefundResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
