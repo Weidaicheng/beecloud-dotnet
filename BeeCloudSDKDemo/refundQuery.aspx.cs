@@ -22,42 +22,42 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "Ali";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "Ali" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, true, null, 50);
                 refunds = result.refunds;
             }
             if (type == "wxrefundquery")
             {
                 typeChannel = "WX";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "WX" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("WX", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("WX", null, null, null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "unionrefundquery")
             {
                 typeChannel = "UN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "UN" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("UN", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("UN", null, null, null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "jdrefundquery")
             {
                 typeChannel = "JD";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "JD" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("JD", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("JD", null, null, null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "ybrefundquery")
             {
                 typeChannel = "YEE";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "YEE" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("YEE", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("YEE", null, null, null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             if (type == "kqrefundquery")
             {
                 typeChannel = "KUAIQIAN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "KUAIQIAN" + "</span><br/>");
-                BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("KUAIQIAN", null, null, null, null, null, 50);
+                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("KUAIQIAN", null, null, null, null, null, null, null, 50);
                 refunds = result.refunds;
             }
             this.bind();
@@ -77,7 +77,7 @@ namespace BeeCloudSDKDemo
             }
             else
             {
-                e.Row.Cells[8].Visible = false;
+                e.Row.Cells[8].Enabled = false;
             }
         }
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeeCloud.Model
 {
-    public class BCRefundStatusQueryResult
+    public class BCTransferResult
     {
         /// <summary>
         /// 返回码，0为正常
@@ -20,8 +20,12 @@ namespace BeeCloud.Model
         /// </summary>
         public string errDetail { get; set; }
         /// <summary>
-        /// 退款状态
+        /// 成功发起打款后返回打款表记录唯一标识
         /// </summary>
-        public string refundStatus { get; set; }
+        public string id { get; set; }
+        /// <summary>
+        /// 需要跳转到支付宝输入密码确认批量打款（支付宝独占字段）
+        /// </summary>
+        public string url { get; set; }
     }
 }

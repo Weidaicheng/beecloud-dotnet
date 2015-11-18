@@ -3,17 +3,29 @@ namespace BeeCloud.Model
 {
     public class BCWxJSAPIPayResult : BCPayResult
     {
-        //微信应用APPID
+        /// <summary>
+        /// 微信应用APPID
+        /// </summary>
         public string appId { get; set; }
-        //微信支付打包参数
+        /// <summary>
+        /// 微信支付打包参数
+        /// </summary>
         public string package { get; set; }
-        //随机字符串
+        /// <summary>
+        /// 随机字符串
+        /// </summary>
         public string noncestr { get; set; }
-        //当前毫秒时间戳，13位
+        /// <summary>
+        /// 当前毫秒时间戳，13位
+        /// </summary>
         public string timestamp { get; set; }
-        //签名
+        /// <summary>
+        /// 签名
+        /// </summary>
         public string paySign { get; set; }
-        //签名类型，固定为MD5
+        /// <summary>
+        /// 签名类型，固定为MD5
+        /// </summary>
         public string signType { get; set; }
     }
 }

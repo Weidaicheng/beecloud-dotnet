@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeeCloud.Model
 {
-    public class BCRefundStatusQueryResult
+    public class BCPayQueryByConditionResult
     {
         /// <summary>
         /// 返回码，0为正常
@@ -20,8 +20,12 @@ namespace BeeCloud.Model
         /// </summary>
         public string errDetail { get; set; }
         /// <summary>
-        /// 退款状态
+        /// 查询退款结果数量
         /// </summary>
-        public string refundStatus { get; set; }
+        public int count { get; set; }
+        /// <summary>
+        /// 订单列表
+        /// </summary>
+        public List<BCBill> bills { get; set; }
     }
 }

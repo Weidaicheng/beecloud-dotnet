@@ -171,7 +171,7 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
                 }
             }
-            else if (type == "alitransfer")
+            else if (type == "alitransfers")
             {
                 BCTransferData data = new BCTransferData();
                 data.transferId = BCUtil.GetUUID();
@@ -188,7 +188,17 @@ namespace BeeCloudSDKDemo
                 List<BCTransferData> list = new List<BCTransferData>();
                 list.Add(data);
                 list.Add(data2);
-                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+                BCTransferResult result = BCPay.BCTransfers(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                if (result.resultCode == 0)
+                {
+                    Response.Write("<a href=" + result.url + ">付款地址</a><br/>");
+                }
+            }
+            else if (type == "alitransfer")
+            {
+                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI_TRANSFER.ToString(), BCUtil.GetUUID(), 100, "C# 单笔打款", "baoee753@163.com", "钱志浩", null, "苏州比可网络科技有限公司");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
                 if (result.resultCode == 0)
@@ -198,7 +208,19 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "wxtransfer")
             {
-                Response.Write("<span style='color:#00CD00;font-size:20px'>即将支持</span><br/>");
+                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.WX_TRANSFER.ToString(), "0000000002", 100, "C# 单笔打款", "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null, null);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+            }
+            else if (type == "wxredpack")
+            {
+                BCRedPackInfo info = new BCRedPackInfo();
+                info.actName = "C# 红包";
+                info.sendName = "BeeCloud";
+                info.wishing = "啦啦啦";
+                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.WX_TRANSFER.ToString(), "1000000001", 100, "C# 单笔打款", "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, info, null);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
             }
             Response.Write("<span style='color:#00CD00;font-size:20px'>" + type + "</span>");
         }

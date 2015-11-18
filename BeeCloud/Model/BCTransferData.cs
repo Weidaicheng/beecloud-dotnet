@@ -5,19 +5,30 @@ using System.Text;
 
 namespace BeeCloud.Model
 {
+    /// <summary>
+    /// 以下所有字段在创建时都是必填的
+    /// </summary>
     public class BCTransferData
     {
-        //以下所有字段在创建时都是必填的
- 
-        //付款流水号，32位以内数字字母
+        /// <summary>
+        /// 付款流水号，32位以内数字字母
+        /// </summary>
         public string transferId { get; set; }
-        //收款方支付宝账号
+        /// <summary>
+        /// 收款方支付宝账号
+        /// </summary>
         public string receiverAccount { get; set; }
-        //收款方支付宝账户名
+        /// <summary>
+        /// 收款方支付宝账户名
+        /// </summary>
         public string receiverName { get; set; }
-        //付款金额，单位为分
+        /// <summary>
+        /// 付款金额，单位为分
+        /// </summary>
         public int transferFee { get; set; }
-        //付款备注
+        /// <summary>
+        /// 付款备注
+        /// </summary>
         public string transferNote { get; set; }
     }
 }

@@ -7,7 +7,9 @@ namespace BeeCloud.Model
 {
     public class BCYEEPayResult : BCPayResult
     {
-        //易宝支付地址，是一个URL
+        /// <summary>
+        /// 易宝支付地址，是一个URL
+        /// </summary>
         public string url { get; set; }
     }
 }

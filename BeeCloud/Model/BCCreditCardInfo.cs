@@ -16,19 +16,33 @@ namespace BeeCloud.Model
     public class BCCreditCardInfo
     {
         //由于json序列化后服务端需要蛇形命名，所以这里用蛇形命名
-        //卡号
+        /// <summary>
+        /// 卡号
+        /// </summary>
         public string card_number { get; set; }
-        //过期时间中的月
+        /// <summary>
+        /// 过期时间中的月
+        /// </summary>
         public int expire_month { get; set; }
-        //过期时间中的年
+        /// <summary>
+        /// 过期时间中的年
+        /// </summary>
         public int expire_year { get; set; }
-        //信用卡的三位cvv码
+        /// <summary>
+        /// 信用卡的三位cvv码
+        /// </summary>
         public int cvv { get; set; }
-        //用户名字
+        /// <summary>
+        /// 用户名字
+        /// </summary>
         public string first_name { get; set; }
-        //用户的姓
+        /// <summary>
+        /// 用户的姓
+        /// </summary>
         public string last_name { get; set; }
-        //卡类别 visa/mastercard/discover/amex
+        /// <summary>
+        /// 卡类别 visa/mastercard/discover/amex
+        /// </summary>
         public string card_type { get; set; }
     }
 }

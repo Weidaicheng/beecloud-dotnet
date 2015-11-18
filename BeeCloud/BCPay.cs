@@ -82,11 +82,14 @@ namespace BeeCloud
         public enum TransferChannel
         {
             ALI,
-            WX
+            WX_REDPACK, 
+            WX_TRANSFER, 
+            ALI_TRANSFER
         };
 
+        #region 支付
         //准备支付数据
-        public static string preparePayParameter(string channel, int totalFee, string billNo, string title, Dictionary<string, string> optional, string returnUrl, int? billTimeout, string openId, string showURL, string qrPayMode)
+        public static string preparePayParameters(string channel, int totalFee, string billNo, string title, Dictionary<string, string> optional, string returnUrl, int? billTimeout, string openId, string showURL, string qrPayMode)
         {
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -366,13 +369,13 @@ namespace BeeCloud
         public static BCPayResult BCPayByChannel(string channel, int totalFee, string billNo, string title, Dictionary<string, string> optional, string returnUrl, int? billTimeout, string openId, string showURL, string qrPayMode)
         {
             Random random = new Random();
-            string payUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.billURL;
+            string payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL;
 
-            string paraString = preparePayParameter(channel, totalFee, billNo, title, optional, returnUrl, billTimeout, openId, showURL, qrPayMode);
+            string paraString = preparePayParameters(channel, totalFee, billNo, title, optional, returnUrl, billTimeout, openId, showURL, qrPayMode);
 
             try
             {
-                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString);
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString, BCCache.Instance.networkTimeout);
 
                 string respString = BCPrivateUtil.GetResponseString(response);
 
@@ -381,14 +384,64 @@ namespace BeeCloud
             catch (Exception e)
             {
                 BCPayResult result = new BCPayResult();
-                result.resultCode = 99;
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
         }
+        #endregion
+
+        #region 退款
+        //准备退款参数
+        public static string prepareRefundParameters(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional, bool needApproval)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["refund_no"] = refundNo;
+            data["bill_no"] = billNo;
+            data["refund_fee"] = refundFee;
+            if (optional != null && optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in optional.Keys)
+                {
+                    data["optional"][key] = optional[key];
+                }
+            }
+            data["need_approval"] = needApproval;
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理退款回调
+        public static BCRefundResult handleRefundResult(string respString, string channel)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+            BCRefundResult result = new BCRefundResult();
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (responseData["result_code"].ToString() == "0")
+            {
+                result.id = responseData["id"].ToString();
+                if (channel.Contains("ALI"))
+                {
+                    result.url = responseData["url"].ToString();
+                }
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+            return result;
+        }
 
         /// <summary>
-        /// 退款
+        /// (预)退款
         /// </summary>
         /// <param name="channel">渠道类型   
         ///     选填
@@ -421,7 +474,8 @@ namespace BeeCloud
         ///     {"key1":"value1","key2":"value2",...}
         /// </param>
         /// <param name="needApproval">是否为预退款
-        ///     预退款need_approval值传true,直接退款传false
+        ///     预退款needApproval值传true,直接退款传false
+        ///     如果needApproval值传true，开发者需要调用审核退款接口或者直接去BeeCloud控制台的预退款界面审核退款方能最终退款
         /// </param>
         /// <returns>
         ///     BCRefundResult
@@ -429,58 +483,65 @@ namespace BeeCloud
         public static BCRefundResult BCRefundByChannel(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional, bool needApproval)
         {
             Random random = new Random();
-            string refundUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundURL;
-
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-            data["channel"] = channel;
-            data["refund_no"] = refundNo;
-            data["bill_no"] = billNo;
-            data["refund_fee"] = refundFee;
-            if (optional != null && optional.Count > 0)
-            {
-                data["optional"] = new JsonData();
-                foreach (string key in optional.Keys)
-                {
-                    data["optional"][key] = optional[key];
-                }
-            }
-            data["need_approval"] = needApproval;
-            string paraString = data.ToJson();
+            string refundUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.refundURL;
+            string paraString = prepareRefundParameters(channel, refundNo, billNo, refundFee, optional, needApproval);
 
             try
             {
-                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(refundUrl, paraString);
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(refundUrl, paraString, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-                BCRefundResult result = new BCRefundResult();
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    result.id = responseData["id"].ToString();
-                    if (channel.Contains("ALI"))
-                    {
-                        result.url = responseData["url"].ToString();
-                    }
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-                return result;
+                return handleRefundResult(respString, channel);
+                
             }
             catch(Exception e)
             {
                 BCRefundResult result = new BCRefundResult();
-                result.resultCode = 99;
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }            
+        }
+        #endregion
+
+        #region 退款审核
+        //准备退款审核参数
+        public static string prepareApproveRefundParameters(string channel, List<string> ids, bool agree, string denyReason)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["ids"] = JsonMapper.ToObject(JsonMapper.ToJson(ids));
+            data["agree"] = agree;
+            data["denyReason"] = denyReason;
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理退款审核回调
+        public static BCApproveRefundResult handleApproveRefundResult(string respString, string channel)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+            BCApproveRefundResult result = new BCApproveRefundResult();
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (responseData["result_code"].ToString() == "0")
+            {
+                if (channel.Contains("ALI"))
+                {
+                    result.url = responseData["url"].ToString();
+                }
+                result.status = JsonMapper.ToObject<Dictionary<string, string>>(responseData["result_map"].ToString());
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+            return result;
         }
 
         /// <summary>
@@ -515,8 +576,30 @@ namespace BeeCloud
         public static BCApproveRefundResult BCApproveRefund(string channel, List<string> ids, bool agree, string denyReason)
         {
             Random random = new Random();
-            string approveRefundUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundApproveURL;
+            string approveRefundUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.refundURL;
 
+            string paraString = prepareApproveRefundParameters(channel, ids, agree, denyReason);
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePutHttpResponse(approveRefundUrl, paraString, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                return handleApproveRefundResult(respString, channel);
+            }
+            catch (Exception e)
+            {
+                BCApproveRefundResult result = new BCApproveRefundResult();
+                result.resultCode = -1;
+                result.resultMsg = e.Message;
+                return result;
+            } 
+        }
+        #endregion
+
+        #region 查询
+        ///准备订单查询参数
+        public static string preparePayQueryByConditionParameters(string channel, string billNo, long? startTime, long? endTime, bool? spayResult, bool? needDetail, int? skip, int? limit)
+        {
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
@@ -524,41 +607,254 @@ namespace BeeCloud
             data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
-            data["ids"] = JsonMapper.ToObject(JsonMapper.ToJson(ids));
-            data["agree"] = agree;
-            data["denyReason"] = denyReason;
+            data["bill_no"] = billNo;
+            data["start_time"] = startTime;
+            data["end_time"] = endTime;
+            data["skip"] = skip;
+            data["spay_result"] = spayResult;
+            data["need_detail"] = needDetail;
+            data["limit"] = limit;
 
             string paraString = data.ToJson();
+            return paraString;
+        }
 
-            try
+        //处理订单条件查询回调
+        public static BCPayQueryByConditionResult handlePayQueryByConditionResult(string respString, bool? needDetail)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            BCPayQueryByConditionResult result = new BCPayQueryByConditionResult();
+
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (result.resultCode == 0)
             {
-                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(approveRefundUrl, paraString);
-                string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-                BCApproveRefundResult result = new BCApproveRefundResult();
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (responseData["result_code"].ToString() == "0")
+                result.count = int.Parse(responseData["count"].ToString());
+                if (responseData["bills"].IsArray)
                 {
-                    if (channel.Contains("ALI"))
+                    List<BCBill> bills = new List<BCBill>();
+                    foreach (JsonData billData in responseData["bills"])
                     {
-                        result.url = responseData["url"].ToString();
+                        BCBill bill = new BCBill();
+                        bill.id = billData["id"].ToString();
+                        bill.title = billData["title"].ToString();
+                        bill.totalFee = int.Parse(billData["total_fee"].ToString());
+                        bill.createdTime = BCUtil.GetDateTime((long)billData["create_time"]);
+                        bill.billNo = billData["bill_no"].ToString();
+                        bill.result = (bool)billData["spay_result"];
+                        bill.channel = billData["channel"].ToString();
+                        bill.tradeNo = billData["trade_no"].ToString();
+                        bill.subChannel = billData["sub_channel"].ToString();
+                        bill.optional = billData["optional"].ToString();
+                        if (needDetail == true)
+                        {
+                            bill.messageDetail = billData["message_detail"].ToString();
+                        }
+                        bill.revertResult = (bool)billData["revert_result"];
+                        bill.refundResult = (bool)billData["refund_result"];
+                        bills.Add(bill);
                     }
-                    result.status = JsonMapper.ToObject<Dictionary<string, BCBaseResponse>>(responseData["result_map"].ToString());
+                    result.bills = bills;
                 }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-                return result;
             }
-            catch (Exception e)
+            else
             {
-                BCApproveRefundResult result = new BCApproveRefundResult();
-                result.resultCode = 99;
-                result.resultMsg = e.Message;
-                return result;
-            } 
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+
+            return result;
+        }
+
+        //处理订单Id查询回调
+        public static BCPayQueryByIdResult handlePayQueryByIdResult(string respString)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            BCPayQueryByIdResult result = new BCPayQueryByIdResult();
+
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (result.resultCode == 0)
+            {
+                JsonData billData = responseData["pay"];
+                BCBill bill = new BCBill();
+                bill.id = billData["id"].ToString();
+                bill.title = billData["title"].ToString();
+                bill.totalFee = int.Parse(billData["total_fee"].ToString());
+                bill.createdTime = BCUtil.GetDateTime((long)billData["create_time"]);
+                bill.billNo = billData["bill_no"].ToString();
+                bill.result = (bool)billData["spay_result"];
+                bill.channel = billData["channel"].ToString();
+                bill.tradeNo = billData["trade_no"].ToString();
+                bill.subChannel = billData["sub_channel"].ToString();
+                bill.optional = billData["optional"].ToString();
+                bill.messageDetail = billData["message_detail"].ToString();
+                bill.revertResult = (bool)billData["revert_result"];
+                bill.refundResult = (bool)billData["refund_result"];
+
+                result.bill = bill;
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+
+            return result;
+        }
+
+        //准备订单/退款id查询参数
+        public static string prepareQueryByIdParameters(string id)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //准备退款查询参数
+        public static string prepareRefundQueryByConditionParameters(string channel, string billNo, string refundNo, long? startTime, long? endTime, bool? needApproval, bool? needDetail, int? skip, int? limit)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["bill_no"] = billNo;
+            data["refund_no"] = refundNo;
+            data["start_time"] = startTime;
+            data["end_time"] = endTime;
+            data["need_approval"] = needApproval;
+            data["need_detail"] = needDetail;
+            data["skip"] = skip;
+            data["limit"] = limit;
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理退款条件查询回调
+        public static BCRefundQueryByConditionResult handleRefundQueryByConditionResult(string respString, bool? needDetail)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            BCRefundQueryByConditionResult result = new BCRefundQueryByConditionResult();
+
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (result.resultCode == 0)
+            {
+                result.count = int.Parse(responseData["count"].ToString());
+                if (responseData["refunds"].IsArray)
+                {
+                    List<BCRefund> refunds = new List<BCRefund>();
+                    foreach (JsonData refundData in responseData["refunds"])
+                    {
+                        BCRefund refund = new BCRefund();
+                        refund.id = refundData["id"].ToString();
+                        refund.title = refundData["title"].ToString();
+                        refund.billNo = refundData["bill_no"].ToString();
+                        refund.refundNo = refundData["refund_no"].ToString();
+                        refund.totalFee = int.Parse(refundData["total_fee"].ToString());
+                        refund.refundFee = int.Parse(refundData["refund_fee"].ToString());
+                        refund.channel = refundData["channel"].ToString();
+                        refund.subChannel = refundData["sub_channel"].ToString();
+                        refund.finish = (bool)refundData["finish"];
+                        refund.result = (bool)refundData["result"];
+                        refund.optional = refundData["optional"].ToString();
+                        if (needDetail == true)
+                        {
+                            refund.messageDetail = refundData["message_detail"].ToString();
+                        }
+                        refund.createdTime = BCUtil.GetDateTime((long)refundData["create_time"]);
+                        refunds.Add(refund);
+                    }
+                    result.refunds = refunds;
+                }
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+
+            return result;
+        }
+
+        //处理退款Id查询回调
+        public static BCRefundQueryByIdResult handleRefundQueryByIdResult(string respString)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            BCRefundQueryByIdResult result = new BCRefundQueryByIdResult();
+
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (result.resultCode == 0)
+            {
+                BCRefund refund = new BCRefund();
+                JsonData refundData = responseData["refund"];
+                refund.id = refundData["id"].ToString();
+                refund.title = refundData["title"].ToString();
+                refund.billNo = refundData["bill_no"].ToString();
+                refund.refundNo = refundData["refund_no"].ToString();
+                refund.totalFee = int.Parse(refundData["total_fee"].ToString());
+                refund.refundFee = int.Parse(refundData["refund_fee"].ToString());
+                refund.channel = refundData["channel"].ToString();
+                refund.subChannel = refundData["sub_channel"].ToString();
+                refund.finish = (bool)refundData["finish"];
+                refund.result = (bool)refundData["result"];
+                refund.optional = refundData["optional"].ToString();
+                refund.messageDetail = refundData["message_detail"].ToString();
+                refund.createdTime = BCUtil.GetDateTime((long)refundData["create_time"]);
+                result.refund = refund;
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+
+            return result;
+        }
+
+        //准备退款状态查询参数
+        public static string prepareRefundStatusQueryParameters(string channel, string refundNo)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["refund_no"] = refundNo;
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理退狂状态查询回调
+        public static BCRefundStatusQueryResult handleRefundStatusQueryResult(string respString)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+            BCRefundStatusQueryResult result = new BCRefundStatusQueryResult();
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (responseData["result_code"].ToString() == "0")
+            {
+                result.refundStatus = responseData["refund_status"].ToString();
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+            return result;
         }
 
         /// <summary>
@@ -594,6 +890,14 @@ namespace BeeCloud
         ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
         ///     选填
         /// </param>
+        /// <param name="spayResult">订单状态
+        ///     订单是否成功，null为全部返回，true只返回成功订单，false只返回失败订单
+        ///     选填
+        /// </param>
+        /// <param name="needDetail">是否需要返回渠道详细信息
+        ///     决定是否需要返回渠道的回调信息，true为需要
+        ///     选填
+        /// </param>
         /// <param name="skip">查询起始位置
         ///     默认为0。设置为10表示忽略满足条件的前10条数据
         ///     选填
@@ -603,129 +907,52 @@ namespace BeeCloud
         ///     选填
         /// </param>
         /// <returns></returns>
-        public static BCPayQueryResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit)
+        public static BCPayQueryByConditionResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, bool? spayResult, bool? needDetail, int? skip, int? limit)
         {
             Random random = new Random();
-            string payQueryUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.billsURL;
+            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billsURL;
 
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-            data["channel"] = channel;
-            data["bill_no"] = billNo;
-            data["start_time"] = startTime;
-            data["end_time"] = endTime;
-            data["skip"] = skip;
-            data["limit"] = limit;
-
-            string paraString = data.ToJson();
+            string paraString = preparePayQueryByConditionParameters(channel, billNo, startTime, endTime, spayResult, needDetail, skip, limit);
 
             try
             {
                 string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-
-                BCPayQueryResult result = new BCPayQueryResult();
-
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (result.resultCode == 0)
-                {
-                    result.count = int.Parse(responseData["count"].ToString());
-                    if (responseData["bills"].IsArray)
-                    {
-                        List<BCBill> bills = new List<BCBill>();
-                        foreach (JsonData billData in responseData["bills"])
-                        {
-                            BCBill bill = new BCBill();
-                            bill.title = billData["title"].ToString();
-                            bill.totalFee = int.Parse(billData["total_fee"].ToString());
-                            bill.createdTime = BCUtil.GetDateTime((long)billData["created_time"]);
-                            bill.billNo = billData["bill_no"].ToString();
-                            bill.result = (bool)billData["spay_result"];
-                            bill.channel = billData["channel"].ToString();
-                            bills.Add(bill);
-                        }
-                        result.bills = bills;
-                    }     
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-                
-                return result;
+                return handlePayQueryByConditionResult(respString, needDetail);
             }
             catch(Exception e)
             {
-                BCPayQueryResult result = new BCPayQueryResult();
-                result.resultCode = 99;
+                BCPayQueryByConditionResult result = new BCPayQueryByConditionResult();
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
         }
 
-        public static BCPayQueryResult BCPayQueryById(string id)
+        /// <summary>
+        /// 支付订单查询(指定ID)
+        /// </summary>
+        /// <param name="id">订单id</param>
+        /// <returns></returns>
+        public static BCPayQueryByIdResult BCPayQueryById(string id)
         {
             Random random = new Random();
-            string payQueryUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.billURL + "/" + id;
+            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL + "/" + id;
 
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-
-            string paraString = data.ToJson();
+            string paraString = prepareQueryByIdParameters(id);
 
             try
             {
                 string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-
-                BCPayQueryResult result = new BCPayQueryResult();
-
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (result.resultCode == 0)
-                {
-                    result.count = int.Parse(responseData["count"].ToString());
-                    if (responseData["bills"].IsArray)
-                    {
-                        List<BCBill> bills = new List<BCBill>();
-                        foreach (JsonData billData in responseData["bills"])
-                        {
-                            BCBill bill = new BCBill();
-                            bill.title = billData["title"].ToString();
-                            bill.totalFee = int.Parse(billData["total_fee"].ToString());
-                            bill.createdTime = BCUtil.GetDateTime((long)billData["created_time"]);
-                            bill.billNo = billData["bill_no"].ToString();
-                            bill.result = (bool)billData["spay_result"];
-                            bill.channel = billData["channel"].ToString();
-                            bills.Add(bill);
-                        }
-                        result.bills = bills;
-                    }
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-
-                return result;
+                return handlePayQueryByIdResult(respString);
             }
             catch (Exception e)
             {
-                BCPayQueryResult result = new BCPayQueryResult();
-                result.resultCode = 99;
+                BCPayQueryByIdResult result = new BCPayQueryByIdResult();
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
@@ -764,7 +991,16 @@ namespace BeeCloud
         ///     选填</param>
         /// <param name="endTime">结束时间
         ///     毫秒时间戳, 13位, 可以使用BCUtil.GetTimeStamp()方法获取
-        ///     选填</param>
+        ///     选填
+        /// </param>
+        /// <param name="needApproval">需要审核     
+        ///     标识退款记录是否为预退款
+        ///     选填
+        /// </param>
+        /// <param name="needDetail">是否需要返回渠道详细信息
+        ///     决定是否需要返回渠道的回调信息，true为需要
+        ///     选填
+        /// </param>
         /// <param name="skip">查询起始位置
         ///     默认为0。设置为10表示忽略满足条件的前10条数据
         ///     选填
@@ -776,72 +1012,52 @@ namespace BeeCloud
         /// <returns>
         ///     BCRefundQuerytResult
         /// </returns>
-        public static BCRefundQuerytResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit)
+        public static BCRefundQueryByConditionResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, bool? needApproval, bool? needDetail, int? skip, int? limit)
         {
             Random random = new Random();
-            string payQueryUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundsURL;
+            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.refundsURL;
 
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-            data["channel"] = channel;
-            data["bill_no"] = billNo;
-            data["refund_no"] = refundNo;
-            data["start_time"] = startTime;
-            data["end_time"] = endTime;
-            data["skip"] = skip;
-            data["limit"] = limit;
-
-            string paraString = data.ToJson();
+            string paraString = prepareRefundQueryByConditionParameters(channel, billNo, refundNo, startTime, endTime, needApproval, needDetail, skip, limit);
 
             try
             {
                 string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-
-                BCRefundQuerytResult result = new BCRefundQuerytResult();
-
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (result.resultCode == 0)
-                {
-                    result.count = int.Parse(responseData["count"].ToString());
-                    if (responseData["refunds"].IsArray)
-                    {
-                        List<BCRefund> refunds = new List<BCRefund>();
-                        foreach (JsonData refundData in responseData["refunds"])
-                        {
-                            BCRefund refund = new BCRefund();
-                            refund.title = refundData["title"].ToString();
-                            refund.billNo = refundData["bill_no"].ToString();
-                            refund.refundNo = refundData["refund_no"].ToString();
-                            refund.totalFee = int.Parse(refundData["total_fee"].ToString());
-                            refund.refundFee = int.Parse(refundData["refund_fee"].ToString());
-                            refund.channel = refundData["channel"].ToString();
-                            refund.finish = (bool)refundData["finish"];
-                            refund.result = (bool)refundData["result"];
-                            refund.createdTime = BCUtil.GetDateTime((long)refundData["created_time"]);
-                            refunds.Add(refund);
-                        }
-                        result.refunds = refunds;
-                    }
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-
-                return result;
+                return handleRefundQueryByConditionResult(respString, needDetail);
             }
             catch (Exception e)
             {
-                BCRefundQuerytResult result = new BCRefundQuerytResult();
-                result.resultCode = 99;
+                BCRefundQueryByConditionResult result = new BCRefundQueryByConditionResult();
+                result.resultCode = -1;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 退款订单查询(指定ID)
+        /// </summary>
+        /// <param name="id">退款记录的唯一标识，可用于查询单笔记录</param>
+        /// <returns></returns>
+        public static BCRefundQueryByIdResult BCRefundQueryById(string id)
+        {
+            Random random = new Random();
+            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.refundURL + "/" + id;
+
+            string paraString = prepareQueryByIdParameters(id);
+
+            try
+            {
+                string url = payQueryUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                return handleRefundQueryByIdResult(respString);
+            }
+            catch (Exception e)
+            {
+                BCRefundQueryByIdResult result = new BCRefundQueryByIdResult();
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
@@ -861,75 +1077,64 @@ namespace BeeCloud
         public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, string refundNo)
         {
             Random random = new Random();
-            string refundStatusUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.refundStatusURL;
+            string refundStatusUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.refundStatusURL;
 
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-            data["channel"] = channel;
-            data["refund_no"] = refundNo;
-
-            string paraString = data.ToJson();
+            string paraString = prepareRefundStatusQueryParameters(channel, refundNo);
+            
             string url = refundStatusUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
             try
             {
-                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout, null, null);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-                BCRefundStatusQueryResult result = new BCRefundStatusQueryResult();
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    result.refundStatus = responseData["refund_status"].ToString();
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-                return result;
+                return handleRefundStatusQueryResult(respString);
             }
             catch (Exception e)
             {
                 BCRefundStatusQueryResult result = new BCRefundStatusQueryResult();
-                result.resultCode = 99;
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 批量打款
-        /// </summary>
-        /// <param name="channel">渠道
-        ///     必填
-        ///     现在只支持支付宝（TransferChannel.ALI）</param>
-        /// <param name="batchNo">批量付款批号
-        ///     必填
-        ///     此次批量付款的唯一标示，11-32位数字字母组合
-        /// </param>
-        /// <param name="accountName">付款方的支付宝账户名
-        ///     必填
-        /// </param>
-        /// <param name="transferData">付款的详细数据
-        ///     必填
-        ///     每一个Map对应一笔付款的详细数据, list size 小于等于 1000。
-        ///     具体参BCTransferData类
-        /// </param>
-        /// <returns></returns>
-        public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+        #region 打款
+        //处理单笔单款参数
+        public static string prepareTransferParameters(string channel, string transferNo, int totalFee, string desc, string channelUserId, string channelUserName, BCRedPackInfo info, string account_name)
         {
-            Random random = new Random();
-            string transferUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.transfersURL;
-
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["transfer_no"] = transferNo;
+            data["total_fee"] = totalFee;
+            data["desc"] = desc;
+            data["channel_user_id"] = channelUserId;
+            data["channel_user_name"] = channelUserName;
+            data["account_name"] = account_name;
+            if (info != null)
+            {
+                data["redpack_info"] = new JsonData();
+                data["redpack_info"]["send_name"] = info.sendName;
+                data["redpack_info"]["wishing"] = info.wishing;
+                data["redpack_info"]["act_name"] = info.actName;
+            }
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //准备批量打款参数
+        public static string prepareTransfersParameters(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
             data["timestamp"] = timestamp;
             data["channel"] = channel;
             data["batch_no"] = batchNo;
@@ -947,31 +1152,176 @@ namespace BeeCloud
             }
             data["transfer_data"] = list;
             string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理(批量)打款回调
+        public static BCTransferResult handleTransfersResult(string respString, string channel)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+            BCTransferResult result = new BCTransferResult();
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (responseData["result_code"].ToString() == "0")
+            {
+                if (channel.Contains("ALI"))
+                {
+                    result.url = responseData["url"].ToString();
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 批量打款
+        /// </summary>
+        /// <param name="channel">渠道
+        ///     必填
+        ///     现在只支持支付宝（TransferChannel.ALI_TRANSFER）</param>
+        /// <param name="batchNo">批量付款批号
+        ///     必填
+        ///     此次批量付款的唯一标示，11-32位数字字母组合
+        /// </param>
+        /// <param name="accountName">付款方的支付宝账户名
+        ///     必填
+        /// </param>
+        /// <param name="transferData">付款的详细数据
+        ///     必填
+        ///     每一个Map对应一笔付款的详细数据, list size 小于等于 1000。
+        ///     具体参BCTransferData类
+        /// </param>
+        /// <returns></returns>
+        public static BCTransferResult BCTransfers(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+        {
+            Random random = new Random();
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.transfersURL;
+
+            string paraString = prepareTransfersParameters(channel, batchNo, accountName, transferData);
 
             try
             {
-                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString);
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-                JsonData responseData = JsonMapper.ToObject(respString);
-                BCTransferResult result = new BCTransferResult();
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    if (channel == "ALI")
-                    {
-                        result.url = responseData["url"].ToString();
-                    }
-                }
-                return result;
+                return handleTransfersResult(respString, channel);
             }
             catch (Exception e)
             {
                 BCTransferResult result = new BCTransferResult();
-                result.resultCode = 99;
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
+        }
+
+        /// <summary>
+        /// 打款
+        /// </summary>
+        /// <param name="channel">渠道类型
+        ///     WX_REDPACK 微信红包, 
+        ///     WX_TRANSFER 微信企业打款, 
+        ///     ALI_TRANSFER 支付宝企业打款
+        /// </param>
+        /// <param name="transferNo">打款单号
+        ///     支付宝为11-32位数字字母组合， 微信为10位数字
+        /// </param>
+        /// <param name="totalFee">打款金额
+        ///     此次打款的金额,单位分,正整数(微信红包1.00-200元，微信打款>=1元)
+        /// </param>
+        /// <param name="desc">打款说明
+        ///     此次打款的说明
+        /// </param>
+        /// <param name="channelUserId">用户id
+        ///     支付渠道方内收款人的标示, 微信为openid, 支付宝为支付宝账户
+        /// </param>
+        /// <param name="channelUserName">用户名
+        ///     支付渠道内收款人账户名， 支付宝必填
+        /// </param>
+        /// <param name="info">红包信息
+        ///     查看BCRedPackInfo
+        /// </param>
+        /// <param name="account_name">打款方账号名称
+        ///     打款方账号名全称，支付宝必填
+        /// </param>
+        /// <returns></returns>
+        public static BCTransferResult BCTransfer(string channel, string transferNo, int totalFee, string desc, string channelUserId, string channelUserName, BCRedPackInfo info, string account_name)
+        {
+            Random random = new Random();
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.transferURL;
+
+            string paraString = prepareTransferParameters(channel, transferNo, totalFee, desc, channelUserId, channelUserName, info, account_name);
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                return handleTransfersResult(respString, channel);
+            }
+            catch (Exception e)
+            {
+                BCTransferResult result = new BCTransferResult();
+                result.resultCode = -1;
+                result.resultMsg = e.Message;
+                return result;
+            }
+        }
+        #endregion
+
+        #region 境外支付
+        //准备境外支付参数
+        public static string prepareInternationalPayParameters(string channel, int totalFee, string billNo, string title, string currency, BCCreditCardInfo info, string creditCardId, string returnUrl)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = channel;
+            data["total_fee"] = totalFee;
+            data["bill_no"] = billNo;
+            data["title"] = title;
+            data["currency"] = currency;
+            if (info != null)
+            {
+                data["credit_card_info"] = JsonMapper.ToObject(JsonMapper.ToJson(info));
+            }
+            if (creditCardId != null)
+            {
+                data["credit_card_id"] = creditCardId;
+            }
+            if (returnUrl != null)
+            {
+                data["return_url"] = returnUrl;
+            }
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理境外支付回调
+        public static BCPayResult handleInternationalPayResult(string respString, string channel)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            BCPayPalResult result = new BCPayPalResult();
+            result.resultCode = int.Parse(responseData["result_code"].ToString());
+            result.resultMsg = responseData["result_msg"].ToString();
+            if (responseData["result_code"].ToString() == "0")
+            {
+                if (channel == "PAYPAL_PAYPAL")
+                {
+                    result.url = responseData["url"].ToString();
+                }
+                if (channel == "PAYPAL_CREDITCARD")
+                {
+                    result.creditCardId = responseData["credit_card_id"].ToString();
+                }
+            }
+            else
+            {
+                result.errDetail = responseData["err_detail"].ToString();
+            }
+            return result;
         }
 
         /// <summary>
@@ -1038,70 +1388,24 @@ namespace BeeCloud
         public static BCPayResult BCInternationalPay(string channel, int totalFee, string billNo, string title, string currency, BCCreditCardInfo info,  string creditCardId, string returnUrl)
         {
             Random random = new Random();
-            string payUrl = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)] + BCConstants.version + BCConstants.internationalURL;
+            string payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.internationalURL;
 
-            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
-
-            JsonData data = new JsonData();
-            data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
-            data["timestamp"] = timestamp;
-            data["channel"] = channel;
-            data["total_fee"] = totalFee;
-            data["bill_no"] = billNo;
-            data["title"] = title;
-            data["currency"] = currency;
-            if (info != null)
-            {
-                data["credit_card_info"] = JsonMapper.ToObject(JsonMapper.ToJson(info));
-            }
-            if (creditCardId != null)
-            {
-                data["credit_card_id"] = creditCardId;
-            }
-            if (returnUrl != null)
-            {
-                data["return_url"] = returnUrl;
-            }
-       
-            string paraString = data.ToJson();
+            string paraString = prepareInternationalPayParameters(channel, totalFee, billNo, title, currency, info, creditCardId, returnUrl);
 
             try
             {
-                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString);
-
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
-
-                JsonData responseData = JsonMapper.ToObject(respString);
-
-                BCPayPalResult result = new BCPayPalResult();
-                result.resultCode = int.Parse(responseData["result_code"].ToString());
-                result.resultMsg = responseData["result_msg"].ToString();
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    if (channel == "PAYPAL_PAYPAL")
-                    {
-                        result.url = responseData["url"].ToString();
-                    }
-                    if (channel == "PAYPAL_CREDITCARD")
-                    {
-                        result.creditCardId = responseData["credit_card_id"].ToString();
-                    }
-                }
-                else
-                {
-                    result.errDetail = responseData["err_detail"].ToString();
-                }
-                return result;
-                
+                return handleInternationalPayResult(respString, channel);                
             }
             catch (Exception e)
             {
                 BCPayResult result = new BCPayResult();
-                result.resultCode = 99;
+                result.resultCode = -1;
                 result.resultMsg = e.Message;
                 return result;
             }
         }
+        #endregion
     }
 }

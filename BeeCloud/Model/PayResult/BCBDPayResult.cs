@@ -7,7 +7,9 @@ namespace BeeCloud.Model
 {
     public class BCBDPayResult :  BCPayResult
     {
-        //支付跳转页
+        /// <summary>
+        /// 支付跳转页
+        /// </summary>
         public string url { get; set; }
     }
 }

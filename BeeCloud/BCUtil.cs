@@ -30,6 +30,11 @@ namespace BeeCloud
             return uuid;
         }
 
+        /// <summary>
+        /// webhook 验签
+        /// </summary>
+        /// <param name="timestamp">时间戳</param>
+        /// <returns></returns>
         public static string GetSign(string timestamp)
         {
             string input = BCCache.Instance.appId + BCCache.Instance.appSecret + timestamp;

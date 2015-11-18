@@ -21,7 +21,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "Ali";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "Ali" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("ALI", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("ALI", null, null, null, true, true, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -31,7 +31,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "WX";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "WX" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("WX", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("WX", null, null, null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -41,7 +41,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "UN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "UN" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("UN", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("UN", null, null, null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -51,7 +51,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "JD";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "JD" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("JD", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("JD", null, null, null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -61,7 +61,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "YEE";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "YEE" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("YEE", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("YEE", null, null, null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -71,7 +71,7 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "KUAIQIAN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "KUAIQIAN" + "</span><br/>");
-                BCPayQueryResult result = BCPay.BCPayQueryByCondition("KUAIQIAN", null, null, null, null, 50);
+                BCPayQueryByConditionResult result = BCPay.BCPayQueryByCondition("KUAIQIAN", null, null, null, null, null, null, 50);
                 bills = result.bills;
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
@@ -90,7 +90,8 @@ namespace BeeCloudSDKDemo
         {
             if (e.Row.Cells[4].Text == "False")
             {
-                e.Row.Cells[6].Visible = false;
+                //e.Row.Cells[6].Visible = false;
+                e.Row.Cells[6].Enabled = false;
             }
         }
 

@@ -7,7 +7,9 @@ namespace BeeCloud.Model
 {
     public class BCJDPayResult : BCPayResult
     {
-        //京东跳转form，是一段HTML代码，自动提交
+        /// <summary>
+        /// 京东跳转form，是一段HTML代码，自动提交
+        /// </summary>
         public string html { get; set; }
     }
 }
