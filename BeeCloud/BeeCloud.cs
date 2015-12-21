@@ -10,12 +10,9 @@ namespace BeeCloud
 
     public static class BeeCloud
     {
-        public static void registerApp(string appID, string appSecret)
-        {
-            BCCache.Instance.appId = appID;
-            BCCache.Instance.appSecret = appSecret;
-        }
-
+        /// <summary>
+        /// 注册APP，masterSecret为需要退款/打款功能时注册
+        /// </summary>
         public static void registerApp(string appID, string appSecret, string masterSecret) 
         {
             BCCache.Instance.appId = appID;

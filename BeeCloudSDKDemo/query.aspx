@@ -17,8 +17,8 @@
             <asp:BoundField DataField="result" HeaderText="订单是否成功" />
             <asp:BoundField DataField="createdTime" HeaderText="创建时间" />
             <asp:ButtonField CommandName="refund" Text="申请退款" />
-            <asp:BoundField DataField="messageDetail" HeaderText="MessageDetail" NullDisplayText="NULL"/>
-            <asp:BoundField DataField="optional" HeaderText="optional" NullDisplayText="NULL" />
+            <%--<asp:BoundField DataField="messageDetail" HeaderText="MessageDetail" NullDisplayText="NULL"/>
+            <asp:BoundField DataField="optional" HeaderText="optional" NullDisplayText="NULL" />--%>
             <asp:BoundField DataField="refundResult" HeaderText="已经退款?" />
             <asp:BoundField DataField="revertResult" HeaderText="已撤销？" />
         </Columns>

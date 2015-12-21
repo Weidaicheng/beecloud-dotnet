@@ -7,6 +7,16 @@ namespace BeeCloud.Model
 {
     public class BCRefund
     {
+        public BCRefund() { }
+
+        public BCRefund(String billNo, String refundNo, int refundFee)
+        {
+
+            this.billNo = billNo;
+            this.refundNo = refundNo;
+            this.refundFee = refundFee;
+        }
+
         /// <summary>
         /// 退款记录的唯一标识，可用于查询单笔记录
         /// </summary>
@@ -36,10 +46,6 @@ namespace BeeCloud.Model
         /// </summary>
         public string channel { get; set; }
         /// <summary>
-        /// 子渠道类型
-        /// </summary>
-        public string subChannel { get; set; }
-        /// <summary>
         /// 退款是否完成
         /// </summary>
         public bool finish { get; set; }
@@ -50,9 +56,9 @@ namespace BeeCloud.Model
         /// <summary>
         /// 附加数据,用户自定义的参数，
         /// 将会在webhook通知中原样返回，
-        /// 该字段是JSON格式的字符串 "{"key1":"value1","key2":"value2",...}"
+        /// 该字段是dic "{"key1":"value1","key2":"value2",...}"
         /// </summary>
-        public string optional { get; set; }
+        public Dictionary<string, string> optional { get; set; }
         /// <summary>
         /// 渠道详细信息， 当need_detail传入true时返回
         /// </summary>
@@ -61,5 +67,15 @@ namespace BeeCloud.Model
         /// 退款创建时间
         /// </summary>
         public DateTime createdTime { get; set; }
+        /// <summary>
+        /// 当channel为ALI_APP、ALI_WEB、ALI_QRCODE时，以下字段在成功时有返回
+        /// 支付宝退款地址，需用户在支付宝平台上手动输入支付密码处理
+        /// </summary>
+        public string url { get; set; }
+        /// <summary>
+        /// 标识该笔是预退款还是直接退款
+        /// </summary>
+        public bool needApproval { get; set; }
+
     }
 }

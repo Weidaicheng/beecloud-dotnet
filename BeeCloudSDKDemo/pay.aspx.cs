@@ -21,28 +21,26 @@ namespace BeeCloudSDKDemo
             string type = Request.Form["paytype"];
             if (type == "alipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
+                try
                 {
-                    BCAliWebPayResult payResult = result as BCAliWebPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.url + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "wechatQr")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, null, 300, null, null, "2");
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.WX_NATIVE.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                try
                 {
-                    BCWxNativePayResult payResult = result as BCWxNativePayResult;
-                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.codeURL + "</span><br/>");
-                    string str = payResult.codeURL;
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    string str = resultBill.codeURL;
 
                     //初始化二维码生成工具
                     QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
@@ -61,114 +59,137 @@ namespace BeeCloudSDKDemo
                     Response.BinaryWrite(ms.GetBuffer());
                     Response.ContentType = "image/Png";
                 }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             else if (type == "unionpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_un_url.aspx", 300, null, null, "2");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_un_url.aspx";
+                try
                 {
-                    BCUnWebPayResult payResult = result as BCUnWebPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "qralipay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return_ali_url.aspx", 300, null, null, "0");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.ALI_QRCODE.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.qrPayMode = "0";
+                bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
+                try
                 {
-                    BCAliQrcodePayResult payResult = result as BCAliQrcodePayResult;
-                    Response.Write("<iframe src=" + payResult.url + " name=\"testIframe\" allowtransparency=\"true\" background-color=\"transparent\" title=\"test\" frameborder=\"0\" width=\"300\" height=\"300\" scrolling=\"no\"></iframe>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                    Response.Redirect(resultBill.url);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "aliwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.ALI_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_ali_url.aspx", 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.ALI_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
+                try
                 {
-                    BCAliWebPayResult payResult = result as BCAliWebPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.url + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "jdpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_jd_url.aspx", null, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.JD_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_jd_url.aspx";
+                try
                 {
-                    BCJDPayResult payResult = result as BCJDPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "jdwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.JD_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_jd_url.aspx", null, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.JD_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_jd_url.aspx";
+                try
                 {
-                    BCJDPayResult payResult = result as BCJDPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "ybpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_yee_url.aspx", 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.YEE_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_yee_url.aspx";
+                try
                 {
-                    BCYEEPayResult payResult = result as BCYEEPayResult;
-                    Response.Write("<a href=" + payResult.url + ">付款地址</a><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<a href=" + resultBill.url + ">付款地址</a><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "ybwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.YEE_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, null, 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.YEE_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_yee_url.aspx";
+                try
                 {
-                    BCYEEPayResult payResult = result as BCYEEPayResult;
-                    Response.Write("<a href=" + payResult.url + ">付款地址</a><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<a href=" + resultBill.url + ">付款地址</a><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "kqpay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_kq_url.aspx", 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.KUAIQIAN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_kq_url.aspx";
+                try
                 {
-                    BCKuaiQianPayResult payResult = result as BCKuaiQianPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "kqwappay")
             {
-                BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.KUAIQIAN_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水", null, "http://localhost:50003/return_kq_url.aspx", 300, null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                if (result.resultCode == 0)
+                BCBill bill = new BCBill(BCPay.PayChannel.KUAIQIAN_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_kq_url.aspx";
+                try
                 {
-                    BCKuaiQianPayResult payResult = result as BCKuaiQianPayResult;
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.html + "</span><br/>");
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "alitransfers")
@@ -188,29 +209,59 @@ namespace BeeCloudSDKDemo
                 List<BCTransferData> list = new List<BCTransferData>();
                 list.Add(data);
                 list.Add(data2);
-                BCTransferResult result = BCPay.BCTransfers(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                if (result.resultCode == 0)
+
+                try
                 {
-                    Response.Write("<a href=" + result.url + ">付款地址</a><br/>");
+                    BCTransfersParameter para = new BCTransfersParameter();
+                    para.channel = BCPay.TransferChannel.ALI.ToString();
+                    para.batchNo = BCUtil.GetUUID();
+                    para.accountName = "毛毛";
+                    para.transfersData = list;
+                    string transfersURL = BCPay.BCTransfers(para);
+                    Response.Write("<a href=" + transfersURL + ">付款地址</a><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "alitransfer")
             {
-                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI_TRANSFER.ToString(), BCUtil.GetUUID(), 100, "C# 单笔打款", "baoee753@163.com", "钱志浩", null, "苏州比可网络科技有限公司");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                if (result.resultCode == 0)
+                try
                 {
-                    Response.Write("<a href=" + result.url + ">付款地址</a><br/>");
+                    BCTransferParameter para = new BCTransferParameter();
+                    para.channel = BCPay.TransferChannel.ALI_TRANSFER.ToString();
+                    para.transferNo = BCUtil.GetUUID();
+                    para.totalFee = 100;
+                    para.desc = "C# 单笔打款";
+                    para.channelUserId = "baoee753@163.com";
+                    para.channelUserName = "钱志浩";
+                    para.accountName = "苏州比可网络科技有限公司";
+                    string aliURL = BCPay.BCTransfer(para);
+                    Response.Write("<a href=" + aliURL + ">付款地址</a><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
             else if (type == "wxtransfer")
             {
-                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.WX_TRANSFER.ToString(), "0000000002", 100, "C# 单笔打款", "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, null, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+                try
+                {
+                    BCTransferParameter para = new BCTransferParameter();
+                    para.channel = BCPay.TransferChannel.WX_TRANSFER.ToString();
+                    para.transferNo = "1000000000";
+                    para.totalFee = 100;
+                    para.desc = "C# 单笔打款";
+                    para.channelUserId = "o3kKrjlUsMnv__cK5DYZMl0JoAkY";
+                    BCPay.BCTransfer(para);
+                    Response.Write("完成");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             else if (type == "wxredpack")
             {
@@ -218,9 +269,23 @@ namespace BeeCloudSDKDemo
                 info.actName = "C# 红包";
                 info.sendName = "BeeCloud";
                 info.wishing = "啦啦啦";
-                BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.WX_TRANSFER.ToString(), "1000000001", 100, "C# 单笔打款", "o3kKrjlUsMnv__cK5DYZMl0JoAkY", null, info, null);
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
+
+                try
+                {
+                    BCTransferParameter para = new BCTransferParameter();
+                    para.channel = BCPay.TransferChannel.WX_REDPACK.ToString();
+                    para.transferNo = "1000000001";
+                    para.totalFee = 100;
+                    para.desc = "C# 红包";
+                    para.channelUserId = "o3kKrjlUsMnv__cK5DYZMl0JoAkY";
+                    para.info = info;
+                    BCPay.BCTransfer(para);
+                    Response.Write("完成");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             Response.Write("<span style='color:#00CD00;font-size:20px'>" + type + "</span>");
         }

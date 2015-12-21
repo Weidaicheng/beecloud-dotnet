@@ -22,43 +22,97 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "Ali";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "Ali" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, true, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "ALI";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             if (type == "wxrefundquery")
             {
                 typeChannel = "WX";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "WX" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("WX", null, null, null, null, null, null, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "WX";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             if (type == "unionrefundquery")
             {
                 typeChannel = "UN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "UN" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("UN", null, null, null, null, null, null, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "UN";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             if (type == "jdrefundquery")
             {
                 typeChannel = "JD";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "JD" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("JD", null, null, null, null, null, null, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "JD";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             if (type == "ybrefundquery")
             {
                 typeChannel = "YEE";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "YEE" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("YEE", null, null, null, null, null, null, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "YEE";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             if (type == "kqrefundquery")
             {
                 typeChannel = "KUAIQIAN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "KUAIQIAN" + "</span><br/>");
-                BCRefundQueryByConditionResult result = BCPay.BCRefundQueryByCondition("KUAIQIAN", null, null, null, null, null, null, null, 50);
-                refunds = result.refunds;
+                BCQueryRefundParameter para = new BCQueryRefundParameter();
+                para.channel = "KUAIQIAN";
+                para.limit = 50;
+                try
+                {
+                    refunds = BCPay.BCRefundQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
             }
             this.bind();
         }
@@ -89,31 +143,44 @@ namespace BeeCloudSDKDemo
                 {
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     string refundNo = refunds[rowIndex].refundNo.ToString();
-                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                    try
+                    {
+                        string status = BCPay.BCRefundStatusQuery("WX", refundNo);
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + status + "</span><br/>");
+                    }
+                    catch (Exception excption)
+                    {
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                    }
+  
                 }
                 if (typeChannel == "YEE")
                 {
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     string refundNo = refunds[rowIndex].refundNo.ToString();
-                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("YEE", refundNo);
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                    try
+                    {
+                        string status = BCPay.BCRefundStatusQuery("YEE", refundNo);
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + status + "</span><br/>");
+                    }
+                    catch (Exception excption)
+                    {
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                    }
                 }
                 if (typeChannel == "KUAIQIAN")
                 {
                     int rowIndex = Convert.ToInt32(e.CommandArgument);
                     string refundNo = refunds[rowIndex].refundNo.ToString();
-                    BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("KUAIQIAN", refundNo);
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.refundStatus + "</span><br/>");
+                    try
+                    {
+                        string status = BCPay.BCRefundStatusQuery("KUAIQIAN", refundNo);
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + status + "</span><br/>");
+                    }
+                    catch (Exception excption)
+                    {
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                    }
                 }
             }
         }

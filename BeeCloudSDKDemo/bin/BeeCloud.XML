@@ -4,7 +4,7 @@
         <name>BeeCloud</name>
     </assembly>
     <members>
-        <member name="M:BeeCloud.BCPay.BCPayByChannel(System.String,System.Int32,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Nullable{System.Int32},System.String,System.String,System.String)">
+        <member name="M:BeeCloud.BCPay.BCPayByChannel(BeeCloud.Model.BCBill)">
             <summary>
             支付
             </summary>
@@ -72,10 +72,9 @@
                 3： 订单码-迷你前置模式,对应 iframe 宽度不能小于 75px, 高度不能小于 75px
             </param>
             <returns>
-                BCPayResult， 根据不同的支付渠道有各自对应的result类型
             </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCRefundByChannel(System.String,System.String,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
+        <member name="M:BeeCloud.BCPay.BCRefundByChannel(BeeCloud.Model.BCRefund)">
             <summary>
             (预)退款
             </summary>
@@ -114,7 +113,6 @@
                 如果needApproval值传true，开发者需要调用审核退款接口或者直接去BeeCloud控制台的预退款界面审核退款方能最终退款
             </param>
             <returns>
-                BCRefundResult
             </returns>
         </member>
         <member name="M:BeeCloud.BCPay.BCApproveRefund(System.String,System.Collections.Generic.List{System.String},System.Boolean,System.String)">
@@ -148,10 +146,10 @@
                 参考BCApproveRefundResult
             </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.preparePayQueryByConditionParameters(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.preparePayQueryByConditionParameters(BeeCloud.Model.BCQueryBillParameter)">
             准备订单查询参数
         </member>
-        <member name="M:BeeCloud.BCPay.BCPayQueryByCondition(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.BCPayQueryByCondition(BeeCloud.Model.BCQueryBillParameter)">
             <summary>
             支付订单查询
             </summary>
@@ -203,6 +201,13 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCPayQueryCount(BeeCloud.Model.BCQueryBillParameter)">
+            <summary>
+            获得订单笔数，配合BCPayQueryByCondition使用，使用查询订单时一样的参数
+            </summary>
+            <param name="para"></param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPay.BCPayQueryById(System.String)">
             <summary>
             支付订单查询(指定ID)
@@ -210,7 +215,7 @@
             <param name="id">订单id</param>
             <returns></returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCRefundQueryByCondition(System.String,System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.BCRefundQueryByCondition(BeeCloud.Model.BCQueryRefundParameter)">
             <summary>
             退款订单查询
             </summary>
@@ -263,8 +268,14 @@
                 选填
             </param>
             <returns>
-                BCRefundQuerytResult
             </returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.BCRefundQueryCount(BeeCloud.Model.BCQueryRefundParameter)">
+            <summary>
+            获得退款笔数，配合BCRefundQueryByCondition使用，使用查询退款时一样的参数
+            </summary>
+            <param name="para"></param>
+            <returns></returns>
         </member>
         <member name="M:BeeCloud.BCPay.BCRefundQueryById(System.String)">
             <summary>
@@ -283,10 +294,9 @@
              <param name="refundNo">商户退款单号
              </param>
              <returns>
-                 BCRefundStatusQueryResult
              </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCTransfers(System.String,System.String,System.String,System.Collections.Generic.List{BeeCloud.Model.BCTransferData})">
+        <member name="M:BeeCloud.BCPay.BCTransfers(BeeCloud.Model.BCTransfersParameter)">
             <summary>
             批量打款
             </summary>
@@ -305,9 +315,11 @@
                 每一个Map对应一笔付款的详细数据, list size 小于等于 1000。
                 具体参BCTransferData类
             </param>
-            <returns></returns>
+            <returns>
+                如果channel类型是TRANSFER_CHANNEL.ALI_TRANSFER, 返回需要跳转支付的url, 否则返回空字符串
+            </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCTransfer(System.String,System.String,System.Int32,System.String,System.String,System.String,BeeCloud.Model.BCRedPackInfo,System.String)">
+        <member name="M:BeeCloud.BCPay.BCTransfer(BeeCloud.Model.BCTransferParameter)">
             <summary>
             打款
             </summary>
@@ -337,9 +349,11 @@
             <param name="account_name">打款方账号名称
                 打款方账号名全称，支付宝必填
             </param>
-            <returns></returns>
+            <returns>
+                批量打款跳转支付url
+            </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCInternationalPay(System.String,System.Int32,System.String,System.String,System.String,BeeCloud.Model.BCCreditCardInfo,System.String,System.String)">
+        <member name="M:BeeCloud.BCPay.BCInternationalPay(BeeCloud.Model.BCInternationlBill)">
             <summary>
             境外支付
             </summary>
@@ -443,6 +457,11 @@
             </summary>
             <param name="timestamp">时间戳</param>
             <returns></returns>
+        </member>
+        <member name="M:BeeCloud.BeeCloud.registerApp(System.String,System.String,System.String)">
+            <summary>
+            注册APP，masterSecret为需要退款/打款功能时注册
+            </summary>
         </member>
         <member name="P:BeeCloud.Model.BCCreditCardInfo.card_number">
             <summary>
@@ -549,152 +568,6 @@
             需要跳转到支付宝输入密码确认批量打款（支付宝独占字段）
             </summary>
         </member>
-        <member name="T:BeeCloud.Model.BCPayResult">
-            <summary>
-            支付完成结果类
-            父类
-            保存共有返回值
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayResult.id">
-            <summary>
-            成功发起支付后返回支付表记录唯一标识
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayResult.resultCode">
-            <summary>
-            result_code	result_msg	        含义
-                       0	OK	                调用成功
-                       1	APP_INVALID	        根据app_id找不到对应的APP或者app_sign不正确
-                       2	PAY_FACTOR_NOT_SET	支付要素在后台没有设置
-                       3	CHANNEL_INVALID	    channel参数不合法
-                       4	MISS_PARAM	        缺少必填参数
-                       5	PARAM_INVALID	    参数不合法
-                       6	CERT_FILE_ERROR	    证书错误
-                       7	CHANNEL_ERROR	    渠道内部错误
-                       14	RUN_TIME_ERROR	    实时未知错误，请与技术联系帮助查看
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayResult.resultMsg">
-            <summary>
-            返回信息， OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayResult.errDetail">
-            <summary>
-            具体错误信息
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCBDPayResult.url">
-            <summary>
-            支付跳转页
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCJDPayResult.html">
-            <summary>
-            京东跳转form，是一段HTML代码，自动提交
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCKuaiQianPayResult.html">
-            <summary>
-            快钱跳转form，是一段HTML代码，自动提交
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayPalResult.url">
-            <summary>
-            当channel 为PAYPAL_PAYPAL时返回，跳转支付的url
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayPalResult.creditCardId">
-            <summary>
-            当channel为PAYPAL_CREDITCARD时返回， 信用卡id
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCYEEPayResult.url">
-            <summary>
-            易宝支付地址，是一个URL
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByIdResult.resultCode">
-            <summary>
-            返回码，0为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByIdResult.resultMsg">
-            <summary>
-            返回信息， OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByIdResult.errDetail">
-            <summary>
-            具体错误信息
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByIdResult.bill">
-            <summary>
-            订单
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByIdResult.resultCode">
-            <summary>
-            返回码，0为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByIdResult.resultMsg">
-            <summary>
-            返回信息， OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByIdResult.errDetail">
-            <summary>
-            具体错误信息
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByIdResult.refund">
-            <summary>
-            退款
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundStatusQueryResult.resultCode">
-            <summary>
-            返回码，0为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundStatusQueryResult.resultMsg">
-            <summary>
-            返回信息， OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundStatusQueryResult.errDetail">
-            <summary>
-            具体错误信息
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundStatusQueryResult.refundStatus">
-            <summary>
-            退款状态
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCAliQrcodePayResult.html">
-            <summary>
-            支付宝跳转form，是一段HTML代码，自动提交
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCAliQrcodePayResult.url">
-            <summary>
-            支付宝内嵌二维码地址，是一个URL
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCAliWebPayResult.html">
-            <summary>
-            支付宝跳转form，是一段HTML代码，自动提交
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCAliWebPayResult.url">
-            <summary>
-            支付宝跳转url，推荐使用html
-            </summary>
-        </member>
         <member name="P:BeeCloud.Model.BCBill.id">
             <summary>
             订单记录的唯一标识，可用于查询单笔记录
@@ -717,12 +590,24 @@
         </member>
         <member name="P:BeeCloud.Model.BCBill.channel">
             <summary>
-            渠道类型 WX、ALI、UN、JD、YEE、KUAIQIAN、PAYPAL、BD
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCBill.subChannel">
-            <summary>
-            子渠道类型
+                可以通过enum BCPay.PayChannel获取
+                channel的参数值含义：
+                WX_APP:       微信手机APP支付
+                WX_NATIVE:    微信公众号二维码支付
+                WX_JSAPI:     微信公众号支付
+                ALI_APP:      支付宝APP支付
+                ALI_WEB:      支付宝网页支付 
+                ALI_QRCODE:   支付宝内嵌二维码支付
+                UN_APP:       银联APP支付
+                UN_WEB:       银联网页支付
+                JD_WAP:       京东wap支付
+                JD_WEB:       京东web支付
+                YEE_WAP:      易宝wap支付 
+                YEE_WEB:      易宝web支付
+                KUAIQIAN_WAP: 快钱wap支付
+                KUAIQIAN_WEB: 快钱web支付
+                BD_WEB:       百度web支付
+                BD_WAP:       百度wap支付
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCBill.title">
@@ -737,7 +622,7 @@
         </member>
         <member name="P:BeeCloud.Model.BCBill.optional">
             <summary>
-            附加数据,用户自定义的参数，将会在webhook通知中原样返回，该字段是JSON格式的字符串 "{"key1":"value1","key2":"value2",...}"
+            附加数据,用户自定义的参数，将会在webhook通知中原样返回，该字段是Dic {"key1":"value1","key2":"value2",...}
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCBill.messageDetail">
@@ -760,29 +645,88 @@
             订单创建时间
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByConditionResult.resultCode">
+        <member name="P:BeeCloud.Model.BCBill.openId">
             <summary>
-            返回码，0为正常
+            用户相对于微信公众号的唯一id
+                例如'0950c062-5e41-44e3-8f52-f89d8cf2b6eb'
+                微信公众号支付(WX_JSAPI)的必填参数
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByConditionResult.resultMsg">
+        <member name="P:BeeCloud.Model.BCBill.showURL">
             <summary>
-            返回信息， OK为正常
+            商品展示地址
+                以http://开头,例如'http://beecloud.cn'
+                支付宝网页支付(ALI_WEB)的选填参数
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByConditionResult.errDetail">
+        <member name="P:BeeCloud.Model.BCBill.qrPayMode">
             <summary>
-            具体错误信息
+            二维码类型
+            支付宝内嵌二维码支付(ALI_QRCODE)的选填参数
+            二维码类型含义
+                0： 订单码-简约前置模式,对应 iframe 宽度不能小于 600px, 高度不能小于 300px
+                1： 订单码-前置模式,对应 iframe 宽度不能小于 300px, 高度不能小于 600px
+                3： 订单码-迷你前置模式,对应 iframe 宽度不能小于 75px, 高度不能小于 75px
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByConditionResult.count">
+        <member name="P:BeeCloud.Model.BCBill.billTimeout">
             <summary>
-            查询退款结果数量
+            订单失效时间
+                必须为非零正整数，单位为秒，建议最短失效时间间隔必须大于300秒
+                可空
+                京东系列支付不支持该参数，填空
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCPayQueryByConditionResult.bills">
+        <member name="P:BeeCloud.Model.BCBill.returnUrl">
             <summary>
-            订单列表
+            同步返回页面
+                支付渠道处理完请求后,当前页面自动跳转到商户网站里指定页面的http路径。
+                当channel 参数为 ALI_WEB 或 ALI_QRCODE 或 UN_WEB时为必填
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.url">
+            <summary>
+            发起支付的URL
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.html">
+            <summary>
+            发起支付的脚本
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.codeURL">
+            <summary>
+            支付二维码
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.appId">
+            <summary>
+            微信应用APPID
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.package">
+            <summary>
+            微信支付打包参数
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.noncestr">
+            <summary>
+            随机字符串
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.timestamp">
+            <summary>
+            当前毫秒时间戳，13位
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.paySign">
+            <summary>
+            签名
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.signType">
+            <summary>
+            签名类型，固定为MD5
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCRefund.id">
@@ -820,11 +764,6 @@
             渠道类型 WX、ALI、UN、JD、YEE、KUAIQIAN、BD
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCRefund.subChannel">
-            <summary>
-            子渠道类型
-            </summary>
-        </member>
         <member name="P:BeeCloud.Model.BCRefund.finish">
             <summary>
             退款是否完成
@@ -839,7 +778,7 @@
             <summary>
             附加数据,用户自定义的参数，
             将会在webhook通知中原样返回，
-            该字段是JSON格式的字符串 "{"key1":"value1","key2":"value2",...}"
+            该字段是dic "{"key1":"value1","key2":"value2",...}"
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCRefund.messageDetail">
@@ -852,51 +791,15 @@
             退款创建时间
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByConditionResult.resultCode">
+        <member name="P:BeeCloud.Model.BCRefund.url">
             <summary>
-            返回码，0为正常
+            当channel为ALI_APP、ALI_WEB、ALI_QRCODE时，以下字段在成功时有返回
+            支付宝退款地址，需用户在支付宝平台上手动输入支付密码处理
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByConditionResult.resultMsg">
+        <member name="P:BeeCloud.Model.BCRefund.needApproval">
             <summary>
-            返回信息， OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByConditionResult.errDetail">
-            <summary>
-            具体错误信息
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByConditionResult.count">
-            <summary>
-            查询退款结果数量
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefundQueryByConditionResult.refunds">
-            <summary>
-            退款列表
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCApproveRefundResult.resultCode">
-             <summary>
-            
-             result_code	result_msg	            含义
-                       8	NO_SUCH_BILL	        没有该订单
-                       9	BILL_UNSUCCESS	        该订单没有支付成功
-                       10	REFUND_EXCEED_TIME	    已超过可退款时间
-                       11	ALREADY_REFUNDING	    该订单已有正在处理中的退款
-                       12	REFUND_AMOUNT_TOO_LARGE	提交的退款金额超出可退额度
-                       13	NO_SUCH_REFUND	        没有该退款记录
-             </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCApproveRefundResult.resultMsg">
-            <summary>
-            返回信息，OK为正常
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCApproveRefundResult.errDetail">
-            <summary>
-            具体错误信息
+            标识该笔是预退款还是直接退款
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCApproveRefundResult.status">
@@ -908,51 +811,6 @@
             <summary>
             当channel为ALI_APP、ALI_WEB、ALI_QRCODE时，以下字段在result_code为0时有返回
             支付宝退款地址，需用户在支付宝平台上手动输入支付密码处理
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCUnWebPayResult.html">
-            <summary>
-            银联form表单
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.appId">
-            <summary>
-            微信应用APPID
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.package">
-            <summary>
-            微信支付打包参数
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.noncestr">
-            <summary>
-            随机字符串
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.timestamp">
-            <summary>
-            当前毫秒时间戳，13位
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.paySign">
-            <summary>
-            签名
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxJSAPIPayResult.signType">
-            <summary>
-            签名类型，固定为MD5
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCWxNativePayResult.codeURL">
-            <summary>
-            二维码地址
-            </summary>
-        </member>
-        <member name="T:BeeCloud.Model.BCRefundResult">
-            <summary>
-            退款（预退款）完成结果类
             </summary>
         </member>
     </members>

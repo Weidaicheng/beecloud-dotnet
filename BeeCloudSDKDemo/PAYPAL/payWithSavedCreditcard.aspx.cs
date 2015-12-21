@@ -14,10 +14,17 @@ namespace BeeCloudSDKDemo.PAYPAL
         protected void Page_Load(object sender, EventArgs e)
         {
             //这里填入你在信用卡付款后获得的信用卡id。
-            BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", null, "CARD-1K997489XXXXXXXXXXXXXXX", null);
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+            BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
+            bill.creditCardId = "CARD-1K997489XXXXXXXXXXXXXXX";
+            try
+            {
+                bill = BCPay.BCInternationalPay(bill);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "成功" + "</span><br/>");
+            }
+            catch (Exception excption)
+            {
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+            }
         }
     }
 }

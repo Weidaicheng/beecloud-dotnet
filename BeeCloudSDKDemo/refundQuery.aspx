@@ -20,8 +20,8 @@
             <asp:BoundField DataField="result" HeaderText="是否成功" />
             <asp:BoundField DataField="createdTime" HeaderText="创建时间" />
             <asp:ButtonField CommandName="refundStatus" Text="查看退款状态" />
-            <asp:BoundField DataField="messageDetail" HeaderText="MessageDetail" NullDisplayText="NULL" />
-            <asp:BoundField DataField="optional" HeaderText="optional" NullDisplayText="NULL" />
+            <%--<asp:BoundField DataField="messageDetail" HeaderText="MessageDetail" NullDisplayText="NULL" />
+            <asp:BoundField DataField="optional" HeaderText="optional" NullDisplayText="NULL" />--%>
         </Columns>
     </asp:GridView>
     </div>

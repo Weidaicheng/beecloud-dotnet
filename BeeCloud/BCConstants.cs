@@ -10,9 +10,11 @@ namespace BeeCloud
 
         //new API
         public const string billURL = "rest/bill";
-        public const string billsURL = "rest/bills"; 
+        public const string billsURL = "rest/bills";
+        public const string billsCountURL = "rest/bills/count";
         public const string refundURL = "rest/refund";
         public const string refundsURL = "rest/refunds";
+        public const string refundsCountURL = "rest/refunds/count";
         public const string refundStatusURL = "rest/refund/status";
         public const string transferURL = "rest/transfer";
         public const string transfersURL = "rest/transfers";
