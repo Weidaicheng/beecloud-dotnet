@@ -6,22 +6,6 @@ namespace BeeCloud.Tests
     public class BCUtilTests
     {
         [Test()]
-        public void GetTimeStampTest()
-        {
-            long timeStamp = 1449849600000;
-            long actual = BCUtil.GetTimeStamp(new DateTime(2015, 12, 12, 0, 0, 0, DateTimeKind.Local));
-            Assert.IsTrue(actual.Equals(timeStamp), "BCUtilTests GetTimeStampTest failuer");
-        }
-
-        [Test()]
-        public void GetDateTimeTest()
-        {
-            DateTime time = new DateTime(2015, 12, 12, 0, 0, 0, DateTimeKind.Local);
-            DateTime actual = BCUtil.GetDateTime(1449849600000);
-            Assert.IsTrue(actual.Equals(time));
-        }
-
-        [Test()]
         public void GetUUIDTest()
         {
             string uuid = BCUtil.GetUUID();
