@@ -102,8 +102,6 @@ namespace BeeCloudSDKDemo
             {
                 typeChannel = "KUAIQIAN";
                 Response.Write("<span style='color:#00CD00;font-size:20px'>" + "KUAIQIAN" + "</span><br/>");
-                typeChannel = "YEE";
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "YEE" + "</span><br/>");
                 try
                 {
                     BCQueryBillParameter para = new BCQueryBillParameter();

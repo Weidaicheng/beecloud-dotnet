@@ -146,10 +146,10 @@
                 参考BCApproveRefundResult
             </returns>
         </member>
-        <member name="M:BeeCloud.BCPay.preparePayQueryByConditionParameters(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.preparePayQueryByConditionParameters(BeeCloud.Model.BCQueryBillParameter)">
             准备订单查询参数
         </member>
-        <member name="M:BeeCloud.BCPay.BCPayQueryByCondition(System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.BCPayQueryByCondition(BeeCloud.Model.BCQueryBillParameter)">
             <summary>
             支付订单查询
             </summary>
@@ -201,6 +201,13 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCPayQueryCount(BeeCloud.Model.BCQueryBillParameter)">
+            <summary>
+            获得订单笔数，配合BCPayQueryByCondition使用，使用查询订单时一样的参数
+            </summary>
+            <param name="para"></param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPay.BCPayQueryById(System.String)">
             <summary>
             支付订单查询(指定ID)
@@ -208,7 +215,7 @@
             <param name="id">订单id</param>
             <returns></returns>
         </member>
-        <member name="M:BeeCloud.BCPay.BCRefundQueryByCondition(System.String,System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.BCRefundQueryByCondition(BeeCloud.Model.BCQueryRefundParameter)">
             <summary>
             退款订单查询
             </summary>
@@ -262,6 +269,13 @@
             </param>
             <returns>
             </returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.BCRefundQueryCount(BeeCloud.Model.BCQueryRefundParameter)">
+            <summary>
+            获得退款笔数，配合BCRefundQueryByCondition使用，使用查询退款时一样的参数
+            </summary>
+            <param name="para"></param>
+            <returns></returns>
         </member>
         <member name="M:BeeCloud.BCPay.BCRefundQueryById(System.String)">
             <summary>
@@ -748,11 +762,6 @@
         <member name="P:BeeCloud.Model.BCRefund.channel">
             <summary>
             渠道类型 WX、ALI、UN、JD、YEE、KUAIQIAN、BD
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCRefund.subChannel">
-            <summary>
-            子渠道类型
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCRefund.finish">

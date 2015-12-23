@@ -185,20 +185,6 @@ namespace BeeCloud
                 {
                     bill.id = responseData["id"].ToString();
                     bill.url = responseData["url"].ToString();
-
-                    return bill;
-                }
-                else
-                {
-                    var ex = new BCException(responseData["err_detail"].ToString());
-                    throw ex;
-                }
-            }
-            if (bill.channel == "UN_WEB")
-            {
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    bill.id = responseData["id"].ToString();
                     bill.html = responseData["html"].ToString();
 
                     return bill;
@@ -209,7 +195,7 @@ namespace BeeCloud
                     throw ex;
                 }
             }
-            if (bill.channel == "JD_WAP" || bill.channel == "JD_WEB")
+            if (bill.channel == "JD_WAP" || bill.channel == "JD_WEB" || bill.channel == "KUAIQIAN_WAP" || bill.channel == "KUAIQIAN_WEB" || bill.channel == "UN_WEB")
             {
                 if (responseData["result_code"].ToString() == "0")
                 {
@@ -223,49 +209,7 @@ namespace BeeCloud
                     throw ex;
                 }
             }
-            if (bill.channel == "KUAIQIAN_WAP" || bill.channel == "KUAIQIAN_WEB")
-            {
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    bill.id = responseData["id"].ToString();
-                    bill.html = responseData["html"].ToString();
-                    return bill;
-                }
-                else
-                {
-                    var ex = new BCException(responseData["err_detail"].ToString());
-                    throw ex;
-                }
-            }
-            if (bill.channel == "YEE_WAP")
-            {
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    bill.id = responseData["id"].ToString();
-                    bill.url = responseData["url"].ToString();
-                    return bill;
-                }
-                else
-                {
-                    var ex = new BCException(responseData["err_detail"].ToString());
-                    throw ex;
-                }
-            }
-            if (bill.channel == "YEE_WEB")
-            {
-                if (responseData["result_code"].ToString() == "0")
-                {
-                    bill.id = responseData["id"].ToString();
-                    bill.url = responseData["url"].ToString();
-                    return bill;
-                }
-                else
-                {
-                    var ex = new BCException(responseData["err_detail"].ToString());
-                    throw ex;
-                }
-            }
-            if (bill.channel == "BD_WEB" || bill.channel == "BD_WAP")
+            if (bill.channel == "BD_WEB" || bill.channel == "BD_WAP" || bill.channel == "YEE_WEB" || bill.channel == "YEE_WAP")
             {
                 if (responseData["result_code"].ToString() == "0")
                 {
@@ -376,12 +320,6 @@ namespace BeeCloud
         //准备退款参数
         public static string prepareRefundParameters(BCRefund refund)
         {
-            if (BCCache.Instance.masterSecret == null)
-            {
-                var ex = new BCException("masterSecret未注册, 请查看registerApp方法");
-                throw ex;
-            }
-
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
@@ -412,9 +350,13 @@ namespace BeeCloud
             if (responseData["result_code"].ToString() == "0")
             {
                 refund.id = responseData["id"].ToString();
-                if (refund.channel.Contains("ALI"))
+                try
                 {
                     refund.url = responseData["url"].ToString();
+                }
+                catch
+                {
+                    //
                 }
             }
             else
@@ -489,12 +431,6 @@ namespace BeeCloud
         //准备退款审核参数
         public static string prepareApproveRefundParameters(string channel, List<string> ids, bool agree, string denyReason)
         {
-            if (BCCache.Instance.masterSecret == null)
-            {
-                var ex = new BCException("masterSecret未注册, 请查看registerApp方法");
-                throw ex;
-            }
-
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
             JsonData data = new JsonData();
@@ -517,11 +453,15 @@ namespace BeeCloud
             BCApproveRefundResult result = new BCApproveRefundResult();
             if (responseData["result_code"].ToString() == "0")
             {
-                if (channel.Contains("ALI"))
+                try
                 {
                     result.url = responseData["url"].ToString();
                 }
-                result.status = JsonMapper.ToObject<Dictionary<string, string>>(responseData["result_map"].ToString());
+                catch
+                {
+                    //
+                }
+                result.status = JsonMapper.ToObject<Dictionary<string, string>>(responseData["result_map"].ToJson().ToString());
             }
             else
             {

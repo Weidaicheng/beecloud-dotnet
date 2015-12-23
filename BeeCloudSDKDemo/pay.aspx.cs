@@ -234,9 +234,9 @@ namespace BeeCloudSDKDemo
                     para.transferNo = BCUtil.GetUUID();
                     para.totalFee = 100;
                     para.desc = "C# 单笔打款";
-                    para.channelUserId = "baoee753@163.com";
-                    para.channelUserName = "钱志浩";
-                    para.accountName = "苏州比可网络科技有限公司";
+                    para.channelUserId = "XXX@163.com";
+                    para.channelUserName = "毛毛";
+                    para.accountName = "XXX有限公司";
                     string aliURL = BCPay.BCTransfer(para);
                     Response.Write("<a href=" + aliURL + ">付款地址</a><br/>");
                 }
@@ -254,7 +254,7 @@ namespace BeeCloudSDKDemo
                     para.transferNo = "1000000000";
                     para.totalFee = 100;
                     para.desc = "C# 单笔打款";
-                    para.channelUserId = "o3kKrjlUsMnv__cK5DYZMl0JoAkY";
+                    para.channelUserId = "XXXXXXXXXXXXXXXXXX";
                     BCPay.BCTransfer(para);
                     Response.Write("完成");
                 }
@@ -277,7 +277,7 @@ namespace BeeCloudSDKDemo
                     para.transferNo = "1000000001";
                     para.totalFee = 100;
                     para.desc = "C# 红包";
-                    para.channelUserId = "o3kKrjlUsMnv__cK5DYZMl0JoAkY";
+                    para.channelUserId = "XXXXXXXXXXXXXXXX";
                     para.info = info;
                     BCPay.BCTransfer(para);
                     Response.Write("完成");

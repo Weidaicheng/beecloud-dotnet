@@ -32,6 +32,10 @@ namespace BeeCloud
         /// </summary>
         public static string getAppSignature(string appId, string appSecret, string timestamp)
         {
+            if (appSecret == null)
+            {
+                throw new BCException("app Secret为空，请调用registerApp方法");
+            }
             string input = appId + timestamp + appSecret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
@@ -42,6 +46,10 @@ namespace BeeCloud
         /// </summary>
         public static string getAppSignatureByMasterSecret(string appId, string masterSecret, string timestamp)
         {
+            if (masterSecret == null)
+            {
+                throw new BCException("master Secret为空，请调用registerApp方法");
+            }
             string input = appId + timestamp + masterSecret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;

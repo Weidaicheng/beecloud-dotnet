@@ -41,12 +41,5 @@ namespace BeeCloud
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
         }
-
-        public static string GetPaySignForJSAPI(string appid, string titile, string amount, string outTradeNo, string secret)
-        {
-            string input = appid + titile + amount + outTradeNo + secret;
-            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
-            return sign;
-        }
     }
 }
