@@ -438,7 +438,7 @@
         </member>
         <member name="M:BeeCloud.BCPrivateUtil.CreatePutHttpResponse(System.String,System.String,System.Int32)">
             <summary>
-            创建POST方式的HTTP请求 
+            创建PUT方式的HTTP请求 
             </summary>
         </member>
         <member name="M:BeeCloud.BCPrivateUtil.CreatePostHttpResponse(System.String,System.String,System.Int32)">

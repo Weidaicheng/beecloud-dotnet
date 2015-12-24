@@ -24,7 +24,7 @@ namespace BeeCloud
         public static string getHost()
         {
             Random random = new Random();
-            return mLocalDefaultHosts[random.Next(0, 4)];
+            return mLocalDefaultHosts[random.Next(0, mLocalDefaultHosts.Count)];
         }
 
         /// <summary>
@@ -32,9 +32,9 @@ namespace BeeCloud
         /// </summary>
         public static string getAppSignature(string appId, string appSecret, string timestamp)
         {
-            if (appSecret == null)
+            if (appSecret == null || appId == null)
             {
-                throw new BCException("app Secret为空，请调用registerApp方法");
+                throw new BCException("app id或app Secret为空，请调用registerApp方法");
             }
             string input = appId + timestamp + appSecret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
@@ -46,9 +46,9 @@ namespace BeeCloud
         /// </summary>
         public static string getAppSignatureByMasterSecret(string appId, string masterSecret, string timestamp)
         {
-            if (masterSecret == null)
+            if (masterSecret == null || appId == null)
             {
-                throw new BCException("master Secret为空，请调用registerApp方法");
+                throw new BCException("app id 或 master Secret为空，请调用registerApp方法");
             }
             string input = appId + timestamp + masterSecret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
@@ -68,7 +68,7 @@ namespace BeeCloud
         }
 
         /// <summary>
-        /// 创建POST方式的HTTP请求 
+        /// 创建PUT方式的HTTP请求 
         /// </summary>
         public static HttpWebResponse CreatePutHttpResponse(String url, String payload, int timeout)
         {

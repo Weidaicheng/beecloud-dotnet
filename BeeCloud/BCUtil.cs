@@ -37,6 +37,10 @@ namespace BeeCloud
         /// <returns></returns>
         public static string GetSign(string timestamp)
         {
+            if (BCCache.Instance.appId == null || BCCache.Instance.appSecret == null)
+            {
+                throw new BCException("app id或app Secret为空，请调用registerApp方法");
+            }
             string input = BCCache.Instance.appId + BCCache.Instance.appSecret + timestamp;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
