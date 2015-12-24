@@ -241,17 +241,25 @@
             <input type="submit" class="button" value="查询"/>
         </div>
     </form>
-    <div>------------------------------------------批量打款：-----------------------------------------------------------</div>
+    <div>---------------------------------------------- 打款：-----------------------------------------------------------</div>
     <form action="/pay.aspx" method="post" target="_blank">
         <div>
             <ul class="clear" style="margin-top: 20px">
                 <li onclick="paySwitch(this)">
-                    <input type="radio" value="alitransfer" name="paytype"/>
+                    <input type="radio" value="alitransfers" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/alitransfer.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
+                    <input type="radio" value="alitransfer" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/ali_transfer.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
                     <input type="radio" value="wxtransfer" name="paytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/wxtransfer.png" alt=""/>
+                    <img src="http://beeclouddoc.qiniudn.com/wx_transfer.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="wxredpack" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/wx_redpack.png" alt=""/>
                 </li>
             </ul>
         </div>

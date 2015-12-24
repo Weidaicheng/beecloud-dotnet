@@ -10,15 +10,14 @@ namespace BeeCloud
 
     public static class BeeCloud
     {
-        public static void registerApp(string appID, string appSecret) 
+        /// <summary>
+        /// 注册APP，masterSecret为需要退款/打款功能时注册
+        /// </summary>
+        public static void registerApp(string appID, string appSecret, string masterSecret) 
         {
             BCCache.Instance.appId = appID;
             BCCache.Instance.appSecret = appSecret;
-
-            //Random random = new Random();
-            //BCCache.Instance.bestHost = BCPrivateUtil.mLocalDefaultHosts[random.Next(0, 4)];
-
-            //BCPrivateUtil.getBestHost();
+            BCCache.Instance.masterSecret = masterSecret;
         }
 
         public static void setNetworkTimeout(int timeout)

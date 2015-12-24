@@ -9,9 +9,9 @@ namespace BeeCloud
 
         public string appId { get; set; }
         public string appSecret { get; set; }
-        public string bestHost { get; set; }
+        public string masterSecret { get; set; }
 
-        private int _newworkTimeout = 5000;
+        private int _newworkTimeout = 30000;
         public int networkTimeout
         {
             get
