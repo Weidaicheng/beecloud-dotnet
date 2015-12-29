@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-![pass](https://img.shields.io/badge/Build-pass-green.svg) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v1.3.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.0.0-blue.svg)
 
 
 ## 简介
