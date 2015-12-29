@@ -20,14 +20,27 @@
 三个步骤，2分钟轻松搞定：
 1. 注册开发者：猛击[这里](http://www.beecloud.cn/register)注册成为BeeCloud开发者。
 2. 注册应用：使用注册的账号登陆[控制台](http://www.beecloud.cn/dashboard/)后，点击"+创建App"创建新应用
-3. 在代码中注册：
+3. 在新创建的APP中获取 `APP ID` `APP Secret` `Master Secret` `Test Secret`
+4. 在代码中注册：
 
 ```.net
-BeeCloud.BeeCloud.registerApp(appid, appsecret);
+BeeCloud.BeeCloud.registerApp(appID, appSecret, masterSecret, testSecret);
 ```
 
 ## 使用方法
 >具体使用请参考项目中的`BeeCloudSDKDemo`工程
+* live模式
+
+```.net
+//设置上线模式，真实货币交易（也可不设置，默认为上线模式）
+BeeCloud.BeeCloud.setTestMode(false);
+```
+* test模式
+
+```.net
+//设置当前为测试模式
+BeeCloud.BeeCloud.setTestMode(true);
+```
 
 ### 1.支付
 
@@ -36,16 +49,20 @@ BeeCloud.BeeCloud.registerApp(appid, appsecret);
 方法原型：
 
 ```.net
-public static BCPayResult BCPayByChannel(string channel, int totalFee, string billNo, string title, Dictionary<string,string> optional, string returnUrl,string openId, string showURL, string qrPayMode);
+public static BCBill BCPayByChannel(BCBill bill)
 ```
 调用：
 
 ```.net
-BCPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自制自来水", null, "http://localhost:50003/return.aspx", null, null, "2");
-if (result.resultCode == 0)
+BCBill bill = new BCBill(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
+try
 {
-    BCUnWebPayResult payResult = result as BCUnWebPayResult;
-
+    BCBill resultBill = BCPay.BCPayByChannel(bill);
+}
+catch (Exception excption)
+{
+    //错误处理
 }
 ```
 
@@ -54,83 +71,179 @@ if (result.resultCode == 0)
 方法原型：
 
 ```.net
-public static BCPayResult BCInternationalPay(string channel, int totalFee, string billNo, string title, string currency, BCCreditCardInfo info,  string creditCardId, string returnUrl)
+public static BCInternationlBill BCInternationalPay(BCInternationlBill bill)
 ```
 
 调用：
 
 ```.net
 //通过登录paypal账号付款
-BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_PAYPAL.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", null, null, "http://localhost:50003/paypal/return_paypal_url.aspx");
+BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_PAYPAL.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
+bill.returnUrl = "http://localhost:50003/paypal/return_paypal_url.aspx";
+try
+{
+    bill = BCPay.BCInternationalPay(bill);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 
 //使用信用卡付款
-BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", info, null, null);
+BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
+bill.info = info;
+try
+{
+    bill = BCPay.BCInternationalPay(bill);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 
 //使用存储的信用卡信息付款
-BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", null, "CARD-1K997489XXXXXXXXXXXXXXX", null);
+BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
+//这里填入你在信用卡付款后获得的信用卡id。
+bill.creditCardId = "CARD-1K997489XXXXXXXXXXXXXXX";
+try
+{
+    bill = BCPay.BCInternationalPay(bill);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 ```
 
-### 2.退款
+### 2.(预)退款
 
 方法原型：
 
 ```.net
-public static BCRefundResult BCRefundByChannel(string channel, string refundNo, string billNo, int refundFee, Dictionary<string, string> optional);
+public static BCRefund BCRefundByChannel(BCRefund refund)
 ```
 调用：
 
 ```.net
-BCRefundResult refundResult = BCPay.BCRefundByChannel(BCPay.RefundChannel.ALI.ToString(), DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), billNo, totalFee, null);
-if (refundResult.resultCode == 0)
+BCRefund refund = new BCRefund(billNo, DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), totalFee);
+refund.channel = BCPay.RefundChannel.ALI.ToString();
+try
 {
-    Response.Redirect(refundResult.url);
+    refund = BCPay.BCRefundByChannel(refund);
+    //Response.Redirect(refund.url);支付宝需要到退款链接输入支付密码完成退款
+}
+catch (Exception excption)
+{
+    //错误处理
 }
 ```
-### 3.查询
+
+### 3.退款审核
+
+* 查询支付订单
+
+方法原型
+
+```.net
+public static BCApproveRefundResult BCApproveRefund(string channel, List<string> ids, bool agree, string denyReason)
+```
+
+调用：
+
+```.net
+BCApproveRefundResult result = new BCApproveRefundResult();
+try
+{
+    result = BCPay.BCApproveRefund("WX", list, true, null);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
+```
+
+### 4.查询 
 
 * 查询支付订单
 
 方法原型：
 
 ```.net
-public static BCPayQueryResult BCPayQueryByCondition(string channel, string billNo, long? startTime, long? endTime, int? skip, int? limit);
+//条件查询
+public static List<BCBill> BCPayQueryByCondition(BCQueryBillParameter para)
+//id查询
+public static BCBill BCPayQueryById(string id)
+//条件查询的结果数
+public static int BCPayQueryCount(BCQueryBillParameter para)
 ```
 调用：
 
 ```.net
-BCPayQueryResult result = BCPay.BCPayQueryByCondition(BCUtil.GetTimeStamp("ALI", null, null, null, null, 50);
+try
+{
+    BCQueryBillParameter para = new BCQueryBillParameter();
+    para.channel = "ALI";
+    para.limit = 50;
+    bills = BCPay.BCPayQueryByCondition(para);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 ```
 * 查询退款订单
 
 方法原型：
 
 ```.net
-public static BCRefundQuerytResult BCRefundQueryByCondition(string channel, string billNo, string refundNo, long? startTime, long? endTime, int? skip, int? limit);
+//条件查询
+public static int BCRefundQueryCount(BCQueryRefundParameter para)
+//id查询
+public static BCRefund BCRefundQueryById(string id)
+//条件查询结果数
+public static int BCRefundQueryCount(BCQueryRefundParameter para)
 ```
 调用：
 
 ```.net
-BCRefundQuerytResult result = BCPay.BCRefundQueryByCondition("ALI", null, null, null, null, null, 50);
+BCQueryRefundParameter para = new BCQueryRefundParameter();
+para.channel = "ALI";
+para.limit = 50;
+try
+{
+    refunds = BCPay.BCRefundQueryByCondition(para);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 ```
-* 查询退款状态（支持微信，易宝，快钱）
+* 查询退款状态（支持微信，易宝，快钱，百度）
 
 方法原型：
 
 ```.net
-public static BCRefundStatusQueryResult BCRefundStatusQuery(string channel, string refundNo);
+public static string BCRefundStatusQuery(string channel, string refundNo)
 ```
 调用：
 
 ```.net
-BCRefundStatusQueryResult result = BCPay.BCRefundStatusQuery("WX", refundNo);
+try
+{
+    string status = BCPay.BCRefundStatusQuery("YEE", refundNo);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 ```
-## 4.批量打款
-* 支付宝批量打款
+## 5.（批量）打款
+* （支付宝）批量打款
 
 方法原型:
 
 ```.net
-public static BCTransferResult BCTransfer(string channel, string batchNo, string accountName, List<BCTransferData> transferData)
+public static string BCTransfers(BCTransfersParameter para)
 ```
 调用：
 
@@ -150,7 +263,89 @@ data2.transferNote = "note";
 List<BCTransferData> list = new List<BCTransferData>();
 list.Add(data);
 list.Add(data2);
-BCTransferResult result = BCPay.BCTransfer(BCPay.TransferChannel.ALI.ToString(), BCUtil.GetUUID(), "毛毛", list);
+
+try
+{
+    BCTransfersParameter para = new BCTransfersParameter();
+    para.channel = BCPay.TransferChannel.ALI.ToString();
+    para.batchNo = BCUtil.GetUUID();
+    para.accountName = "毛毛";
+    para.transfersData = list;
+    string transfersURL = BCPay.BCTransfers(para);
+}
+catch (Exception excption)
+{
+     //错误处理
+}
+```
+
+* 单笔打款
+
+方法原型:
+
+```.net
+public static string BCTransfer(BCTransferParameter para)
+```
+
+调用:
+
+```.net
+//支付宝单笔打款
+try
+{
+    BCTransferParameter para = new BCTransferParameter();
+    para.channel = BCPay.TransferChannel.ALI_TRANSFER.ToString();
+    para.transferNo = BCUtil.GetUUID();
+    para.totalFee = 100;
+    para.desc = "C# 单笔打款";
+    para.channelUserId = "XXX@163.com";
+    para.channelUserName = "毛毛";
+    para.accountName = "XXX有限公司";
+    string aliURL = BCPay.BCTransfer(para);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
+
+//微信单笔打款
+try
+{
+    BCTransferParameter para = new BCTransferParameter();
+    para.channel = BCPay.TransferChannel.WX_TRANSFER.ToString();
+    para.transferNo = "1000000000";
+    para.totalFee = 100;
+    para.desc = "C# 单笔打款";
+    para.channelUserId = "XXXXXXXXXXXXXXXXXX";
+    BCPay.BCTransfer(para);
+}
+catch (Exception excption)
+{
+    //错误处理
+}
+
+//微信红包
+BCRedPackInfo info = new BCRedPackInfo();
+info.actName = "C# 红包";
+info.sendName = "BeeCloud";
+info.wishing = "啦啦啦";
+
+try
+{
+    BCTransferParameter para = new BCTransferParameter();
+    para.channel = BCPay.TransferChannel.WX_REDPACK.ToString();
+    para.transferNo = "1000000001";
+    para.totalFee = 100;
+    para.desc = "C# 红包";
+    para.channelUserId = "XXXXXXXXXXXXXXXX";
+    para.info = info;
+    BCPay.BCTransfer(para);
+    Response.Write("完成");
+}
+catch (Exception excption)
+{
+    //错误处理
+}
 ```
 
 ## Demo

@@ -15,7 +15,7 @@ namespace BeeCloudSDKDemo
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            BeeCloud.BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", "4bfdd244-574d-4bf3-b034-0c751ed34fee");
 
             byte[] byts = new byte[Request.InputStream.Length];
             Request.InputStream.Read(byts, 0, byts.Length);
@@ -26,11 +26,11 @@ namespace BeeCloudSDKDemo
 
             string sign = requestData["sign"].ToString();
             long timestamp = long.Parse(requestData["timestamp"].ToString());
-            string channelType = requestData["channelType"].ToString();
-            string transactionType = requestData["transactionType"].ToString();
-            string tradeSuccess = requestData["tradeSuccess"].ToString();
+            string channelType = requestData["channel_type"].ToString();
+            string transactionType = requestData["transaction_type"].ToString();
+            string tradeSuccess = requestData["trade_success"].ToString();
 
-            //检查timestamp是否在可信时间段内，阻止重发
+            //检查timestamp是否在可信时间段内，阻止重放
             TimeSpan ts = DateTime.Now - BCUtil.GetDateTime(timestamp);
             
             //验签， 确保来自BeeCloud
@@ -46,7 +46,7 @@ namespace BeeCloudSDKDemo
                 // 如果发现这样的情况，请及时与我们联系，我们会与客户一起与这些不法分子做斗争。而且即使有这样极端的情况发生，
                 // 只要按照前述要求做了购买的产品与订单金额的匹配性验证，在你的后端服务器不被入侵的前提下，你就不会有任何经济损失。
 
-                JsonData messageDetail = requestData["messageDetail"];
+                JsonData messageDetail = requestData["message_detail"];
                 if (channelType == "ALI")
                 {
                     string bc_appid = messageDetail["bc_appid"].ToString();

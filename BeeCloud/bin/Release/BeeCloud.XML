@@ -431,6 +431,12 @@
             通过masterSecret生成AppSign
             </summary>
         </member>
+        <member name="M:BeeCloud.BCPrivateUtil.getAppSignatureByTestSecret(System.String)">
+            <summary>
+            通过testSecret生成AppSign
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.CreateGetHttpResponse(System.String,System.Int32)">
             <summary>
             创建GET方式的HTTP请求 
@@ -458,10 +464,16 @@
             <param name="timestamp">时间戳</param>
             <returns></returns>
         </member>
-        <member name="M:BeeCloud.BeeCloud.registerApp(System.String,System.String,System.String)">
+        <member name="M:BeeCloud.BeeCloud.registerApp(System.String,System.String,System.String,System.String)">
             <summary>
             注册APP，masterSecret为需要退款/打款功能时注册
             </summary>
+        </member>
+        <member name="M:BeeCloud.BeeCloud.setTestMode(System.Boolean)">
+            <summary>
+            设置是否为测试模式
+            </summary>
+            <param name="testMode"></param>
         </member>
         <member name="P:BeeCloud.Model.BCCreditCardInfo.card_number">
             <summary>
