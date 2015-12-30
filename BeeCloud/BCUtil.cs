@@ -30,16 +30,18 @@ namespace BeeCloud
             return uuid;
         }
 
+        /// <summary>
+        /// webhook 验签
+        /// </summary>
+        /// <param name="timestamp">时间戳</param>
+        /// <returns></returns>
         public static string GetSign(string timestamp)
         {
+            if (BCCache.Instance.appId == null || BCCache.Instance.appSecret == null)
+            {
+                throw new BCException("app id或app Secret为空，请调用registerApp方法");
+            }
             string input = BCCache.Instance.appId + BCCache.Instance.appSecret + timestamp;
-            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
-            return sign;
-        }
-
-        public static string GetPaySignForJSAPI(string appid, string titile, string amount, string outTradeNo, string secret)
-        {
-            string input = appid + titile + amount + outTradeNo + secret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
         }

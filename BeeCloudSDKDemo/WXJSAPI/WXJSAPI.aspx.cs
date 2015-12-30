@@ -33,19 +33,20 @@ namespace BeeCloudSDKDemo.WXJSAPI
                     //ViewState["openid"] = jsApiPay.openid;
                     Response.Write(jsApiPay.openid);
 
-                    BCWxJSAPIPayResult result = BCPay.BCPayByChannel(BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotnet", null, null, jsApiPay.openid, null, null) as BCWxJSAPIPayResult;
-                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-                    //Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-                    if (result.resultCode == 0)
+                    BCBill bill = new BCBill(BCPay.PayChannel.WX_JSAPI.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                    bill.openId = jsApiPay.openid;
+                    try
                     {
-                        timeStamp = result.timestamp;
-                        noncestr = result.noncestr;
-                        package = result.package;
-                        paySign = result.paySign;
-                        signType = result.signType;
+                        BCBill resultBill = BCPay.BCPayByChannel(bill);
+                        timeStamp = resultBill.timestamp;
+                        noncestr = resultBill.noncestr;
+                        package = resultBill.package;
+                        paySign = resultBill.paySign;
+                        signType = resultBill.signType;
                     }
-                    else { 
-                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
+                    catch (Exception excption)
+                    {
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                     }
                 }
                 catch (Exception ex)

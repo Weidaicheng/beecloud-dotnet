@@ -27,14 +27,16 @@ namespace BeeCloudSDKDemo.PAYPAL
             info.first_name = firstName;
             info.last_name = lastName;
             info.card_type = cardType;
-            BCPayResult result = BCPay.BCInternationalPay(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD", info, null, null);
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultCode + "</span><br/>");
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.resultMsg + "</span><br/>");
-            Response.Write("<span style='color:#00CD00;font-size:20px'>" + result.errDetail + "</span><br/>");
-            if (result.resultCode == 0)
+            BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
+            bill.info = info;
+            try
             {
-                BCPayPalResult payResult = result as BCPayPalResult;
-                Response.Write("<span style='color:#00CD00;font-size:20px'>" + payResult.creditCardId + "</span><br/>");
+                bill = BCPay.BCInternationalPay(bill);
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + bill.creditCardId + "</span><br/>");
+            }
+            catch (Exception excption)
+            {
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
             }
         }
     }

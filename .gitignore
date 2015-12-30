@@ -21,6 +21,8 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+OpenCover/
+
 *_i.c
 *_p.c
 *.ilk
@@ -149,3 +151,7 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+BeeCloudTest/bin/Release/BeeCloudTest.dll.VisualState.xml
+BeeCloudTest/bin/Release/BeeCloud.dll.VisualState.xml
+BeeCloudTest/bin/Release/TestResult.xml
+BeeCloud/bin/Release/BeeCloud.dll.VisualState.xml
