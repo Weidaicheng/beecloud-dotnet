@@ -29,6 +29,7 @@ BeeCloud.BeeCloud.registerApp(appID, appSecret, masterSecret, testSecret);
 
 ## 使用方法
 >具体使用请参考项目中的`BeeCloudSDKDemo`工程
+
 * live模式
 
 ```.net
