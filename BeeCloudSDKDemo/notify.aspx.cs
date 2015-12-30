@@ -30,7 +30,7 @@ namespace BeeCloudSDKDemo
             string transactionType = requestData["transaction_type"].ToString();
             string tradeSuccess = requestData["trade_success"].ToString();
 
-            //检查timestamp是否在可信时间段内，阻止重放
+            //检查timestamp是否在可信时间段内，阻止在该时间段外重复发送请求
             TimeSpan ts = DateTime.Now - BCUtil.GetDateTime(timestamp);
             
             //验签， 确保来自BeeCloud

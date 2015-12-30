@@ -230,6 +230,7 @@ public static string BCRefundStatusQuery(string channel, string refundNo)
 ```.net
 try
 {
+    //拿常用渠道 易宝 举例
     string status = BCPay.BCRefundStatusQuery("YEE", refundNo);
 }
 catch (Exception excption)
@@ -237,7 +238,7 @@ catch (Exception excption)
     //错误处理
 }
 ```
-## 5.（批量）打款
+## 5.企业打款
 * （支付宝）批量打款
 
 方法原型:
@@ -369,7 +370,11 @@ demo使用framework4.5
 
 
 ## 常见问题
-- demo的支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  
+- 微信公众号支付**没有**同步回调(return url)
+
+- 只有`支付宝` `微信` `银联` `京东`有**退款webhook**，其他渠道需要通过refundStatusQuery方法来查询获得退款状态
+
+- 使用demo的live模式发起支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  
 由于政策原因，一些渠道的账号不能提供给用户测试，所以有遇到没有权限，渠道未开通等报错是正常的。
 
 - `LitJson.dll`和`ThoughtWorks.QRCode.dll`哪里有下？  
