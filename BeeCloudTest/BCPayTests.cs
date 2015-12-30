@@ -15,14 +15,14 @@ namespace BeeCloud.Tests
         [TearDown()]
         public void reset()
         {
-            BeeCloud.registerApp(null, null, null);
+            BeeCloud.registerApp(null, null, null, null);
         }
 
         #region 支付
         [Test()]
         public void preparePayParametersTest()
         {
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
             BCBill bill = new BCBill("ALI", 100, "10000000", "UT");
             bill.optional = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
             bill.returnUrl = "http://www.test.com";
@@ -126,7 +126,7 @@ namespace BeeCloud.Tests
             refund.channel = "WX";
             refund.optional = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
             string paraString = "\"channel\":\"WX\",\"refund_no\":\"20000000\",\"bill_no\":\"10000000\",\"refund_fee\":100,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"},\"need_approval\":false}";
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
             string actual = BCPay.prepareRefundParameters(refund);
             Assert.IsTrue(actual.Contains(paraString));
         }
@@ -146,7 +146,7 @@ namespace BeeCloud.Tests
         public void prepareApproveRefundParametersTest()
         {
             string paraString = "\"channel\":\"ALI\",\"ids\":[\"001\",\"002\"],\"agree\":true,\"denyReason\":null}";
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
             string actual = BCPay.prepareApproveRefundParameters("ALI", new List<string> { "001", "002" }, true, null);
             Assert.IsTrue(actual.Contains(paraString));
         }
@@ -165,7 +165,7 @@ namespace BeeCloud.Tests
         [Test()]
         public void preparePayQueryByConditionParametersTest()
         {
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
 
             BCQueryBillParameter para = new BCQueryBillParameter();
             para.channel = "ALI";
@@ -193,7 +193,7 @@ namespace BeeCloud.Tests
         [Test()]
         public void prepareQueryByIdParametersTest()
         {
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
 
             string paraString = "{\"app_id\":\"c5d1cba1-5e3f-4ba0-941d-9b0a371fe719\",\"app_sign\":";
             string actual = BCPay.prepareQueryByIdParameters("000000001");
@@ -221,7 +221,7 @@ namespace BeeCloud.Tests
         [Test()]
         public void prepareRefundQueryByConditionParametersTest()
         {
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
 
             BCQueryRefundParameter para = new BCQueryRefundParameter();
             para.channel = "ALI";
@@ -247,7 +247,7 @@ namespace BeeCloud.Tests
         [Test()]
         public void prepareRefundStatusQueryParametersTest()
         {
-            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2");
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
 
             string paraString = "\"channel\":\"WX\",\"refund_no\":\"00000001\"}";
             string actual = BCPay.prepareRefundStatusQueryParameters("WX", "00000001");

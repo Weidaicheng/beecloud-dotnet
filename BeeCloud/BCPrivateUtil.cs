@@ -56,6 +56,23 @@ namespace BeeCloud
         }
 
         /// <summary>
+        /// 通过testSecret生成AppSign
+        /// </summary>
+        /// <returns></returns>
+        public static string getAppSignatureByTestSecret(string timestamp)
+        {
+            string testSecret = BCCache.Instance.testSecret;
+            string appId = BCCache.Instance.appId;
+            if (testSecret == null || appId == null)
+            {
+                throw new BCException("app id 或 test Secret为空，请调用registerApp方法");
+            }
+            string input = appId + timestamp + testSecret;
+            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
+            return sign;
+        }
+
+        /// <summary>
         /// 创建GET方式的HTTP请求 
         /// </summary>
         public static HttpWebResponse CreateGetHttpResponse(string url, int timeout)

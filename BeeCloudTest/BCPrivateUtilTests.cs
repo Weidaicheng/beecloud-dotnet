@@ -13,7 +13,7 @@ namespace BeeCloud.Tests
         [TearDown()]
         public void reset()
         {
-            BeeCloud.registerApp(null, null, null);
+            BeeCloud.registerApp(null, null, null, null);
         }
 
         [Test()]

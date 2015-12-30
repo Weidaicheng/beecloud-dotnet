@@ -95,7 +95,14 @@ namespace BeeCloud
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            if (!BCCache.Instance.testMode)
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            }
+            else
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignatureByTestSecret(timestamp.ToString());
+            }   
             data["timestamp"] = timestamp;
             data["channel"] = bill.channel;
             data["total_fee"] = bill.totalFee;
@@ -133,7 +140,14 @@ namespace BeeCloud
                 if (responseData["result_code"].ToString() == "0")
                 {
                     bill.id = responseData["id"].ToString();
-                    bill.codeURL = responseData["code_url"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.codeURL = responseData["url"].ToString();
+                    }
+                    else
+                    {
+                        bill.codeURL = responseData["code_url"].ToString();
+                    } 
                     return bill;
                 }
                 else
@@ -145,6 +159,10 @@ namespace BeeCloud
             }
             if (bill.channel == "WX_JSAPI")
             {
+                if (BCCache.Instance.testMode)
+                {
+                    throw new BCException("微信公众号内支付不支持测试模式");
+                }
                 if (responseData["result_code"].ToString() == "0")
                 {
                     bill.id = responseData["id"].ToString();
@@ -168,7 +186,14 @@ namespace BeeCloud
                 if (responseData["result_code"].ToString() == "0")
                 {
                     bill.id = responseData["id"].ToString();
-                    bill.html = responseData["html"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                    }
                     bill.url = responseData["url"].ToString();
 
                     return bill;
@@ -185,8 +210,14 @@ namespace BeeCloud
                 {
                     bill.id = responseData["id"].ToString();
                     bill.url = responseData["url"].ToString();
-                    bill.html = responseData["html"].ToString();
-
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                    }
                     return bill;
                 }
                 else
@@ -200,7 +231,14 @@ namespace BeeCloud
                 if (responseData["result_code"].ToString() == "0")
                 {
                     bill.id = responseData["id"].ToString();
-                    bill.html = responseData["html"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                    }
                     return bill;
                 }
                 else
@@ -296,9 +334,18 @@ namespace BeeCloud
         /// </returns>
         public static BCBill BCPayByChannel(BCBill bill)
         {
-            string payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL;
+            string payUrl = "";
+            if (!BCCache.Instance.testMode)
+            {
+                payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL;
+            }
+            else
+            {
+                payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billTestURL;
+            }
+            
 
-            string paraString = preparePayParameters(bill);//(bill.channel, bill.totalFee, bill.billNo, bill.title, bill.optional, bill.returnUrl, bill.billTimeout, bill.openId, bill.showURL, bill.qrPayMode);
+            string paraString = preparePayParameters(bill);
 
             try
             {
@@ -316,7 +363,7 @@ namespace BeeCloud
         }
         #endregion
 
-        #region 退款
+        #region （预）退款
         //准备退款参数
         public static string prepareRefundParameters(BCRefund refund)
         {
@@ -529,7 +576,14 @@ namespace BeeCloud
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            if (!BCCache.Instance.testMode)
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            }
+            else
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignatureByTestSecret(timestamp.ToString());
+            }
             data["timestamp"] = timestamp;
             data["channel"] = para.channel;
             data["bill_no"] = para.billNo;
@@ -644,7 +698,14 @@ namespace BeeCloud
 
             JsonData data = new JsonData();
             data["app_id"] = BCCache.Instance.appId;
-            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            if (!BCCache.Instance.testMode)
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            }
+            else
+            {
+                data["app_sign"] = BCPrivateUtil.getAppSignatureByTestSecret(timestamp.ToString());
+            }
             data["timestamp"] = timestamp;
 
             string paraString = data.ToJson();
@@ -830,7 +891,16 @@ namespace BeeCloud
         public static List<BCBill> BCPayQueryByCondition(BCQueryBillParameter para)
         {
             Random random = new Random();
-            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billsURL;
+            string payQueryUrl = "";
+            if (!BCCache.Instance.testMode)
+            {
+                payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billsURL;
+            }
+            else
+            {
+                payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billsTestURL;
+            }
+            
 
             string paraString = preparePayQueryByConditionParameters(para);
 
@@ -881,7 +951,16 @@ namespace BeeCloud
         public static BCBill BCPayQueryById(string id)
         {
             Random random = new Random();
-            string payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL + "/" + id;
+            string payQueryUrl = "";
+            if (!BCCache.Instance.testMode)
+            {
+                payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL + "/" + id;
+            }
+            else
+            {
+                payQueryUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billTestURL + "/" + id;
+            }
+            
 
             string paraString = prepareQueryByIdParameters(id);
 
