@@ -16,6 +16,7 @@ namespace BeeCloud
         public const string transferURL = "rest/transfer";
         public const string transfersURL = "rest/transfers";
         public const string internationalURL = "rest/international/bill";
+        public const string bctransferURL = "rest/bc_transfer";
 
         //test mode API
         public const string billTestURL = "rest/sandbox/bill";

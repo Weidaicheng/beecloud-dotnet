@@ -416,6 +416,13 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCBankCardTransfer(BeeCloud.Model.BCTransferWithBackCard)">
+            <summary>
+            BC银行卡代付
+            </summary>
+            <param name="transfer">具体参考初始化BCTransferWithBackCard</param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.getHost">
             <summary>
             获取API地址
@@ -508,6 +515,87 @@
         <member name="P:BeeCloud.Model.BCCreditCardInfo.card_type">
             <summary>
             卡类别 visa/mastercard/discover/amex
+            </summary>
+        </member>
+        <member name="M:BeeCloud.Model.BCTransferWithBackCard.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            初始化下发参数
+            </summary>
+            <param name="_totalFee">代付订单总金额</param>
+            <param name="_billNo">商户订单号</param>
+            <param name="_title">下发订单标题</param>
+            <param name="_tradeSource">交易源(UTF8编码格式，目前只能填写OUT_PC)</param>
+            <param name="_bankCode">银行编码(例如:中国银行 BOC)</param>
+            <param name="_bankAssociatedCode">银行联行行号(需要向银行咨询)</param>
+            <param name="_bankFullName"> 银行全名(中国银行，而不能写成"中行")</param>
+            <param name="_cardType">银行卡类型(DE代表借记卡，CR代表信用卡，其他值为非法)</param>
+            <param name="_accountType"> 收款帐户类型(帐户类型，P代表私户，C代表公户，其他值为非法)</param>
+            <param name="_accountNo">收款帐户号(收款方的银行卡号)</param>
+            <param name="_accountName">收款帐户名称(收款方的姓名或者单位名)</param>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.totalFee">
+            <summary>
+            代付订单总金额
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.billNo">
+            <summary>
+            商户订单号
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.title">
+            <summary>
+            下发订单标题
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.tradeSource">
+            <summary>
+            交易源(UTF8编码格式，目前只能填写OUT_PC)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankCode">
+            <summary>
+            银行编码(例如:中国银行 BOC)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankAssociatedCode">
+            <summary>
+            银行联行行号(需要向银行咨询)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankFullName">
+            <summary>
+            银行全名(中国银行，而不能写成"中行",因为“中行”也是中信银行和中兴银行的缩写)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.cardType">
+            <summary>
+            银行卡类型(DE代表借记卡，CR代表信用卡，其他值为非法)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.accountType">
+            <summary>
+            收款帐户类型(帐户类型，P代表私户，C代表公户，其他值为非法)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.accountNo">
+            <summary>
+            收款帐户号(收款方的银行卡号)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.accountName">
+            <summary>
+            收款帐户名称(收款方的姓名或者单位名)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.mobile">
+            <summary>
+            银行绑定的手机号(银行绑定的手机号，当需要手机收到银行入账信息时，填写该值，前提是该手机在银行有短信通知业务，否则收不到银行信息)
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBackCard.optional">
+            <summary>
+            附加数据(用户自定义的参数，将会在Webhook通知中原样返回，该字段主要用于商户携带的自定义数据)
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCRedPackInfo.sendName">

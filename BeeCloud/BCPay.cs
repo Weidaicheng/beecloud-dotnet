@@ -1453,5 +1453,83 @@ namespace BeeCloud
             }
         }
         #endregion
+
+        #region 代付
+        //准备代付参数
+        public static string prepareBCTransferWithBankCard(BCTransferWithBackCard transfer)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+
+            data["total_fee"] = transfer.totalFee;
+            data["bill_no"] = transfer.billNo;
+            data["title"] = transfer.title;
+            data["trade_source"] = transfer.tradeSource;
+            data["bank_code"] = transfer.bankCode;
+            data["bank_associated_code"] = transfer.bankAssociatedCode;
+            data["bank_fullname"] = transfer.bankFullName;
+            data["card_type"] = transfer.cardType;
+            data["account_type"] = transfer.accountType;
+            data["account_no"] = transfer.accountNo;
+            data["account_name"] = transfer.accountName;
+            data["mobile"] = transfer.mobile;
+
+            if (transfer.optional != null && transfer.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in transfer.optional.Keys)
+                {
+                    data["optional"][key] = transfer.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+            return paraString;
+        }
+
+        //处理代付回调
+        public static BCTransferWithBackCard handleBCTransferWithBankCardResult(string respString, BCTransferWithBackCard transfer)
+        {
+            JsonData responseData = JsonMapper.ToObject(respString);
+
+            if (responseData["result_code"].ToString() == "0")
+            {
+                return transfer;
+            }
+            else
+            {
+                var ex = new BCException(responseData["err_detail"].ToString());
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// BC银行卡代付
+        /// </summary>
+        /// <param name="transfer">具体参考初始化BCTransferWithBackCard</param>
+        /// <returns></returns>
+        public static BCTransferWithBackCard BCBankCardTransfer(BCTransferWithBackCard transfer)
+        {
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bctransferURL;
+
+            string paraString = prepareBCTransferWithBankCard(transfer);
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                return handleBCTransferWithBankCardResult(respString, transfer);
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

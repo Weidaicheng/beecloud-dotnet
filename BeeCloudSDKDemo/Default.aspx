@@ -261,6 +261,10 @@
                     <input type="radio" value="wxredpack" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/wx_redpack.png" alt=""/>
                 </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="bctransfer" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon_bcdaifu.png" alt=""/>
+                </li>
             </ul>
         </div>
         <div style="clear: both;">

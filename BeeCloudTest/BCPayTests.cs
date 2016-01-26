@@ -262,5 +262,21 @@ namespace BeeCloud.Tests
             Assert.IsTrue(actual == "FAIL");
         }
         #endregion
+
+        #region 代发
+        [Test()]
+        public void prepareBCTransferWithBankCardTest()
+        {
+            BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
+            string paraString = BCPay.prepareBCTransferWithBankCard(new BCTransferWithBackCard(1, "8558f188e3cb4008bf8ab077d11f59bf", ".net测试代付", "OUT_PC", "BOC", "xxxxxxxxxxxx", "中国银行", "DE", "P", "xxxxxxxxxxxxxxx", "xxx"));
+            Assert.IsTrue(paraString.Contains("\"total_fee\":1,\"bill_no\":\"8558f188e3cb4008bf8ab077d11f59bf\",\"title\":\".net\\u6D4B\\u8BD5\\u4EE3\\u4ED8\",\"trade_source\":\"OUT_PC\",\"bank_code\":\"BOC\",\"bank_associated_code\":\"xxxxxxxxxxxx\",\"bank_fullname\":\"\\u4E2D\\u56FD\\u94F6\\u884C\",\"card_type\":\"DE\",\"account_type\":\"P\",\"account_no\":\"xxxxxxxxxxxxxxx\",\"account_name\":\"xxx\",\"mobile\":null}"));
+        }
+
+        [Test()]
+        public void handleBCTransferWithBankCardResultTest()
+        {
+            Assert.Pass();
+        }
+        #endregion
     }
 }
