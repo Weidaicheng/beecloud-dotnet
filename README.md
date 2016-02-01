@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.0.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.1.0-blue.svg)
 
 
 ## 简介
@@ -9,21 +9,22 @@
 本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .NET SDK, 适用于 .NET framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
 
 ## 安装
-1.从BeeCloud [release](https://github.com/beecloud/beecloud-dotnet/releases)中下载dll文件,然后导入自己工程。  
+**方法一**.从BeeCloud [release](https://github.com/beecloud/beecloud-dotnet/releases)中下载dll文件,然后导入自己工程。  
 
 >下载的BeeCloud.xml文件为dll注释文件，请一起放入项目文件夹中，方便查看注释。  
 >.net SDK使用了第三方Json库LitJson.dll，请一起引入项目。 
 
-2.按需修改本工程之后编译获得dll文件(包括BeeCloud.dll, BeeCloud.xml,LitJson.dll)，导入自己工程即可。
+**方法二**.按需修改本工程之后编译获得dll文件(包括BeeCloud.dll, BeeCloud.xml,LitJson.dll)，导入自己工程即可。
 
 ## 注册
-三个步骤，2分钟轻松搞定：
+四个步骤，2分钟轻松搞定：
 1. 注册开发者：猛击[这里](http://www.beecloud.cn/register)注册成为BeeCloud开发者。
 2. 注册应用：使用注册的账号登陆[控制台](http://www.beecloud.cn/dashboard/)后，点击"+创建App"创建新应用
 3. 在新创建的APP中获取 `APP ID` `APP Secret` `Master Secret` `Test Secret`
 4. 在代码中注册：
 
 ```.net
+//请注意各个参数一一对应
 BeeCloud.BeeCloud.registerApp(appID, appSecret, masterSecret, testSecret);
 ```
 
@@ -239,7 +240,7 @@ catch (Exception excption)
     //错误处理
 }
 ```
-## 5.企业打款
+### 5.（微信/支付宝）企业打款
 * （支付宝）批量打款
 
 方法原型:
@@ -350,9 +351,39 @@ catch (Exception excption)
 }
 ```
 
+### 6. BeeCloud代付（打款到银行卡）
+
+方法原型：
+
+```C#
+// Summary:
+//     BC银行卡代付
+//
+// Parameters:
+//   transfer:
+//     具体参考初始化BCTransferWithBackCard
+public static BCTransferWithBackCard BCBankCardTransfer(BCTransferWithBackCard transfer);
+```
+
+调用：
+
+```C#
+BCTransferWithBackCard transfer = new BCTransferWithBackCard(1, BCUtil.GetUUID(), ".net测试代付", "OUT_PC", "BOC", "xxxxxxx", "中国银行", "DE", "P", "xxxxxxxxxxxx", "xxx");
+transfer.mobile = "xxxxxxxxxxxxxx";
+try 
+{
+    transfer = BCPay.BCBankCardTransfer(transfer);
+    //打款成功
+}
+catch (Exception excption)
+{
+    //错误处理
+}
+```
+
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
-demo使用framework4.5  
+**demo使用framework4.5**  
 在demo工程中添加BeeCloud工程的dll引用，设置demo工程为启动项后F5即可运行调试
 >每次修改过BeeCloud工程后请先build BeeCloud工程再运行demo调试
 
@@ -412,8 +443,8 @@ Pull Request要求
 - 清晰的commit历史 - 保证你的pull请求的每次commit操作都是有意义的。如果你开发中需要执行多次的即时commit操作，那么请把它们放到一起再提交pull请求。
 
 ## 联系我们
-- 如果有什么问题，可以到BeeCloud开发者1群:**321545822** 或 BeeCloud开发者2群:**427128840** 提问
-- 更详细的文档，见源代码的注释以及[官方文档](https://beecloud.cn/doc/?index=7)
+- 如果有什么问题，可以到BeeCloud开发者5群:**532516744**提问
+- 更详细的文档，见源代码的注释以及[官方FAQ](https://beecloud.cn/faq/)
 - 如果发现了bug，欢迎提交[issue](https://github.com/beecloud/beecloud-dotnet-sdk/issues)
 - 如果有新的需求，欢迎提交[issue](https://github.com/beecloud/beecloud-dotnet-sdk/issues)
 
