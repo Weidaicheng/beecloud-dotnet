@@ -28,7 +28,7 @@ namespace BeeCloud.Tests
             bill.returnUrl = "http://www.test.com";
             bill.billTimeout = 360;
 
-            string paraString = "\"channel\":\"ALI\",\"total_fee\":100,\"bill_no\":\"10000000\",\"title\":\"UT\",\"return_url\":\"http://www.test.com\",\"bill_timeout\":360,\"openid\":null,\"show_url\":null,\"qr_pay_mode\":null,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"}}";
+            string paraString = "\"channel\":\"ALI\",\"total_fee\":100,\"bill_no\":\"10000000\",\"title\":\"UT\",\"return_url\":\"http://www.test.com\",\"bill_timeout\":360,\"openid\":null,\"show_url\":null,\"qr_pay_mode\":null,\"identity_id\":null,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"}}";
             string actual = BCPay.preparePayParameters(bill);
             Assert.IsTrue(actual.Contains(paraString));
         }

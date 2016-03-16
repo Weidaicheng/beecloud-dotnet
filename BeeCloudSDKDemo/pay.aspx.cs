@@ -153,6 +153,7 @@ namespace BeeCloudSDKDemo
             else if (type == "ybwappay")
             {
                 BCBill bill = new BCBill(BCPay.PayChannel.YEE_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.yeeID = "1234567890abcdefg";
                 bill.returnUrl = "http://localhost:50003/return_yee_url.aspx";
                 try
                 {
