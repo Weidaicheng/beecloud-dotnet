@@ -128,6 +128,10 @@ namespace BeeCloud.Model
         /// 支付二维码
         /// </summary>
         public string codeURL { get; set; }
+        /// <summary>
+        /// 50位以内数字和/或字母组合，易宝移动网页（一键）支付用户唯一标识符，用于绑定用户一键支付的银行卡信息
+        /// </summary>
+        public string yeeID { get; set; }
 
 
         /// <summary>

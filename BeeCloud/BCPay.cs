@@ -116,6 +116,8 @@ namespace BeeCloud
             data["show_url"] = bill.showURL;
             data["qr_pay_mode"] = bill.qrPayMode;
 
+            data["identity_id"] = bill.yeeID;
+
 
             if (bill.optional != null && bill.optional.Count > 0)
             {
@@ -1498,6 +1500,7 @@ namespace BeeCloud
 
             if (responseData["result_code"].ToString() == "0")
             {
+                transfer.id = responseData["id"].ToString();
                 return transfer;
             }
             else
