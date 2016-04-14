@@ -25,7 +25,8 @@ namespace BeeCloud
             KUAIQIAN_WAP,
             KUAIQIAN_WEB,
             BD_WEB,
-            BD_WAP
+            BD_WAP,
+            BC_GATEWAY
         };
 
         public enum InternationalPay
@@ -68,7 +69,8 @@ namespace BeeCloud
             JD,
             YEE,
             KUAIQIAN,
-            BD
+            BD,
+            BC
         };
 
         public enum RefundStatusChannel
@@ -85,6 +87,22 @@ namespace BeeCloud
             WX_REDPACK, 
             WX_TRANSFER, 
             ALI_TRANSFER
+        };
+
+        public enum Banks
+        {
+            CMB,    //招商银行
+            ICBC,   //工商银行
+            BOC,    //中国银行
+            ABC,    //农业银行
+            BOCM,   //交通银行
+            SPDB,   //浦发银行
+            GDB,    //广发银行
+            CITIC,  //中信银行
+            CEB,    //光大银行
+            CIB,    //兴业银行
+            SDB,    //平安银行
+            CMBC    //民生银行
         };
 
         #region 支付
@@ -118,6 +136,10 @@ namespace BeeCloud
 
             data["identity_id"] = bill.yeeID;
 
+            if (bill.bank != null) 
+            {
+                data["bank"] = bill.bank;
+            }
 
             if (bill.optional != null && bill.optional.Count > 0)
             {
@@ -255,6 +277,27 @@ namespace BeeCloud
                 {
                     bill.id = responseData["id"].ToString();
                     bill.url = responseData["url"].ToString();
+                    return bill;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            if (bill.channel == "BC_GATEWAY")
+            {
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    bill.id = responseData["id"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                    }
                     return bill;
                 }
                 else

@@ -114,6 +114,22 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            if (type == "beepay")
+            {
+                typeChannel = "BC_GATEWAY";
+                Response.Write("<span style='color:#00CD00;font-size:20px'>" + "BC_GATEWAY" + "</span><br/>");
+                try
+                {
+                    BCQueryBillParameter para = new BCQueryBillParameter();
+                    para.channel = "BC_GATEWAY";
+                    para.limit = 50;
+                    bills = BCPay.BCPayQueryByCondition(para);
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             this.bind();
         }
 
@@ -213,6 +229,20 @@ namespace BeeCloudSDKDemo
                 {
                     BCRefund refund = new BCRefund(billNo, DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), totalFee);
                     refund.channel = BCPay.RefundChannel.KUAIQIAN.ToString();
+                    try
+                    {
+                        refund = BCPay.BCRefundByChannel(refund);
+                        Response.Write("<script>alert('退款成功！')</script>");
+                    }
+                    catch (Exception excption)
+                    {
+                        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                    }
+                }
+                if (typeChannel == "BC_GATEWAY")
+                {
+                    BCRefund refund = new BCRefund(billNo, DateTime.Today.ToString("yyyyMMdd") + BCUtil.GetUUID().Substring(0, 8), totalFee);
+                    refund.channel = BCPay.RefundChannel.BC.ToString();
                     try
                     {
                         refund = BCPay.BCRefundByChannel(refund);

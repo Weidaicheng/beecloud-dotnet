@@ -154,6 +154,10 @@
                     <input type="radio" value="kqwappay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt=""/>
                 </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="beepay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon_gateway.png" alt=""/>
+                </li>
             </ul>
         </div>
         <div>
@@ -200,6 +204,10 @@
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="kqquery" name="querytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/kq.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="beepay" name="querytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon_gateway.png" alt=""/>
                 </li>
             </ul>
         </div>
