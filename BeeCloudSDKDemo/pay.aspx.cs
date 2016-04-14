@@ -193,6 +193,20 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "beepay")
+            {
+                BCBill bill = new BCBill(BCPay.PayChannel.BC_GATEWAY.ToString(), 1, BCUtil.GetUUID(), "dotNet白开水");
+                bill.bank = BCPay.Banks.BOC.ToString();
+                try
+                {
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             else if (type == "alitransfers")
             {
                 BCTransferData data = new BCTransferData();
