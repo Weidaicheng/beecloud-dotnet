@@ -6,7 +6,41 @@
 
 本项目的官方GitHub地址是 [https://github.com/beecloud/beecloud-dotnet](https://github.com/beecloud/beecloud-dotnet)
 
-本SDK是根据[BeeCloud Rest API](https://github.com/beecloud/beecloud-rest-api) 开发的 .NET SDK, 适用于 .NET framework 3.5及以上平台。可以作为调用BeeCloud Rest API的示例或者直接用于生产。
+SDK支持以下支付渠道： 
+
+* 支付宝web/wap
+* 微信扫码/微信内JSAPI
+* 银联web/wap
+* 京东web/wap
+* 易宝web/wap
+* 百度web/wap
+* paypal
+* BeeCloud网关支付
+
+提供（国内/国际）支付、（预）退款、 查询、 打款、 代付功能
+
+## 流程
+
+下图为整个支付的流程:
+![pic](http://7xavqo.com1.z0.glb.clouddn.com/img-beecloud%20sdk.png)
+
+
+步骤①：**（从网页服务器端）发送订单信息**
+步骤②：**收到BeeCloud返回的渠道支付地址（比如支付宝的收银台）**
+>*特别注意：
+微信扫码返回的内容不是和支付宝一样的一个有二维码的页面，而是直接给出了微信的二维码的内容，需要用户自己将微信二维码输出成二维码的图片展示出来*
+
+步骤③：**将支付地址展示给用户进行支付**
+步骤④：**用户支付完成后通过一开始发送的订单信息中的return_url来返回商户页面**
+>*特别注意：
+微信没有自己的页面，二维码展示在商户自己的页面上，所以没有return url的概念，需要商户自行使用一些方法去完成这个支付完成后的跳转（比如后台轮询查支付结果）*
+
+此时商户的网页需要做相应界面展示的更新（比如告诉用户"支付成功"或"支付失败")。**不允许**使用同步回调的结果来作为最终的支付结果，因为同步回调有极大的可能性出现丢失的情况（即用户支付完没有执行return url，直接关掉了网站等等），最终支付结果应以下面的异步回调为准。
+
+步骤⑤：**（在商户后端服务端）处理异步回调结果（[Webhook](https://beecloud.cn/doc/?index=webhook)）**
+ 
+付款完成之后，根据客户在BeeCloud后台的设置，BeeCloud会向客户服务端发送一个Webhook请求，里面包括了数字签名，订单号，订单金额等一系列信息。客户需要在服务端依据规则要验证**数字签名是否正确，购买的产品与订单金额是否匹配，这两个验证缺一不可**。验证结束后即可开始走支付完成后的逻辑。
+
 
 ## 安装
 **方法一**.从BeeCloud [release](https://github.com/beecloud/beecloud-dotnet/releases)中下载dll文件,然后导入自己工程。  
@@ -19,7 +53,7 @@
 ## 注册
 四个步骤，2分钟轻松搞定：
 1. 注册开发者：猛击[这里](http://www.beecloud.cn/register)注册成为BeeCloud开发者。
-2. 注册应用：使用注册的账号登陆[控制台](http://www.beecloud.cn/dashboard/)后，点击"+创建App"创建新应用
+2. 注册应用：使用注册的账号登陆[控制台](http://www.beecloud.cn/dashboard/)后，点击"+添加应用"创建新应用
 3. 在新创建的APP中获取 `APP ID` `APP Secret` `Master Secret` `Test Secret`
 4. 在代码中注册：
 
@@ -27,6 +61,8 @@
 //请注意各个参数一一对应
 BeeCloud.BeeCloud.registerApp(appID, appSecret, masterSecret, testSecret);
 ```
+
+注册方法务必在下面其他方法使用前被注册，一般写在程序启动时。
 
 ## 使用方法
 >具体使用请参考项目中的`BeeCloudSDKDemo`工程
@@ -402,21 +438,7 @@ catch (Exception excption)
 
 
 ## 常见问题
-- 微信公众号支付**没有**同步回调(return url)
-
-- 只有`支付宝` `微信` `银联` `京东`有**退款webhook**，其他渠道需要通过refundStatusQuery方法来查询获得退款状态
-
-- 使用demo的live模式发起支付宝为什么报错，报错内容为：调试错误，请回到请求来源地，重新发起请求。错误代码 ILLEGAL_PARTNER？  
-由于政策原因，一些渠道的账号不能提供给用户测试，所以有遇到没有权限，渠道未开通等报错是正常的。
 
 - `LitJson.dll`和`ThoughtWorks.QRCode.dll`哪里有下？  
 可以在demo项目的bin文件夹下获得，推荐使用本项目提供的dll，有遇到过使用不同版本的dll导致出错的情况。  
-
-- 网页在手机上如何使用微信支付？  
-1.由于微信的限制，现在手机网页只能在微信APP内实现使用微信支付，即微信公众号支付（WX_JSAPI）  
-2.WX_JSAPI支付配置相对复杂，请参考[微信文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_1)  
-
-- 查询/退款方法没有传channel但是报错了？  
-要不传channel完成查询/退款必须保证所有渠道所有订单号不同，否则会报错告诉开发者，要求传入channel以区分。
-
-- 易宝不支持本地调试，需要在服务器上，并配置信任域才可调试。  
+  

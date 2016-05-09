@@ -45,5 +45,23 @@ namespace BeeCloud
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
         }
+
+        /// <summary>
+        /// webhook 测试模式验签
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
+        public static string GetSignByTestMode(string timestamp)
+        {
+            string testSecret = BCCache.Instance.testSecret;
+            string appId = BCCache.Instance.appId;
+            if (testSecret == null || appId == null)
+            {
+                throw new BCException("app id 或 test Secret为空，请调用registerApp方法");
+            }
+            string input = appId + testSecret + timestamp;
+            string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
+            return sign;
+        }
     }
 }
