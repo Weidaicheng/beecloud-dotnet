@@ -471,6 +471,13 @@
             <param name="timestamp">时间戳</param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCUtil.GetSignByTestMode(System.String)">
+            <summary>
+            webhook 测试模式验签
+            </summary>
+            <param name="timestamp"></param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BeeCloud.registerApp(System.String,System.String,System.String,System.String)">
             <summary>
             注册APP，masterSecret为需要退款/打款功能时注册
