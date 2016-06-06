@@ -87,6 +87,8 @@ BeeCloud.BeeCloud.setTestMode(false);
 BeeCloud.BeeCloud.setTestMode(true);
 ```
 
+> 微信内JSAPI不支持测试模式，需要上线真实付款测试
+
 ### 1.支付
 
 - 境内支付
