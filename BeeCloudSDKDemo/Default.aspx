@@ -123,6 +123,10 @@
                     <img src="http://beeclouddoc.qiniudn.com/unionpay.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
+                    <input type="radio" value="unionwappay" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-unwap.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
                     <input type="radio" value="qralipay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/alis.png" alt=""/>
                 </li>
@@ -157,6 +161,10 @@
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="beepay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon_gateway.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="beepayexpress" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon_BcExpress.png" alt=""/>
                 </li>
             </ul>
         </div>
@@ -271,7 +279,7 @@
                 </li>
                 <li onclick="paySwitch(this)">
                     <input type="radio" value="bctransfer" name="paytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/icon_bcdaifu.png" alt=""/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-companypay.png" alt=""/>
                 </li>
             </ul>
         </div>

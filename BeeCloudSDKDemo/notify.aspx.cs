@@ -20,7 +20,7 @@ namespace BeeCloudSDKDemo
 
             byte[] byts = new byte[Request.InputStream.Length];
             Request.InputStream.Read(byts, 0, byts.Length);
-            string req = System.Text.Encoding.Default.GetString(byts);
+            string req = System.Text.Encoding.UTF8.GetString(byts);
             req = Server.UrlDecode(req);
 
             JsonData requestData = JsonMapper.ToObject(req);

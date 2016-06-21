@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using LitJson;
 using BeeCloud.Model;
 using System;
+using BeeCloud.Model.BCTransferWithBankCard;
 
 namespace BeeCloud
 {
@@ -18,6 +19,7 @@ namespace BeeCloud
             ALI_QRCODE,
             ALI_WAP,
             UN_WEB,
+            UN_WAP,
             JD_WAP,
             JD_WEB,
             YEE_WAP,
@@ -26,7 +28,8 @@ namespace BeeCloud
             KUAIQIAN_WEB,
             BD_WEB,
             BD_WAP,
-            BC_GATEWAY
+            BC_GATEWAY,
+            BC_EXPRESS
         };
 
         public enum InternationalPay
@@ -250,7 +253,7 @@ namespace BeeCloud
                     throw ex;
                 }
             }
-            if (bill.channel == "JD_WAP" || bill.channel == "JD_WEB" || bill.channel == "KUAIQIAN_WAP" || bill.channel == "KUAIQIAN_WEB" || bill.channel == "UN_WEB")
+            if (bill.channel == "JD_WAP" || bill.channel == "JD_WEB" || bill.channel == "KUAIQIAN_WAP" || bill.channel == "KUAIQIAN_WEB" || bill.channel == "UN_WEB" || bill.channel == "UN_WAP")
             {
                 if (responseData["result_code"].ToString() == "0")
                 {
@@ -276,7 +279,16 @@ namespace BeeCloud
                 if (responseData["result_code"].ToString() == "0")
                 {
                     bill.id = responseData["id"].ToString();
-                    bill.url = responseData["url"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                        bill.url = responseData["url"].ToString();
+                    }
+                   
                     return bill;
                 }
                 else
@@ -306,6 +318,28 @@ namespace BeeCloud
                     throw ex;
                 }
             }
+            if (bill.channel == "BC_EXPRESS")
+            {
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    bill.id = responseData["id"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        bill.html = string.Format("<html><head></head><body><script>location.href='{0}'</script></body></html>", responseData["url"].ToString());
+                    }
+                    else
+                    {
+                        bill.html = responseData["html"].ToString();
+                        bill.url = responseData["url"].ToString();
+                    }
+                    return bill;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
             return bill;
         }
 
@@ -325,6 +359,7 @@ namespace BeeCloud
         ///     ALI_QRCODE:   支付宝内嵌二维码支付
         ///     UN_APP:       银联APP支付
         ///     UN_WEB:       银联网页支付
+        ///     UN_WAP:       银联wap支付
         ///     JD_WAP:       京东wap支付
         ///     JD_WEB:       京东web支付
         ///     YEE_WAP:      易宝wap支付 
@@ -333,6 +368,8 @@ namespace BeeCloud
         ///     KUAIQIAN_WEB: 快钱web支付
         ///     BD_WEB:       百度web支付
         ///     BD_WAP:       百度wap支付
+        ///     BC_GATEWAY    比可网关支付
+        ///     BC_EXPRESS    比可快捷支付（收款最低金额1元）
         /// </param>
         /// <param name="totalFee">订单总金额
         ///     只能为整数，单位为分
@@ -1180,7 +1217,7 @@ namespace BeeCloud
         }
         #endregion
 
-        #region 打款
+        #region 微信/支付宝打款
         //准备单笔单款参数
         public static string prepareTransferParameters(BCTransferParameter para)
         {
@@ -1499,7 +1536,7 @@ namespace BeeCloud
         }
         #endregion
 
-        #region 代付
+        #region BeeCloud企业打款
         //准备代付参数
         public static string prepareBCTransferWithBankCard(BCTransferWithBackCard transfer)
         {
@@ -1514,8 +1551,6 @@ namespace BeeCloud
             data["bill_no"] = transfer.billNo;
             data["title"] = transfer.title;
             data["trade_source"] = transfer.tradeSource;
-            data["bank_code"] = transfer.bankCode;
-            data["bank_associated_code"] = transfer.bankAssociatedCode;
             data["bank_fullname"] = transfer.bankFullName;
             data["card_type"] = transfer.cardType;
             data["account_type"] = transfer.accountType;
@@ -1549,6 +1584,49 @@ namespace BeeCloud
             else
             {
                 var ex = new BCException(responseData["err_detail"].ToString());
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取BeeCloud企业打款支持的银行全称列表
+        /// </summary>
+        /// <param name="type">业务类型：
+        ///     P_DE:对私借记卡,
+        ///     P_CR:对私信用卡,
+        ///     C:对公账户
+        /// </param>
+        /// <returns></returns>
+        public static BankList getBankFullNames(string type)
+        {
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bctransferBanks;
+            JsonData data = new JsonData();
+            data["type"] = type;
+            string paraString = data.ToJson();
+
+            try
+            {
+                string url = transferUrl + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(url, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    BankList backlist = new BankList();
+                    backlist.size = int.Parse(responseData["size"].ToString());
+                    backlist.bankList = JsonMapper.ToObject<List<string>>(responseData["bank_list"].ToJson());
+                    return backlist;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
                 throw ex;
             }
         }

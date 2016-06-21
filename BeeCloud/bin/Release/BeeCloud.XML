@@ -21,6 +21,7 @@
                 ALI_QRCODE:   支付宝内嵌二维码支付
                 UN_APP:       银联APP支付
                 UN_WEB:       银联网页支付
+                UN_WAP:       银联wap支付
                 JD_WAP:       京东wap支付
                 JD_WEB:       京东web支付
                 YEE_WAP:      易宝wap支付 
@@ -29,6 +30,8 @@
                 KUAIQIAN_WEB: 快钱web支付
                 BD_WEB:       百度web支付
                 BD_WAP:       百度wap支付
+                BC_GATEWAY    比可网关支付
+                BC_EXPRESS    比可快捷支付（收款最低金额1元）
             </param>
             <param name="totalFee">订单总金额
                 只能为整数，单位为分
@@ -416,6 +419,17 @@
             </param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.getBankFullNames(System.String)">
+            <summary>
+            获取BeeCloud企业打款支持的银行全称列表
+            </summary>
+            <param name="type">业务类型：
+                P_DE:对私借记卡,
+                P_CR:对私信用卡,
+                C:对公账户
+            </param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPay.BCBankCardTransfer(BeeCloud.Model.BCTransferWithBackCard)">
             <summary>
             BC银行卡代付
@@ -524,7 +538,17 @@
             卡类别 visa/mastercard/discover/amex
             </summary>
         </member>
-        <member name="M:BeeCloud.Model.BCTransferWithBackCard.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+        <member name="P:BeeCloud.Model.BCTransferWithBankCard.BankList.size">
+            <summary>
+            支持的银行数量
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCTransferWithBankCard.BankList.bankList">
+            <summary>
+            银行全称列表
+            </summary>
+        </member>
+        <member name="M:BeeCloud.Model.BCTransferWithBackCard.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             初始化下发参数
             </summary>
@@ -532,8 +556,6 @@
             <param name="_billNo">商户订单号</param>
             <param name="_title">下发订单标题</param>
             <param name="_tradeSource">交易源(UTF8编码格式，目前只能填写OUT_PC)</param>
-            <param name="_bankCode">银行编码(例如:中国银行 BOC)</param>
-            <param name="_bankAssociatedCode">银行联行行号(需要向银行咨询)</param>
             <param name="_bankFullName"> 银行全名(中国银行，而不能写成"中行")</param>
             <param name="_cardType">银行卡类型(DE代表借记卡，CR代表信用卡，其他值为非法)</param>
             <param name="_accountType"> 收款帐户类型(帐户类型，P代表私户，C代表公户，其他值为非法)</param>
@@ -560,19 +582,9 @@
             交易源(UTF8编码格式，目前只能填写OUT_PC)
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankCode">
-            <summary>
-            银行编码(例如:中国银行 BOC)
-            </summary>
-        </member>
-        <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankAssociatedCode">
-            <summary>
-            银行联行行号(需要向银行咨询)
-            </summary>
-        </member>
         <member name="P:BeeCloud.Model.BCTransferWithBackCard.bankFullName">
             <summary>
-            银行全名(中国银行，而不能写成"中行",因为“中行”也是中信银行和中兴银行的缩写)
+            银行全名(中国银行，而不能写成"中行",因为“中行”也是中信银行和中兴银行的缩写)，可以通过方法getBankFullNames()获得
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCTransferWithBackCard.cardType">
@@ -842,7 +854,7 @@
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCBill.bank">
-            <summary>
+            <summary>BC_GATEWAY渠道必填参数
             bank    取值	含义
             CMB	    招商银行
             ICBC	工商银行

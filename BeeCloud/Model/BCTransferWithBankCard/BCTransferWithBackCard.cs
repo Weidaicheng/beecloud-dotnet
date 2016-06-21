@@ -16,21 +16,17 @@ namespace BeeCloud.Model
         /// <param name="_billNo">商户订单号</param>
         /// <param name="_title">下发订单标题</param>
         /// <param name="_tradeSource">交易源(UTF8编码格式，目前只能填写OUT_PC)</param>
-        /// <param name="_bankCode">银行编码(例如:中国银行 BOC)</param>
-        /// <param name="_bankAssociatedCode">银行联行行号(需要向银行咨询)</param>
         /// <param name="_bankFullName"> 银行全名(中国银行，而不能写成"中行")</param>
         /// <param name="_cardType">银行卡类型(DE代表借记卡，CR代表信用卡，其他值为非法)</param>
         /// <param name="_accountType"> 收款帐户类型(帐户类型，P代表私户，C代表公户，其他值为非法)</param>
         /// <param name="_accountNo">收款帐户号(收款方的银行卡号)</param>
         /// <param name="_accountName">收款帐户名称(收款方的姓名或者单位名)</param>
-        public BCTransferWithBackCard(int _totalFee, string _billNo, string _title, string _tradeSource, string _bankCode, string _bankAssociatedCode, string _bankFullName, string _cardType, string _accountType, string _accountNo, string _accountName)
+        public BCTransferWithBackCard(int _totalFee, string _billNo, string _title, string _tradeSource, string _bankFullName, string _cardType, string _accountType, string _accountNo, string _accountName)
         {
             totalFee = _totalFee;
             billNo = _billNo;
             title = _title;
             tradeSource = _tradeSource;
-            bankCode = _bankCode;
-            bankAssociatedCode = _bankAssociatedCode;
             bankFullName = _bankFullName;
             cardType = _cardType;
             accountType = _accountType;
@@ -56,15 +52,7 @@ namespace BeeCloud.Model
         /// </summary>
         public string tradeSource { get; set; }
         /// <summary>
-        /// 银行编码(例如:中国银行 BOC)
-        /// </summary>
-        public string bankCode { get; set; }
-        /// <summary>
-        /// 银行联行行号(需要向银行咨询)
-        /// </summary>
-        public string bankAssociatedCode { get; set; }
-        /// <summary>
-        /// 银行全名(中国银行，而不能写成"中行",因为“中行”也是中信银行和中兴银行的缩写)
+        /// 银行全名(中国银行，而不能写成"中行",因为“中行”也是中信银行和中兴银行的缩写)，可以通过方法getBankFullNames()获得
         /// </summary>
         public string bankFullName { get; set; }
         /// <summary>

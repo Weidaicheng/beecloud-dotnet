@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using BeeCloud;
 using BeeCloud.Model;
 using ThoughtWorks.QRCode.Codec;
@@ -11,6 +7,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Drawing;
+using BeeCloud.Model.BCTransferWithBankCard;
 
 namespace BeeCloudSDKDemo
 {
@@ -67,6 +64,20 @@ namespace BeeCloudSDKDemo
             else if (type == "unionpay")
             {
                 BCBill bill = new BCBill(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                bill.returnUrl = "http://localhost:50003/return_un_url.aspx";
+                try
+                {
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
+            else if (type == "unionwappay")
+            {
+                BCBill bill = new BCBill(BCPay.PayChannel.UN_WAP.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
                 bill.returnUrl = "http://localhost:50003/return_un_url.aspx";
                 try
                 {
@@ -207,6 +218,19 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "beepayexpress")
+            {
+                BCBill bill = new BCBill(BCPay.PayChannel.BC_EXPRESS.ToString(), 100, BCUtil.GetUUID(), "dotNet白开水");
+                try
+                {
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.html + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             else if (type == "alitransfers")
             {
                 BCTransferData data = new BCTransferData();
@@ -304,7 +328,15 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "bctransfer")
             {
-                BCTransferWithBackCard transfer = new BCTransferWithBackCard(1, BCUtil.GetUUID(), ".net测试代付", "OUT_PC", "BOC", "xxxxxxx", "中国银行", "DE", "P", "xxxxxxxxxxxx", "xxx");
+                //getBankFullNames方法可以获取所有支持的银行全称，将全称填写到BCTransferWithBackCard里的bank_fullname字段
+                BankList banks = BCPay.getBankFullNames("P_CR");
+                foreach (var bank in banks.bankList) 
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + bank.ToString() + "</span><br/>");
+                }
+                
+
+                BCTransferWithBackCard transfer = new BCTransferWithBackCard(1, BCUtil.GetUUID(), ".net测试代付", "OUT_PC", "中国银行", "DE", "P", "xxxxxxxxxxxx", "xxx");
                 transfer.mobile = "xxxxxxxxxxxxxx";
                 try 
                 {
