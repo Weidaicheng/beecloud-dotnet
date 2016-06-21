@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.2.1-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.3.0-blue.svg)
 
 
 ## 简介
@@ -15,9 +15,9 @@ SDK支持以下支付渠道：
 * 易宝web/wap
 * 百度web/wap
 * paypal
-* BeeCloud网关支付
+* BeeCloud网关支付/快捷支付
 
-提供（国内/国际）支付、（预）退款、 查询、 打款、 代付功能
+提供（国内/国际）支付、（预）退款、 查询、 打款功能
 
 ## 准备
 
@@ -421,7 +421,7 @@ public static BCTransferWithBackCard BCBankCardTransfer(BCTransferWithBackCard t
 调用：
 
 ```C#
-BCTransferWithBackCard transfer = new BCTransferWithBackCard(1, BCUtil.GetUUID(), ".net测试代付", "OUT_PC", "BOC", "xxxxxxx", "中国银行", "DE", "P", "xxxxxxxxxxxx", "xxx");
+BCTransferWithBackCard transfer = new BCTransferWithBackCard(1, BCUtil.GetUUID(), ".net测试代付", "OUT_PC", "中国银行", "DE", "P", "xxxxxxxxxxxx", "xxx");
 transfer.mobile = "xxxxxxxxxxxxxx";
 try 
 {
