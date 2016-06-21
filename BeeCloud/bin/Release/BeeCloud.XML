@@ -870,11 +870,6 @@
             CMBC	民生银行
             </summary>
         </member>
-        <member name="P:BeeCloud.Model.BCBill.cardNo">
-            <summary>BC_EXPRESS渠道选填参数
-             设置后在wap页面可以实现固定卡号的支付，即不可以从页面输入卡号
-            </summary>
-        </member>
         <member name="P:BeeCloud.Model.BCRefund.id">
             <summary>
             退款记录的唯一标识，可用于查询单笔记录

@@ -221,7 +221,6 @@ namespace BeeCloudSDKDemo
             else if (type == "beepayexpress")
             {
                 BCBill bill = new BCBill(BCPay.PayChannel.BC_EXPRESS.ToString(), 100, BCUtil.GetUUID(), "dotNet白开水");
-                bill.cardNo = "370285111114760";
                 try
                 {
                     BCBill resultBill = BCPay.BCPayByChannel(bill);

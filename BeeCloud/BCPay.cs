@@ -144,11 +144,6 @@ namespace BeeCloud
                 data["bank"] = bill.bank;
             }
 
-            if (bill.cardNo != null)
-            {
-                data["card_no"] = bill.cardNo;
-            }
-
             if (bill.optional != null && bill.optional.Count > 0)
             {
                 data["optional"] = new JsonData();
