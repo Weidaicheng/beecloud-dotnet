@@ -159,7 +159,7 @@ namespace BeeCloud.Model
         /// </summary>
         public string signType { get; set; }
 
-        /// <summary>
+        /// <summary>BC_GATEWAY渠道必填参数
         /// bank    取值	含义
         /// CMB	    招商银行
         /// ICBC	工商银行

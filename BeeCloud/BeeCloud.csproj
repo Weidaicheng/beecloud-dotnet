@@ -57,6 +57,7 @@
     <Compile Include="Model\BCBill\BCInternationlBill.cs" />
     <Compile Include="Model\BCQuery\BCQueryBillParameter.cs" />
     <Compile Include="Model\BCQuery\BCQueryRefundParameter.cs" />
+    <Compile Include="Model\BCTransferWithBankCard\BankList.cs" />
     <Compile Include="Model\BCTransferWithBankCard\BCTransferWithBackCard.cs" />
     <Compile Include="Model\BCTransfer\BCRedPackInfo.cs" />
     <Compile Include="Model\BCTransfer\BCTransferData.cs" />
