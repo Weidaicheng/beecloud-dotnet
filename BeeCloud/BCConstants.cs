@@ -1,11 +1,10 @@
-﻿
-namespace BeeCloud
+﻿namespace BeeCloud
 {
     internal static class BCConstants
     {
         public const string version = "/2/";
 
-        //new API
+        //pay & transfer
         public const string billURL = "rest/bill";
         public const string billsURL = "rest/bills";
         public const string billsCountURL = "rest/bills/count";
@@ -18,6 +17,12 @@ namespace BeeCloud
         public const string internationalURL = "rest/international/bill";
         public const string bctransferURL = "rest/bc_transfer";
         public const string bctransferBanks = "rest/bc_transfer/banks";
+
+        //subscription API
+        public const string bcsendSMSURL = "sms";
+        public const string bcplanURL = "plan";
+        public const string bcsubscriptionURL ="subscription";
+        public const string bcsubscriptionbanksURL = "subscription_banks";
 
         //test mode API
         public const string billTestURL = "rest/sandbox/bill";

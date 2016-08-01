@@ -437,6 +437,43 @@
             <param name="transfer">具体参考初始化BCTransferWithBackCard</param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.sendSMS(System.String)">
+            <summary>
+            给用户发送验证码
+            </summary>
+            <param name="phone">用户电话</param>
+            <returns></returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.getBanks">
+            <summary>
+            获取所有支持订阅的银行列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.getCommonBanks">
+            <summary>
+            获取常用的支持订阅的银行列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.createSubscription(System.String,System.String,BeeCloud.Model.BCSubscription.BCSubscription)">
+            <summary>
+            创建订阅记录
+            </summary>
+            <param name="smsID">用户短信ID，通过sendSMS方法发送给用户手机时获得</param>
+            <param name="smsCode">用户短信验证码</param>
+            <param name="subscription">设置订阅参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:BeeCloud.BCPay.querySubscriptions(System.String,System.String,System.String)">
+            <summary>
+            按条件查询用户订阅
+            </summary>
+            <param name="buyerID">用户ID</param>
+            <param name="planID">订阅计划ID</param>
+            <param name="cardID">用户卡ID</param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.getHost">
             <summary>
             获取API地址
@@ -537,6 +574,31 @@
             <summary>
             卡类别 visa/mastercard/discover/amex
             </summary>
+        </member>
+        <member name="M:BeeCloud.Model.BCSubscription.BCSubscription.#ctor">
+            <summary>
+            初始化
+            </summary>
+        </member>
+        <member name="M:BeeCloud.Model.BCSubscription.BCSubscription.#ctor(System.String,System.String,System.String)">
+            <summary>
+            已有cardID时的初始化方法
+            </summary>
+            <param name="_buyerID">购买者ID</param>
+            <param name="_planID">订阅计划ID</param>
+            <param name="_cardID">用户卡ID</param>
+        </member>
+        <member name="M:BeeCloud.Model.BCSubscription.BCSubscription.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            只知道用户卡号等信息时的初始化方法
+            </summary>
+            <param name="_buyerID">购买者ID</param>
+            <param name="_planID">订阅计划ID</param>
+            <param name="_bankName">银行名称，可以通过getCommonBanks/getBanks方法获取</param>
+            <param name="_cardNo">卡号</param>
+            <param name="_IDName">卡持有人的姓名</param>
+            <param name="_IDNo">卡持有人的身份证号</param>
+            <param name="_mobile">持卡人预留银行卡的手机号</param>
         </member>
         <member name="P:BeeCloud.Model.BCTransferWithBankCard.BankList.size">
             <summary>
