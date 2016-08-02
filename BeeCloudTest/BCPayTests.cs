@@ -280,6 +280,7 @@ namespace BeeCloud.Tests
         }
         #endregion
 
+        #region 订阅
         [Test()]
         public void createSubscriptionTest()
         {
@@ -307,26 +308,26 @@ namespace BeeCloud.Tests
         [Test()]
         public void queryPlansTest()
         {
-            BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            List<BCPlan> plans = BCPay.queryPlansByCondition("RInz", null, null, null);
-            Console.WriteLine(plans);
+            //BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
+            //List<BCPlan> plans = BCPay.queryPlansByCondition("RInz", null, null, null);
+            //Console.WriteLine(plans);
             //Assert.Fail();
         }
 
         [Test()]
         public void createPlanTest()
         {
-            BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            BCPlan plan = BCPay.createPlan(new BCPlan(200, "day", "RInz's plan one"));
+            //BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
+            //BCPlan plan = BCPay.createPlan(new BCPlan(200, "day", "RInz's plan one"));
             //Assert.Fail();
         }
 
         [Test()]
         public void updatePlanTest()
         {
-            BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            //string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", "RInz's plan two", null, null);
-            string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", null, true, null);
+            //BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
+            ////string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", "RInz's plan two", null, null);
+            //string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", null, true, null);
             Console.WriteLine(planID);
             //Assert.Fail();
         }
@@ -334,18 +335,19 @@ namespace BeeCloud.Tests
         [Test()]
         public void deletePlanTest()
         {
-            BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            string id = BCPay.deletePlan("4760e907-3a61-4ef4-bd38-c13a91c77f35");
+            //BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
+            //string id = BCPay.deletePlan("4760e907-3a61-4ef4-bd38-c13a91c77f35");
             //Assert.Fail();
         }
 
         [Test()]
         public void queryPlanByIDTest()
         {
-            BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            BCPlan plan = BCPay.queryPlanByID("0cbdb971-b592-4899-908d-943b94b77cf8");
+            //BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
+            //BCPlan plan = BCPay.queryPlanByID("0cbdb971-b592-4899-908d-943b94b77cf8");
             Console.WriteLine(plan);
             //Assert.Fail();
         }
+        #endregion
     }
 }
