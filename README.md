@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.3.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.4.0-blue.svg)
 
 
 ## 简介
@@ -16,6 +16,7 @@ SDK支持以下支付渠道：
 * 百度web/wap
 * paypal
 * BeeCloud网关支付/快捷支付
+* BeeCloud订阅支付
 
 提供（国内/国际）支付、（预）退款、 查询、 打款功能
 
@@ -161,6 +162,34 @@ catch (Exception excption)
     //错误处理
 }
 ```
+
+- 订阅支付
+
+方法原型：
+
+```C#
+//创建计划
+public static BCPlan createPlan(BCPlan plan)
+//开始订阅
+public static BCSubscription createSubscription(string smsID, string smsCode, BCSubscription subscription)
+```
+
+调用：
+
+```C#
+string smsid = BCPay.sendSMS("订阅人手机号");
+BCSubscription sub = BCPay.createSubscription(smsid, 
+                        "手机收到的验证码，用户输入，获取后传入", 
+                        new BCSubscription("用户ID", 
+                            "订阅计划ID", 
+                            "订阅用户银行名称（支持列表可参考getBanks()获取支持银行列表)", 
+                            "卡号", 
+                            "姓名", 
+                            "身份证号", 
+                            "银行预留手机号，要与发验证码的手机号一致"));
+```
+
+>更多订阅支付的内容请参考[文档](https://github.com/beecloud/beecloud-rest-api/blob/master/subscription/%E8%AE%A2%E9%98%85%E7%B3%BB%E7%BB%9F%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
 ### 2.(预)退款
 

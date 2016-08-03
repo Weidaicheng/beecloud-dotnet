@@ -12,12 +12,13 @@ namespace BeeCloudSDKDemo
     public partial class subscription : System.Web.UI.Page
     {
         List<BCPlan> plans = new List<BCPlan>();
+        List<BCSubscription> subs = new List<BCSubscription>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             BeeCloud.BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
             plans = BCPay.queryPlansByCondition(null, null, null, null);
-
+            subs = BCPay.querySubscriptionsByCondition(null, null, null);
             this.bind();
         }
 
@@ -25,6 +26,9 @@ namespace BeeCloudSDKDemo
         {
             PlansGridView.DataSource = plans;
             PlansGridView.DataBind();
+
+            SubscriptionGridView.DataSource = subs;
+            SubscriptionGridView.DataBind();
         }
 
         protected void PlansGridView_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -56,6 +60,11 @@ namespace BeeCloudSDKDemo
                 }
                 
             }
+        }
+
+        protected void SubscriptionGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            //
         }
     }
 }

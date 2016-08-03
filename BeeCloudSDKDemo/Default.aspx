@@ -167,6 +167,14 @@
             <input type="submit" class="button" value="确认付款"/>
         </div>
     </form>
+    <div>---------------------------------------------- 订阅：-----------------------------------------------------------</div>
+        <div>
+            <ul class="clear" style="margin-top: 20px">
+                <li onclick="paySwitch(this)">
+                    <a href="/subscription.aspx"><img src ="http://beeclouddoc.qiniudn.com/img-subscriptionpay.png" alt=""/></a>
+                </li>
+            </ul>
+        </div>
     <div>------------------------------------------海外支付：-----------------------------------------------------------</div>
         <div>
             <a href="/PAYPAL/PAYPAL.aspx">PayPal支付</a>
@@ -279,14 +287,6 @@
             <input type="submit" class="button" value="付款"/>
         </div>
     </form>
-    <div>---------------------------------------------- 订阅：-----------------------------------------------------------</div>
-        <div>
-            <ul class="clear" style="margin-top: 20px">
-                <li onclick="paySwitch(this)">
-                    <a href="/subscription.aspx"><img src ="http://beeclouddoc.qiniudn.com/img-subscriptionpay.png" alt=""/></a>
-                </li>
-            </ul>
-        </div>
 </body>
 <script type="text/javascript">
     function paySwitch(that) {
