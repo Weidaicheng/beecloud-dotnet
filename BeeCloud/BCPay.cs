@@ -1897,8 +1897,14 @@ namespace BeeCloud
         /// <param name="interval">订阅周期</param>
         /// <param name="intervalCount">周期长度</param>
         /// <param name="trialDays">订阅发生时间与实际扣款时间之间的时长</param>
+        /// <param name="createdBefore">创建时间前</param>
+        /// <param name="createdAfter">创建时间后</param>
+        /// <param name="skip">跳过数量</param>
+        /// <param name="limit">查询限量</param>
+        /// <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
         /// <returns></returns>
-        public static List<BCPlan> queryPlansByCondition(string nameWithSubstring, string interval, int? intervalCount, int? trialDays)
+        /// 
+        public static List<BCPlan> queryPlansByCondition(string nameWithSubstring, string interval, int? intervalCount, int? trialDays, long? createdBefore, long? createdAfter, int? skip, int? limit, bool countOnly)
         {
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -1914,12 +1920,29 @@ namespace BeeCloud
             }
             if (intervalCount.HasValue)
             {
-                planURL += "&interval_count" + intervalCount.Value;
+                planURL += "&interval_count=" + intervalCount.Value;
             }
             if (trialDays.HasValue)
             {
-                planURL += "&trial_days" + trialDays.Value;
+                planURL += "&trial_days=" + trialDays.Value;
             }
+            if (createdBefore.HasValue)
+            {
+                planURL += "&created_before=" + createdBefore.Value;
+            }
+            if (createdAfter.HasValue)
+            {
+                planURL += "&created_after=" + createdAfter.Value;
+            }
+            if (skip.HasValue)
+            {
+                planURL += "&skip=" + skip.Value;
+            }
+            if (limit.HasValue)
+            {
+                planURL += "&limit=" + limit.Value;
+            }
+            planURL += "&count_only=" + countOnly;
 
             try
             {
@@ -2208,14 +2231,20 @@ namespace BeeCloud
             }
         }
 
+
         /// <summary>
         /// 按条件查询用户订阅
         /// </summary>
         /// <param name="buyerID">用户ID</param>
         /// <param name="planID">订阅计划ID</param>
         /// <param name="cardID">用户卡ID</param>
+        /// <param name="createdBefore">创建时间前</param>
+        /// <param name="createdAfter">创建时间后</param>
+        /// <param name="skip">跳过数量</param>
+        /// <param name="limit">查询限量</param>
+        /// <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
         /// <returns></returns>
-        public static List<BCSubscription> querySubscriptionsByCondition(string buyerID, string planID, string cardID)
+        public static List<BCSubscription> querySubscriptionsByCondition(string buyerID, string planID, string cardID, long? createdBefore, long? createdAfter, int? skip, int? limit, bool countOnly)
         {
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -2233,6 +2262,23 @@ namespace BeeCloud
             {
                 subscriptionURL += "&card_id=" + cardID;
             }
+            if (createdBefore.HasValue)
+            {
+                subscriptionURL += "&created_before=" + createdBefore.Value;
+            }
+            if (createdAfter.HasValue)
+            {
+                subscriptionURL += "&created_after=" + createdAfter.Value;
+            }
+            if (skip.HasValue)
+            {
+                subscriptionURL += "&skip=" + skip.Value;
+            }
+            if (limit.HasValue)
+            {
+                subscriptionURL += "&limit=" + limit.Value;
+            }
+            subscriptionURL += "&count_only=" + countOnly;
 
             try
             {

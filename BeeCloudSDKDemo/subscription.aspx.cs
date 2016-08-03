@@ -17,8 +17,8 @@ namespace BeeCloudSDKDemo
         protected void Page_Load(object sender, EventArgs e)
         {
             BeeCloud.BeeCloud.registerApp("95d87fff-989c-4426-812c-21408644cf88", "8aaad136-b899-4793-9564-0ebc72ae86f2", "688dbe68-a7e9-4f16-850a-21270949afe8", null);
-            plans = BCPay.queryPlansByCondition(null, null, null, null);
-            subs = BCPay.querySubscriptionsByCondition(null, null, null);
+            plans = BCPay.queryPlansByCondition(null, null, null, null, null, null, 0, 5, false);
+            subs = BCPay.querySubscriptionsByCondition(null, null, null, null, null, null, 5, false);
             this.bind();
         }
 

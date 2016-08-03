@@ -8,21 +8,36 @@ namespace BeeCloud.Model.BCSubscription
     public class BCSubscription
     {
         public string ID { get; set; }
+        //订阅者ID，可以是用户email，也可以是商户系统中的用户ID
         public string buyerID { get; set; }
+        //订阅计划ID
         public string planID { get; set; }
+        //用户卡ID
         public string cardID { get; set; }
+        //订阅用户银行名称
         public string bankName { get; set; }
+        //订阅用户银行卡号
         public string cardNo { get; set; }
+        //订阅用户身份证姓名
         public string IDName { get; set; }
+        //订阅用户身份证号
         public string IDNo { get; set; }
+        //订阅用户银行预留手机号
         public string mobile { get; set; }
+        //订阅数量
         public double amount { get; set; }
+        //优惠券id
         public string couponID { get; set; }
+        //试用截止时间点
         public long trialEnd { get; set; }
+        //自定义字段
         public Dictionary<string, string> optional { get; set; }
 
+        //订阅是否生效
         public bool valid { get; set; }
+        //订阅状态
         public string status { get; set; }
+        //银行卡号后4位
         public string last4 { get; set; }
         public bool cancelAtPeriodEnd { get; set; }
 
