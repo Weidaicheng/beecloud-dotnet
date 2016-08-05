@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BeeCloud;
 using NUnit.Framework;
 using BeeCloud.Model;
+using BeeCloud.Model.BCSubscription;
 
 namespace BeeCloud.Tests
 {
@@ -263,7 +264,7 @@ namespace BeeCloud.Tests
         }
         #endregion
 
-        #region 代发
+        #region 打款
         [Test()]
         public void prepareBCTransferWithBankCardTest()
         {
@@ -276,6 +277,76 @@ namespace BeeCloud.Tests
         public void handleBCTransferWithBankCardResultTest()
         {
             Assert.Pass();
+        }
+        #endregion
+
+        #region 订阅
+        [Test()]
+        public void createSubscriptionTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            //string smsid = BCPay.sendSMS("xxxxxxxxxxx");
+            //BCSubscription sub = BCPay.createSubscription("76575d6d-4566-4538-bb7a-311276141bda", "7405", new Model.BCSubscription.BCSubscription("RInz", "0cbdb971-b592-4899-908d-943b94b77cf8", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"));
+
+            //List<string> banks = BCPay.getBanks();
+            //Console.WriteLine(banks);
+            //List<string> commonBanks = BCPay.getCommonBanks();
+            //Console.WriteLine(commonBanks);
+
+            //BCSubscription sub = BCPay.createSubscription("7d7f2cd0-ea25-4896-a05f-494e0d205c01", "4513", new Model.BCSubscription.BCSubscription("xxxxx", "28c91e5e-1c4c-4fe2-a819-0a2e8b327ced", "中国银行", "xxxxxxxxxxxxxxxxxxx", "xxx", "xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxx"));
+            //BCSubscription sub = BCPay.createSubscription("a34b2cc0-c7fa-41c6-87b5-f70d10b85d89", "8303", new Model.BCSubscription.BCSubscription("xxxxx", "28c91e5e-1c4c-4fe2-a819-0a2e8b327ced", "中国银行", "xxxxxxxxxxxxxxxxxxx", "xxx", "xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxx"));
+            //Console.WriteLine(sub);
+
+            //List<BCSubscription> subs = BCPay.querySubscriptionsByCondition(null, null, "32fc8016-9242-4ae9-ab56-25e4451b0720");
+            //BCSubscription sub = BCPay.querySubscriptionByID("9cc4f2e6-fab4-4e88-bc99-bcce24735a90");
+            //string sub = BCPay.deleteSubscription("9cc4f2e6-fab4-4e88-bc99-bcce24735a90", false);
+            //string sub = BCPay.updateSubscription("9cc4f2e6-fab4-4e88-bc99-bcce24735a90", null, null, null, 12, null, null, null);
+            //Console.WriteLine(sub);
+            //Assert.Fail();
+        }
+
+        [Test()]
+        public void queryPlansTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            //List<BCPlan> plans = BCPay.queryPlansByCondition("RInz", null, null, null);
+            //Console.WriteLine(plans);
+            //Assert.Fail();
+        }
+
+        [Test()]
+        public void createPlanTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            //BCPlan plan = BCPay.createPlan(new BCPlan(200, "day", "RInz's plan one"));
+            //Assert.Fail();
+        }
+
+        [Test()]
+        public void updatePlanTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            ////string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", "RInz's plan two", null, null);
+            //string planID = BCPay.updatePlan("0cbdb971-b592-4899-908d-943b94b77cf8", null, true, null);
+            //Console.WriteLine(planID);
+            //Assert.Fail();
+        }
+
+        [Test()]
+        public void deletePlanTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            //string id = BCPay.deletePlan("4760e907-3a61-4ef4-bd38-c13a91c77f35");
+            //Assert.Fail();
+        }
+
+        [Test()]
+        public void queryPlanByIDTest()
+        {
+            //BeeCloud.registerApp("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", null);
+            //BCPlan plan = BCPay.queryPlanByID("0cbdb971-b592-4899-908d-943b94b77cf8");
+            //Console.WriteLine(plan);
+            //Assert.Fail();
         }
         #endregion
     }

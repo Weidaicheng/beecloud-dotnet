@@ -6,6 +6,7 @@ using LitJson;
 using BeeCloud.Model;
 using System;
 using BeeCloud.Model.BCTransferWithBankCard;
+using BeeCloud.Model.BCSubscription;
 
 namespace BeeCloud
 {
@@ -138,6 +139,11 @@ namespace BeeCloud
             data["qr_pay_mode"] = bill.qrPayMode;
 
             data["identity_id"] = bill.yeeID;
+
+            if (bill.useApp.HasValue)
+            {
+                data["use_app"] = bill.useApp.Value;
+            }
 
             if (bill.bank != null) 
             {
@@ -1659,6 +1665,856 @@ namespace BeeCloud
                 throw ex;
             }
         }
+        #endregion
+
+        #region BeeCloud订阅
+        /// <summary>
+        /// 给用户发送验证码
+        /// </summary>
+        /// <param name="phone">用户电话</param>
+        /// <returns></returns>
+        public static string sendSMS(string phone)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["phone"] = phone;
+            string paraString = data.ToJson();
+
+            string smsURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsendSMSURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(smsURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return responseData["sms_id"].ToString();
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取所有支持订阅的银行列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> getBanks()
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            //JsonData data = new JsonData();
+            //data["app_id"] = BCCache.Instance.appId;
+            //data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            //data["timestamp"] = timestamp;
+            //string paraString = data.ToJson();
+
+            string banksURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionbanksURL;
+            banksURL = banksURL + "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(banksURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<string> banks = new List<string>();
+                    if (responseData["banks"].IsArray)
+                    {
+                        foreach (JsonData bankData in responseData["banks"])
+                        {
+                            banks.Add(bankData.ToString());
+                        }
+                        return banks;
+                    }
+                    else
+                    {
+                        return banks;
+                    }
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 获取常用的支持订阅的银行列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> getCommonBanks()
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            //JsonData data = new JsonData();
+            //data["app_id"] = BCCache.Instance.appId;
+            //data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            //data["timestamp"] = timestamp;
+            //string paraString = data.ToJson();
+
+            string banksURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionbanksURL;
+            banksURL = banksURL + "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(banksURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<string> banks = new List<string>();
+                    if (responseData["common_banks"].IsArray)
+                    {
+                        foreach (JsonData bankData in responseData["common_banks"])
+                        {
+                            banks.Add(bankData.ToString());
+                        }
+                        return banks;
+                    }
+                    else
+                    {
+                        return banks;
+                    }
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        
+
+        /// <summary>
+        /// 创建订阅计划
+        /// </summary>
+        /// <param name="plan">设置计划参数</param>
+        /// <returns></returns>
+        public static BCPlan createPlan(BCPlan plan)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+
+            data["timestamp"] = timestamp;
+            data["fee"] = plan.fee;
+            data["interval"] = plan.interval;
+            data["name"] = plan.name;
+            data["currency"] = plan.currency;
+            if (plan.intervalCount != null)
+            {
+                data["interval_count"] = plan.intervalCount;
+            }
+            if (plan.trialDays != null)
+            {
+                data["trial_days"] = plan.trialDays;
+            }
+            if (plan.valid != null)
+            {
+                data["valid"] = plan.valid;
+            }
+            if (plan.optional != null && plan.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in plan.optional.Keys)
+                {
+                    data["optional"][key] = plan.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+
+            string planURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcplanURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(planURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    plan.ID = responseData["plan"]["id"].ToString();
+                    plan.currency = responseData["plan"]["currency"].ToString();
+                    plan.intervalCount = (int)responseData["plan"]["interval_count"];
+                    plan.trialDays = (int)responseData["plan"]["trial_days"];
+                    plan.valid = (bool)responseData["plan"]["valid"];
+                    return plan;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 按条件查询订阅计划
+        /// </summary>
+        /// <param name="nameWithSubstring">订阅计划名</param>
+        /// <param name="interval">订阅周期</param>
+        /// <param name="intervalCount">周期长度</param>
+        /// <param name="trialDays">订阅发生时间与实际扣款时间之间的时长</param>
+        /// <param name="createdBefore">创建时间前</param>
+        /// <param name="createdAfter">创建时间后</param>
+        /// <param name="skip">跳过数量</param>
+        /// <param name="limit">查询限量</param>
+        /// <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
+        /// <returns></returns>
+        /// 
+        public static List<BCPlan> queryPlansByCondition(string nameWithSubstring, string interval, int? intervalCount, int? trialDays, long? createdBefore, long? createdAfter, int? skip, int? limit, bool countOnly)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string planURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcplanURL;
+            planURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+            if (nameWithSubstring != null)
+            {
+                planURL += "&name_with_substring=" + nameWithSubstring;
+            }
+            if (interval != null)
+            {
+                planURL += "&interval=" + interval;
+            }
+            if (intervalCount.HasValue)
+            {
+                planURL += "&interval_count=" + intervalCount.Value;
+            }
+            if (trialDays.HasValue)
+            {
+                planURL += "&trial_days=" + trialDays.Value;
+            }
+            if (createdBefore.HasValue)
+            {
+                planURL += "&created_before=" + createdBefore.Value;
+            }
+            if (createdAfter.HasValue)
+            {
+                planURL += "&created_after=" + createdAfter.Value;
+            }
+            if (skip.HasValue)
+            {
+                planURL += "&skip=" + skip.Value;
+            }
+            if (limit.HasValue)
+            {
+                planURL += "&limit=" + limit.Value;
+            }
+            planURL += "&count_only=" + countOnly;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(planURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<BCPlan> plans = new List<BCPlan>();
+                    if (responseData["plans"].IsArray)
+                    {
+                        foreach (JsonData planData in responseData["plans"])
+                        {
+                            BCPlan plan = new BCPlan();
+                            plan.ID = planData["id"].ToString();
+                            plan.fee = (int)planData["fee"];
+                            plan.interval = planData["interval"].ToString();
+                            plan.name = planData["name"].ToString();
+                            plan.currency = planData["currency"].ToString();
+                            plan.intervalCount = (int)planData["interval_count"];
+                            plan.trialDays = (int)planData["trial_days"];
+                            plan.valid = (bool)planData["valid"];
+                            plan.optional = JsonMapper.ToObject<Dictionary<string, string>>(planData["optional"].ToJson().ToString());
+
+                            plans.Add(plan);
+                        }
+                    }
+                    return plans;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 根据ID查询订阅计划
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static BCPlan queryPlanByID(string id)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string planURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcplanURL + "/" + id;
+            planURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(planURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    BCPlan plan = new BCPlan();
+                    plan.ID = responseData["plan"]["id"].ToString();
+                    plan.fee = (int)responseData["plan"]["fee"];
+                    plan.interval = responseData["plan"]["interval"].ToString();
+                    plan.name = responseData["plan"]["name"].ToString();
+                    plan.currency = responseData["plan"]["currency"].ToString();
+                    plan.intervalCount = (int)responseData["plan"]["interval_count"];
+                    plan.trialDays = (int)responseData["plan"]["trial_days"];
+                    plan.valid = (bool)responseData["plan"]["valid"];
+                    plan.optional = JsonMapper.ToObject<Dictionary<string, string>>(responseData["plan"]["optional"].ToJson().ToString());
+                    return plan;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 跟新订阅计划
+        /// </summary>
+        /// <param name="id">计划ID</param>
+        /// <param name="name">计划名</param>
+        /// <param name="optional">自定义字段</param>
+        /// <returns></returns>
+        public static string updatePlan(string id, string name, bool? valid, Dictionary<string, string> optional)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+
+            data["timestamp"] = timestamp;
+            if (name != null)
+            {
+                data["name"] = name;
+            }
+            if (valid.HasValue)
+            {
+                data["valid"] = valid.Value;
+            }
+
+            if (optional != null && optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in optional.Keys)
+                {
+                    data["optional"][key] = optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+
+            string planURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcplanURL + "/" + id;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePutHttpResponse(planURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    //BCPlan plan = new BCPlan();
+                    //plan.ID = responseData["plan"]["id"].ToString();
+                    //plan.fee = (int)responseData["plan"]["fee"];
+                    //plan.interval = responseData["plan"]["interval"].ToString();
+                    //plan.name = responseData["plan"]["name"].ToString();
+                    //plan.currency = responseData["plan"]["currency"].ToString();
+                    //plan.intervalCount = (int)responseData["plan"]["interval_count"];
+                    //plan.trialDays = (int)responseData["plan"]["trial_days"];
+                    //plan.optional = JsonMapper.ToObject<Dictionary<string, string>>(responseData["optional"].ToString());
+                    return responseData["id"].ToString();
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 删除订阅计划
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string deletePlan(string id)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string planURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcplanURL + "/" + id;
+            planURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateDeleteHttpResponse(planURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return id;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 创建订阅记录
+        /// </summary>
+        /// <param name="smsID">用户短信ID，通过sendSMS方法发送给用户手机时获得</param>
+        /// <param name="smsCode">用户短信验证码</param>
+        /// <param name="subscription">设置订阅参数</param>
+        /// <returns></returns>
+        public static BCSubscription createSubscription(string smsID, string smsCode, BCSubscription subscription)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+
+            data["timestamp"] = timestamp;
+            data["sms_id"] = smsID;
+            data["sms_code"] = smsCode;
+            data["buyer_id"] = subscription.buyerID;
+            data["plan_id"] = subscription.planID;
+            data["card_id"] = subscription.cardID;
+            data["bank_name"] = subscription.bankName;
+            data["card_no"] = subscription.cardNo;
+            data["id_name"] = subscription.IDName;
+            data["id_no"] = subscription.IDNo;
+            data["amount"] = subscription.amount;
+            data["coupon_id"] = subscription.couponID;
+            data["trial_end"] = subscription.trialEnd;
+            data["mobile"] = subscription.mobile;
+
+            if (subscription.optional != null && subscription.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in subscription.optional.Keys)
+                {
+                    data["optional"][key] = subscription.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+
+            string subscriptionURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(subscriptionURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    subscription.ID = responseData["subscription"]["id"].ToString();
+                    subscription.buyerID = responseData["subscription"]["buyer_id"].ToString();
+                    subscription.planID = responseData["subscription"]["plan_id"].ToString();
+                    subscription.bankName = responseData["subscription"]["bank_name"].ToString();
+                    subscription.IDName = responseData["subscription"]["id_name"].ToString();
+                    subscription.IDNo = responseData["subscription"]["id_no"].ToString();
+                    subscription.mobile = responseData["subscription"]["mobile"].ToString();
+                    subscription.amount = (double)responseData["subscription"]["amount"];
+                    subscription.couponID = responseData["subscription"]["coupon_id"].ToString();
+                    subscription.trialEnd = (long)responseData["subscription"]["trial_end"];
+                    subscription.optional = JsonMapper.ToObject<Dictionary<string, string>>(responseData["subscription"]["optional"].ToJson().ToString());
+                    subscription.last4 = responseData["subscription"]["last4"].ToString();
+                    subscription.status = responseData["subscription"]["status"].ToString();
+                    subscription.valid = (bool)responseData["subscription"]["valid"];
+                    subscription.cancelAtPeriodEnd = (bool)responseData["subscription"]["cancel_at_period_end"];
+                    return subscription;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+
+        /// <summary>
+        /// 按条件查询用户订阅
+        /// </summary>
+        /// <param name="buyerID">用户ID</param>
+        /// <param name="planID">订阅计划ID</param>
+        /// <param name="cardID">用户卡ID</param>
+        /// <param name="createdBefore">创建时间前</param>
+        /// <param name="createdAfter">创建时间后</param>
+        /// <param name="skip">跳过数量</param>
+        /// <param name="limit">查询限量</param>
+        /// <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
+        /// <returns></returns>
+        public static List<BCSubscription> querySubscriptionsByCondition(string buyerID, string planID, string cardID, long? createdBefore, long? createdAfter, int? skip, int? limit, bool countOnly)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string subscriptionURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionURL;
+            subscriptionURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+            if (buyerID != null)
+            {
+                subscriptionURL += "&buyer_id=" +　buyerID;
+            }
+            if (planID != null)
+            {
+                subscriptionURL += "&plan_id=" + planID;
+            }
+            if (cardID != null)
+            {
+                subscriptionURL += "&card_id=" + cardID;
+            }
+            if (createdBefore.HasValue)
+            {
+                subscriptionURL += "&created_before=" + createdBefore.Value;
+            }
+            if (createdAfter.HasValue)
+            {
+                subscriptionURL += "&created_after=" + createdAfter.Value;
+            }
+            if (skip.HasValue)
+            {
+                subscriptionURL += "&skip=" + skip.Value;
+            }
+            if (limit.HasValue)
+            {
+                subscriptionURL += "&limit=" + limit.Value;
+            }
+            subscriptionURL += "&count_only=" + countOnly;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(subscriptionURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<BCSubscription> subscriptions = new List<BCSubscription>();
+                    if (responseData["subscriptions"].IsArray)
+                    {
+                        foreach (JsonData subData in responseData["subscriptions"])
+                        {
+                            BCSubscription sub = new BCSubscription();
+                            sub.ID = subData["id"].ToString();
+                            sub.buyerID = subData["buyer_id"].ToString();
+                            sub.planID = subData["plan_id"].ToString();
+                            sub.cardID = subData["card_id"].ToString();
+                            sub.bankName = subData["bank_name"].ToString();
+                            sub.IDName = subData["id_name"].ToString();
+                            sub.IDNo = subData["id_no"].ToString();
+                            sub.mobile = subData["mobile"].ToString();
+                            sub.amount = (double)subData["amount"];
+                            sub.couponID = subData["coupon_id"].ToString();
+                            sub.trialEnd = (long)subData["trial_end"];
+                            sub.optional = JsonMapper.ToObject<Dictionary<string, string>>(subData["optional"].ToJson().ToString());
+
+                            sub.last4 = subData["last4"].ToString();
+                            sub.status = subData["status"].ToString();
+                            sub.valid = (bool)subData["valid"];
+                            sub.cancelAtPeriodEnd = (bool)subData["cancel_at_period_end"];
+
+                            subscriptions.Add(sub);
+                        }
+                    }
+                    return subscriptions;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 按ID查询订阅记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static BCSubscription querySubscriptionByID(string id)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string subscriptionURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionURL + "/" + id;
+            subscriptionURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(subscriptionURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    BCSubscription sub = new BCSubscription();
+                    sub.ID = responseData["subscription"]["id"].ToString();
+                    sub.buyerID = responseData["subscription"]["buyer_id"].ToString();
+                    sub.planID = responseData["subscription"]["plan_id"].ToString();
+                    sub.cardID = responseData["subscription"]["card_id"].ToString();
+                    sub.bankName = responseData["subscription"]["bank_name"].ToString();
+                    sub.IDName = responseData["subscription"]["id_name"].ToString();
+                    sub.IDNo = responseData["subscription"]["id_no"].ToString();
+                    sub.mobile = responseData["subscription"]["mobile"].ToString();
+                    sub.amount = (double)responseData["subscription"]["amount"];
+                    sub.couponID = responseData["subscription"]["coupon_id"].ToString();
+                    sub.trialEnd = (long)responseData["subscription"]["trial_end"];
+                    sub.optional = JsonMapper.ToObject<Dictionary<string, string>>(responseData["subscription"]["optional"].ToJson().ToString());
+
+                    sub.last4 = responseData["subscription"]["last4"].ToString();
+                    sub.status = responseData["subscription"]["status"].ToString();
+                    sub.valid = (bool)responseData["subscription"]["valid"];
+                    sub.cancelAtPeriodEnd = (bool)responseData["subscription"]["cancel_at_period_end"];
+                    return sub;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 跟新订阅记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="buyerID"></param>
+        /// <param name="planID"></param>
+        /// <param name="cardID"></param>
+        /// <param name="amount"></param>
+        /// <param name="coupon"></param>
+        /// <param name="trialEnd"></param>
+        /// <param name="optional"></param>
+        /// <returns></returns>
+        public static string updateSubscription(string id, string buyerID, string planID, string cardID, double? amount, string coupon, long? trialEnd, Dictionary<string, string> optional)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+
+            data["timestamp"] = timestamp;
+            if (buyerID != null)
+            {
+                data["buyer_id"] = buyerID;
+            }
+            if (cardID != null)
+            {
+                data["card_id"] = cardID;
+            }
+            if (planID != null)
+            {
+                data["plan_id"] = planID;
+            }
+            if (coupon != null)
+            {
+                data["coupon"] = coupon;
+            }
+            if (amount.HasValue)
+            {
+                data["amount"] = amount.Value;
+            }
+            if (trialEnd.HasValue)
+            {
+                data["trial_end"] = trialEnd.Value;
+            }
+
+            if (optional != null && optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in optional.Keys)
+                {
+                    data["optional"][key] = optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+
+            string subscriptionURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionURL + "/" + id;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePutHttpResponse(subscriptionURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return responseData["id"].ToString();
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 删除订阅记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="atPeriodEnd"></param>
+        /// <returns></returns>
+        public static string deleteSubscription(string id, bool atPeriodEnd)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            string subscriptionURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.bcsubscriptionURL + "/" + id;
+            subscriptionURL += "?app_id=" + BCCache.Instance.appId + "&app_sign=" + BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString()) + "&timestamp=" + timestamp + "&at_period_end=" + atPeriodEnd;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateDeleteHttpResponse(subscriptionURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return id;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
         #endregion
     }
 }

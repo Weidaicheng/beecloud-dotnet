@@ -12,10 +12,12 @@ namespace BeeCloud
         private delegate void getBestHostDelegate();
         
         public static List<string> mLocalDefaultHosts = new List<string>(){
-            "https://apisz.beecloud.cn",   //深圳
-            "https://apihz.beecloud.cn",    //杭州
-            "https://apiqd.beecloud.cn",    //青岛
-            "https://apibj.beecloud.cn"     //北京
+            //"http://192.168.1.113:8080"
+            "http://123.56.82.71:8080"
+            //"https://apisz.beecloud.cn",   //深圳
+            //"https://apihz.beecloud.cn",    //杭州
+            //"https://apiqd.beecloud.cn",    //青岛
+            //"https://apibj.beecloud.cn"     //北京
             };
 
         /// <summary>
@@ -124,6 +126,19 @@ namespace BeeCloud
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(encodedBytes, 0, encodedBytes.Length);
             requestStream.Close();
+
+            return request.GetResponse() as HttpWebResponse;
+        }
+
+        /// <summary>
+        /// 创建DELETE方式的HTTP请求 
+        /// </summary>
+        /// <returns></returns>
+        public static HttpWebResponse CreateDeleteHttpResponse(String url, int timeout)
+        {
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            request.Method = "DELETE";
+            request.Timeout = timeout;
 
             return request.GetResponse() as HttpWebResponse;
         }

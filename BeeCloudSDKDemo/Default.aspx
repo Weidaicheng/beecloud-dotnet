@@ -151,14 +151,6 @@
                     <img src="http://beeclouddoc.qiniudn.com/ybwap.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
-                    <input type="radio" value="kqpay" name="paytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/kq.png" alt=""/>
-                </li>
-                <li onclick="paySwitch(this)">
-                    <input type="radio" value="kqwappay" name="paytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/kqwap.png" alt=""/>
-                </li>
-                <li onclick="paySwitch(this)">
                     <input type="radio" value="beepay" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon_gateway.png" alt=""/>
                 </li>
@@ -175,6 +167,14 @@
             <input type="submit" class="button" value="确认付款"/>
         </div>
     </form>
+    <div>---------------------------------------------- 订阅：-----------------------------------------------------------</div>
+        <div>
+            <ul class="clear" style="margin-top: 20px">
+                <li onclick="paySwitch(this)">
+                    <a href="/subscription.aspx"><img src ="http://beeclouddoc.qiniudn.com/img-subscriptionpay.png" alt=""/></a>
+                </li>
+            </ul>
+        </div>
     <div>------------------------------------------海外支付：-----------------------------------------------------------</div>
         <div>
             <a href="/PAYPAL/PAYPAL.aspx">PayPal支付</a>

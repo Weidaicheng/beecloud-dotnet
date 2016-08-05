@@ -89,6 +89,7 @@
     <Content Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <Content Include="subscription.aspx" />
     <Content Include="Web.config" />
     <Content Include="WXJSAPI\WXJSAPI.aspx" />
   </ItemGroup>
@@ -205,6 +206,13 @@
     </Compile>
     <Compile Include="return_yee_return.aspx.designer.cs">
       <DependentUpon>return_yee_return.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="subscription.aspx.cs">
+      <DependentUpon>subscription.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="subscription.aspx.designer.cs">
+      <DependentUpon>subscription.aspx</DependentUpon>
     </Compile>
     <Compile Include="WXJSAPI\Data.cs" />
     <Compile Include="WXJSAPI\HttpService.cs" />
