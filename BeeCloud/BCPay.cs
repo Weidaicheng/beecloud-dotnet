@@ -140,6 +140,9 @@ namespace BeeCloud
 
             data["identity_id"] = bill.yeeID;
 
+            {
+            }
+
             if (bill.bank != null) 
             {
                 data["bank"] = bill.bank;

@@ -133,6 +133,10 @@ namespace BeeCloud.Model
         /// </summary>
         public string yeeID { get; set; }
 
+        /// <summary>
+        /// 支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
+        /// </summary>
+        public bool? useApp { get; set; } 
 
         /// <summary>
         /// 微信应用APPID

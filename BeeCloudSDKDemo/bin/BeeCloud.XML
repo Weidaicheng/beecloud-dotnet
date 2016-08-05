@@ -979,6 +979,11 @@
             50位以内数字和/或字母组合，易宝移动网页（一键）支付用户唯一标识符，用于绑定用户一键支付的银行卡信息
             </summary>
         </member>
+        <member name="P:BeeCloud.Model.BCBill.useApp">
+            <summary>
+            支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
+            </summary>
+        </member>
         <member name="P:BeeCloud.Model.BCBill.appId">
             <summary>
             微信应用APPID
