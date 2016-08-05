@@ -140,7 +140,9 @@ namespace BeeCloud
 
             data["identity_id"] = bill.yeeID;
 
+            if (bill.useApp.HasValue)
             {
+                data["use_app"] = bill.useApp.Value;
             }
 
             if (bill.bank != null) 
