@@ -61,6 +61,36 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "bc_native")
+            {
+                BCBill bill = new BCBill(BCPay.PayChannel.BC_NATIVE.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                try
+                {
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    string str = resultBill.codeURL;
+
+                    //初始化二维码生成工具
+                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+                    qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
+                    qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+                    qrCodeEncoder.QRCodeVersion = 0;
+                    qrCodeEncoder.QRCodeScale = 4;
+
+                    //将字符串生成二维码图片
+                    Bitmap image = qrCodeEncoder.Encode(str, Encoding.Default);
+                    //保存为PNG到内存流  
+                    MemoryStream ms = new MemoryStream();
+                    image.Save(ms, ImageFormat.Png);
+
+                    //输出二维码图片
+                    Response.BinaryWrite(ms.GetBuffer());
+                    Response.ContentType = "image/Png";
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             else if (type == "unionpay")
             {
                 BCBill bill = new BCBill(BCPay.PayChannel.UN_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");

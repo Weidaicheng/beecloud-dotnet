@@ -158,6 +158,10 @@
                     <input type="radio" value="beepayexpress" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon_BcExpress.png" alt=""/>
                 </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="bc_native" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-bcwxsm.png" alt=""/>
+                </li>
             </ul>
         </div>
         <div>

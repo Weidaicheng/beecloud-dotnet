@@ -67,6 +67,10 @@ namespace BeeCloud.Model
         /// </summary>
         public Dictionary<string, string> optional { get; set; }
         /// <summary>
+        /// 可自定义webhook的发送地址，选填
+        /// </summary>
+        public string notifyURL { get; set; }
+        /// <summary>
         /// 渠道详细信息， 当need_detail传入true时返回
         /// </summary>
         public string messageDetail { get; set; }
@@ -136,8 +140,9 @@ namespace BeeCloud.Model
         /// <summary>
         /// 支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
         /// </summary>
-        public bool? useApp { get; set; } 
+        public bool? useApp { get; set; }
 
+        #region 微信JSAPI使用
         /// <summary>
         /// 微信应用APPID
         /// </summary>
@@ -162,6 +167,7 @@ namespace BeeCloud.Model
         /// 签名类型，固定为MD5
         /// </summary>
         public string signType { get; set; }
+        #endregion
 
         /// <summary>BC_GATEWAY渠道必填参数
         /// bank    取值	含义
