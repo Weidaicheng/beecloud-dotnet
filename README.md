@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.4.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.5.0-blue.svg)
 
 
 ## 简介
@@ -15,7 +15,7 @@ SDK支持以下支付渠道：
 * 易宝web/wap
 * 百度web/wap
 * paypal
-* BeeCloud网关支付/快捷支付
+* BeeCloud网关支付/快捷支付/微信扫码支付
 * BeeCloud订阅支付
 
 提供（国内/国际）支付、（预）退款、 查询、 打款功能
@@ -94,6 +94,7 @@ BeeCloud.BeeCloud.setTestMode(true);
 
 - 境内支付
 
+
 方法原型：
 
 ```.net
@@ -113,6 +114,10 @@ catch (Exception excption)
     //错误处理
 }
 ```
+
+>特殊参数：
+`useApp` :　支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
+`notifyURL` : 各订单可以通过设置该参数配置本订单webhook地址
 
 - 境外支付
 
