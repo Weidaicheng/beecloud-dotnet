@@ -30,7 +30,8 @@ namespace BeeCloud
             BD_WEB,
             BD_WAP,
             BC_GATEWAY,
-            BC_EXPRESS
+            BC_EXPRESS,
+            BC_NATIVE
         };
 
         public enum InternationalPay
@@ -154,7 +155,10 @@ namespace BeeCloud
             {
                 data["card_no"] = bill.cardNo;
             }
-
+            if (bill.notifyURL != null)
+            {
+                data["notify_url"] = bill.notifyURL;
+            }
             if (bill.optional != null && bill.optional.Count > 0)
             {
                 data["optional"] = new JsonData();
@@ -350,6 +354,28 @@ namespace BeeCloud
                     var ex = new BCException(responseData["err_detail"].ToString());
                     throw ex;
                 }
+            }
+            if (bill.channel == "BC_NATIVE")
+            {
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    bill.id = responseData["id"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        //bill.codeURL = responseData["url"].ToString();
+                    }
+                    else
+                    {
+                        bill.codeURL = responseData["code_url"].ToString();
+                    }
+                    return bill;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+
             }
             return bill;
         }

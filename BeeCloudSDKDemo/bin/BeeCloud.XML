@@ -900,6 +900,11 @@
             附加数据,用户自定义的参数，将会在webhook通知中原样返回，该字段是Dic {"key1":"value1","key2":"value2",...}
             </summary>
         </member>
+        <member name="P:BeeCloud.Model.BCBill.notifyURL">
+            <summary>
+            可自定义webhook的发送地址，选填
+            </summary>
+        </member>
         <member name="P:BeeCloud.Model.BCBill.messageDetail">
             <summary>
             渠道详细信息， 当need_detail传入true时返回

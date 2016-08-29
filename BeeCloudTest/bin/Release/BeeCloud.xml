@@ -463,7 +463,7 @@
             <param name="plan">设置计划参数</param>
             <returns></returns>
         </member>
-        <member name="M:BeeCloud.BCPay.queryPlansByCondition(System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:BeeCloud.BCPay.queryPlansByCondition(System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Boolean)">
             <summary>
             按条件查询订阅计划
             </summary>
@@ -471,7 +471,13 @@
             <param name="interval">订阅周期</param>
             <param name="intervalCount">周期长度</param>
             <param name="trialDays">订阅发生时间与实际扣款时间之间的时长</param>
+            <param name="createdBefore">创建时间前</param>
+            <param name="createdAfter">创建时间后</param>
+            <param name="skip">跳过数量</param>
+            <param name="limit">查询限量</param>
+            <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
             <returns></returns>
+            
         </member>
         <member name="M:BeeCloud.BCPay.queryPlanByID(System.String)">
             <summary>
@@ -505,13 +511,18 @@
             <param name="subscription">设置订阅参数</param>
             <returns></returns>
         </member>
-        <member name="M:BeeCloud.BCPay.querySubscriptionsByCondition(System.String,System.String,System.String)">
+        <member name="M:BeeCloud.BCPay.querySubscriptionsByCondition(System.String,System.String,System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Boolean)">
             <summary>
             按条件查询用户订阅
             </summary>
             <param name="buyerID">用户ID</param>
             <param name="planID">订阅计划ID</param>
             <param name="cardID">用户卡ID</param>
+            <param name="createdBefore">创建时间前</param>
+            <param name="createdAfter">创建时间后</param>
+            <param name="skip">跳过数量</param>
+            <param name="limit">查询限量</param>
+            <param name="countOnly">设置为true时只返回数量，设置为false时只返回plan记录</param>
             <returns></returns>
         </member>
         <member name="M:BeeCloud.BCPay.querySubscriptionByID(System.String)">
@@ -649,6 +660,14 @@
             <summary>
             卡类别 visa/mastercard/discover/amex
             </summary>
+        </member>
+        <member name="M:BeeCloud.Model.BCSubscription.BCPlan.#ctor(System.Int32,System.String,System.String)">
+            <summary>
+            初始化订阅计划
+            </summary>
+            <param name="_fee">每次收费的金额，以分为单位 (0表示免费计划)</param>
+            <param name="_interval">定义收费周期单位，只能是day、week、month、year</param>
+            <param name="_name">计划名</param>
         </member>
         <member name="M:BeeCloud.Model.BCSubscription.BCSubscription.#ctor">
             <summary>
@@ -881,6 +900,11 @@
             附加数据,用户自定义的参数，将会在webhook通知中原样返回，该字段是Dic {"key1":"value1","key2":"value2",...}
             </summary>
         </member>
+        <member name="P:BeeCloud.Model.BCBill.notifyURL">
+            <summary>
+            可自定义webhook的发送地址，选填
+            </summary>
+        </member>
         <member name="P:BeeCloud.Model.BCBill.messageDetail">
             <summary>
             渠道详细信息， 当need_detail传入true时返回
@@ -958,6 +982,11 @@
         <member name="P:BeeCloud.Model.BCBill.yeeID">
             <summary>
             50位以内数字和/或字母组合，易宝移动网页（一键）支付用户唯一标识符，用于绑定用户一键支付的银行卡信息
+            </summary>
+        </member>
+        <member name="P:BeeCloud.Model.BCBill.useApp">
+            <summary>
+            支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
             </summary>
         </member>
         <member name="P:BeeCloud.Model.BCBill.appId">
