@@ -262,6 +262,19 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "bc_wx_wap")
+            {
+                BCBill bill = new BCBill(BCPay.PayChannel.BC_WX_WAP.ToString(), 100, BCUtil.GetUUID(), "dotNet白开水");
+                try
+                {
+                    BCBill resultBill = BCPay.BCPayByChannel(bill);
+                    Response.Write("<a href=" + resultBill.url + ">付款地址</a><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             else if (type == "alitransfers")
             {
                 BCTransferData data = new BCTransferData();

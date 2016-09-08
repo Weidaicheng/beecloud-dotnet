@@ -162,6 +162,14 @@
                     <input type="radio" value="bc_native" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon-bcwxsm.png" alt=""/>
                 </li>
+                <li onclick="paySwitch(this)">
+                    <input type="radio" value="bc_wx_wap" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-bcwxwap.png" alt=""/>
+                </li>
+                <%--<li onclick="paySwitch(this)">
+                    <input type="radio" value="bc_wx_jsapi" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-bcwx.png" alt=""/>
+                </li>--%>
             </ul>
         </div>
         <div>
@@ -291,6 +299,14 @@
             <input type="submit" class="button" value="付款"/>
         </div>
     </form>
+    <div>------------------------------------------------身份实名验证-------------------------------------------------------</div>
+    <div>
+        <ul class="clear" style="margin-top: 20px">
+            <li onclick="paySwitch(this)">
+                <a href="/auth.aspx"><img src ="http://beeclouddoc.qiniudn.com/icon-jianquan.png" alt=""/></a>
+            </li>
+        </ul>
+    </div>
 </body>
 <script type="text/javascript">
     function paySwitch(that) {

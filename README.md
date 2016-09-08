@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.5.1-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.0-blue.svg)
 
 
 ## 简介
@@ -9,7 +9,7 @@
 SDK支持以下支付渠道： 
 
 * 支付宝web/wap
-* 微信扫码/微信内JSAPI
+* 微信扫码/微信内JSAPI/微信WAP
 * 银联web/wap
 * 京东web/wap
 * 易宝web/wap
@@ -323,7 +323,7 @@ catch (Exception excption)
 ### 5.企业打款
 * （支付宝）批量打款
 
-该渠道由于支付宝停止开放，只有在早期申请到的用户才能使用  
+在支付宝需要开通《批量付款到支付宝》的产品，并联系客服要求开通API的版本
 
 方法原型:
 
@@ -467,6 +467,23 @@ catch (Exception excption)
     //错误处理
 }
 ```
+
+### 6.身份实名验证
+
+用于商户对用户信息做实名认证或者鉴别用户的银行卡是否匹配  
+
+方法原型：
+
+```C#
+public static bool BCAuthentication(string name, string IDNo, string cardNo, string mobile)
+```
+
+调用： 
+
+```C#
+
+```
+
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
