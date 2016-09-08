@@ -31,7 +31,9 @@ namespace BeeCloud
             BD_WAP,
             BC_GATEWAY,
             BC_EXPRESS,
-            BC_NATIVE
+            BC_NATIVE,
+            BC_WX_WAP,
+            BC_WX_JSAPI,
         };
 
         public enum InternationalPay
@@ -300,7 +302,6 @@ namespace BeeCloud
                     }
                     else
                     {
-                        bill.html = responseData["html"].ToString();
                         bill.url = responseData["url"].ToString();
                     }
                    
@@ -368,6 +369,53 @@ namespace BeeCloud
                     {
                         bill.codeURL = responseData["code_url"].ToString();
                     }
+                    return bill;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+
+            }
+            if (bill.channel == "BC_WX_WAP")
+            {
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    bill.id = responseData["id"].ToString();
+                    if (BCCache.Instance.testMode)
+                    {
+                        //bill.codeURL = responseData["url"].ToString();
+                    }
+                    else
+                    {
+                        bill.url = responseData["url"].ToString();
+                    }
+                    return bill;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+
+            }
+            if (bill.channel == "BC_WX_JSAPI")
+            {
+                if (BCCache.Instance.testMode)
+                {
+                    throw new BCException("微信公众号内支付不支持测试模式");
+                }
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    bill.id = responseData["id"].ToString();
+                    bill.appId = responseData["app_id"].ToString();
+                    bill.package = responseData["package"].ToString();
+                    bill.noncestr = responseData["nonce_str"].ToString();
+                    bill.timestamp = responseData["timestamp"].ToString();
+                    bill.paySign = responseData["pay_sign"].ToString();
+                    bill.signType = responseData["sign_type"].ToString();
+
                     return bill;
                 }
                 else
@@ -2531,6 +2579,58 @@ namespace BeeCloud
                 else
                 {
                     var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region 身份实名验证
+        /// <summary>
+        /// 身份实名验证，支持二要素，三要素，四要素验证
+        /// </summary>
+        /// <param name="name">身份证姓名</param>
+        /// <param name="IDNo">身份证号</param>
+        /// <param name="cardNo">用户银行卡号(选填)</param>
+        /// <param name="mobile">用户银行卡预留手机号（选填）</param>
+        /// <returns></returns>
+        public static bool BCAuthentication(string name, string IDNo, string cardNo, string mobile)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["name"] = name;
+            data["id_no"] = IDNo;
+            data["card_no"] = cardNo;
+            data["mobile"] = mobile;
+            string paraString = data.ToJson();
+
+            string authURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.authULR;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(authURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return (bool)responseData["auth_result"];
+                }
+                else
+                {
+                    var ex = new BCException(responseData["errMsg"].ToString());
                     throw ex;
                 }
             }

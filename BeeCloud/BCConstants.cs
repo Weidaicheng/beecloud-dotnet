@@ -24,6 +24,9 @@
         public const string bcsubscriptionURL ="subscription";
         public const string bcsubscriptionbanksURL = "subscription_banks";
 
+        //auth API
+        public const string authULR = "auth";
+
         //test mode API
         public const string billTestURL = "rest/sandbox/bill";
         public const string billsTestURL = "rest/sandbox/bills";

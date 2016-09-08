@@ -554,6 +554,16 @@
             <param name="atPeriodEnd"></param>
             <returns></returns>
         </member>
+        <member name="M:BeeCloud.BCPay.BCAuthentication(System.String,System.String,System.String,System.String)">
+            <summary>
+            身份实名验证，支持二要素，三要素，四要素验证
+            </summary>
+            <param name="name">身份证姓名</param>
+            <param name="IDNo">身份证号</param>
+            <param name="cardNo">用户银行卡号(选填)</param>
+            <param name="mobile">用户银行卡预留手机号（选填）</param>
+            <returns></returns>
+        </member>
         <member name="M:BeeCloud.BCPrivateUtil.getHost">
             <summary>
             获取API地址
