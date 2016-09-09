@@ -275,6 +275,64 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "bc_wx_scan")
+            {
+                BCBill bill = new BCBill(BCPay.OfflinePayChannel.BC_WX_SCAN.ToString(), 1, BCUtil.GetUUID(), "dotNet白开水");
+                bill.authCode = "130166424204787197";
+                try
+                {
+                    BCBill resultBill = BCPay.BCOfflinePayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.result + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
+            else if (type == "bc_ali_scan")
+            {
+                BCBill bill = new BCBill(BCPay.OfflinePayChannel.BC_ALI_SCAN.ToString(), 1, BCUtil.GetUUID(), "dotNet白开水");
+                bill.authCode = "283024351597694002";
+                try
+                {
+                    BCBill resultBill = BCPay.BCOfflinePayByChannel(bill);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + resultBill.result + "</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
+            //else if (type == "bc_ali_qrcode")
+            //{
+            //    BCBill bill = new BCBill(BCPay.OfflinePayChannel.BC_ALI_QRCODE.ToString(), 100, BCUtil.GetUUID(), "dotNet白开水");
+            //    try
+            //    {
+            //        BCBill resultBill = BCPay.BCOfflinePayByChannel(bill);
+            //        string str = resultBill.codeURL;
+
+            //        //初始化二维码生成工具
+            //        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+            //        qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
+            //        qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+            //        qrCodeEncoder.QRCodeVersion = 0;
+            //        qrCodeEncoder.QRCodeScale = 4;
+
+            //        //将字符串生成二维码图片
+            //        Bitmap image = qrCodeEncoder.Encode(str, Encoding.Default);
+            //        //保存为PNG到内存流  
+            //        MemoryStream ms = new MemoryStream();
+            //        image.Save(ms, ImageFormat.Png);
+
+            //        //输出二维码图片
+            //        Response.BinaryWrite(ms.GetBuffer());
+            //        Response.ContentType = "image/Png";
+            //    }
+            //    catch (Exception excption)
+            //    {
+            //        Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+            //    }
+            //}
             else if (type == "alitransfers")
             {
                 BCTransferData data = new BCTransferData();

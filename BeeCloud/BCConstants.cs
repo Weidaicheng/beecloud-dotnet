@@ -30,5 +30,9 @@
         //test mode API
         public const string billTestURL = "rest/sandbox/bill";
         public const string billsTestURL = "rest/sandbox/bills";
+
+        //offline API
+        public const string offlineBillURL = "rest/offline/bill";
+        public const string offlineStatusURL = "rest/offline/bill/status";
     }
 }
