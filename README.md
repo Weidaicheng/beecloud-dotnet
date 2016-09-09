@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.1-blue.svg)
 
 
 ## 简介
@@ -8,8 +8,8 @@
 
 SDK支持以下支付渠道： 
 
-* 支付宝web/wap
-* 微信扫码/微信内JSAPI/微信WAP
+* 支付宝web/wap/刷卡
+* 微信扫码/微信内JSAPI/微信WAP/刷卡
 * 银联web/wap
 * 京东web/wap
 * 易宝web/wap
@@ -17,6 +17,7 @@ SDK支持以下支付渠道：
 * paypal
 * BeeCloud网关支付/快捷支付/微信扫码支付
 * BeeCloud订阅支付
+
 
 提供（国内/国际）支付、（预）退款、 查询、 打款功能
 
@@ -118,6 +119,22 @@ catch (Exception excption)
 >特殊参数：
 `useApp` :　支付宝移动网页支付(ALI_WAP)的选填参数,是否尝试掉起支付宝APP原生支付，默认为true
 `notifyURL` : 各订单可以通过设置该参数配置本订单webhook地址
+
+- 线下支付
+
+方法原型：
+
+```C#
+public static BCBill BCOfflinePayByChannel(BCBill bill)
+```
+
+调用：
+
+```C#
+BCBill bill = new BCBill(BCPay.OfflinePayChannel.BC_ALI_SCAN.ToString(), 1, BCUtil.GetUUID(), "dotNet白开水");
+bill.authCode = "283024351597694002";
+BCBill resultBill = BCPay.BCOfflinePayByChannel(bill);
+```
 
 - 境外支付
 

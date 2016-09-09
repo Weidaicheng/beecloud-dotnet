@@ -36,6 +36,13 @@ namespace BeeCloud
             BC_WX_JSAPI,
         };
 
+        public enum OfflinePayChannel
+        {
+            BC_WX_SCAN,
+            //BC_ALI_QRCODE,
+            BC_ALI_SCAN
+        };
+
         public enum InternationalPay
         {
             PAYPAL_PAYPAL,
@@ -521,6 +528,137 @@ namespace BeeCloud
                 string respString = BCPrivateUtil.GetResponseString(response);
 
                 return handlePayResult(respString, bill);
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region 微信支付宝扫码/被扫支付
+        /// <summary>
+        ///  微信支付宝扫码/被扫支付
+        /// </summary>
+        /// <param name="bill"></param>
+        /// <returns></returns>
+        public static BCBill BCOfflinePayByChannel(BCBill bill)
+        {
+            string payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.offlineBillURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["channel"] = bill.channel;
+            data["total_fee"] = bill.totalFee;
+            data["bill_no"] = bill.billNo;
+            data["title"] = bill.title;
+
+            if (bill.authCode != null)
+            {
+                data["auth_code"] = bill.authCode;
+            }
+   
+            if (bill.optional != null && bill.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in bill.optional.Keys)
+                {
+                    data["optional"][key] = bill.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(payUrl, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                //if (bill.channel == "BC_ALI_QRCODE")
+                //{
+                //    if (responseData["result_code"].ToString() == "0")
+                //    {
+                //        bill.id = responseData["id"].ToString();
+                //        bill.codeURL = responseData["code_url"].ToString();
+                //        return bill;
+                //    }
+                //    else
+                //    {
+                //        var ex = new BCException(responseData["err_detail"].ToString());
+                //        throw ex;
+                //    }
+                //}
+                if (bill.channel == "BC_ALI_SCAN" || bill.channel == "BC_WX_SCAN")
+                {
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        bill.id = responseData["id"].ToString();
+                        bill.result = (bool)responseData["pay_result"];
+                        return bill;
+                    }
+                    else
+                    {
+                        var ex = new BCException(responseData["err_detail"].ToString());
+                        throw ex;
+                    }
+                }
+                return bill;
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 支付宝微信扫码/被扫订单状态查询
+        /// </summary>
+        /// <param name="billNo"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        public static bool BCOfflineBillStatus(string billNo, string channel)
+        {
+            string statusUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.offlineStatusURL;
+
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["bill_no"] = billNo;
+            data["channel"] = channel;
+            
+            string paraString = data.ToJson();
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(statusUrl, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return (bool)responseData["pay_result"];
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
             }
             catch (Exception e)
             {

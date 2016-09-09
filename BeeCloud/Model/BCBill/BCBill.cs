@@ -185,10 +185,13 @@ namespace BeeCloud.Model
         /// CMBC	民生银行
         /// </summary>
         public string bank { get; set; }
-        
         /// <summary>BC_EXPRESS渠道选填参数
         ///  设置后在wap页面可以实现固定卡号的支付，即不可以从页面输入卡号
         /// </summary>
         public string cardNo { get; set; }
+        /// <summary>BC_WX_SCAN或BC_ALI_SCAN 时为必填
+        /// 当商户用扫码枪扫用户的条形码时得到的字符串 
+        /// </summary>
+        public string authCode { get; set; }
     }
 }
