@@ -487,7 +487,8 @@ catch (Exception excption)
 
 ### 6.身份实名验证
 
-用于商户对用户信息做实名认证或者鉴别用户的银行卡是否匹配  
+* 用于商户对用户信息做实名认证或者鉴别用户的银行卡是否匹配，提供二要素（姓名+身份证），三要素（姓名+身份证+银行卡号），四要素（姓名+身份证+银行卡号+银行卡预留电话），用户可以根据自己需求选取模式
+* 本接口调用收费
 
 方法原型：
 
@@ -498,7 +499,7 @@ public static bool BCAuthentication(string name, string IDNo, string cardNo, str
 调用： 
 
 ```C#
-
+bool result = BCPay.BCAuthentication(姓名, 身份证号, 银行卡号, 银行卡预留电话号);
 ```
 
 
