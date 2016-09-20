@@ -39,7 +39,7 @@ namespace BeeCloud
         public enum OfflinePayChannel
         {
             BC_WX_SCAN,
-            //BC_ALI_QRCODE,
+            BC_ALI_QRCODE,
             BC_ALI_SCAN
         };
 
@@ -545,7 +545,17 @@ namespace BeeCloud
         /// <returns></returns>
         public static BCBill BCOfflinePayByChannel(BCBill bill)
         {
-            string payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.offlineBillURL;
+            string payUrl = "";
+
+            if (bill.channel.ToString().Contains("SCAN"))
+            {
+                payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.offlineBillURL;
+            }
+            else
+            {
+                payUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.billURL;
+            }
+            
 
             long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
 
@@ -583,20 +593,20 @@ namespace BeeCloud
 
                 JsonData responseData = JsonMapper.ToObject(respString);
 
-                //if (bill.channel == "BC_ALI_QRCODE")
-                //{
-                //    if (responseData["result_code"].ToString() == "0")
-                //    {
-                //        bill.id = responseData["id"].ToString();
-                //        bill.codeURL = responseData["code_url"].ToString();
-                //        return bill;
-                //    }
-                //    else
-                //    {
-                //        var ex = new BCException(responseData["err_detail"].ToString());
-                //        throw ex;
-                //    }
-                //}
+                if (bill.channel == "BC_ALI_QRCODE")
+                {
+                    if (responseData["result_code"].ToString() == "0")
+                    {
+                        bill.id = responseData["id"].ToString();
+                        bill.codeURL = responseData["code_url"].ToString();
+                        return bill;
+                    }
+                    else
+                    {
+                        var ex = new BCException(responseData["err_detail"].ToString());
+                        throw ex;
+                    }
+                }
                 if (bill.channel == "BC_ALI_SCAN" || bill.channel == "BC_WX_SCAN")
                 {
                     if (responseData["result_code"].ToString() == "0")

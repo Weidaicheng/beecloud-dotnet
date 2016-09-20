@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.1-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.2-blue.svg)
 
 
 ## 简介
@@ -8,7 +8,7 @@
 
 SDK支持以下支付渠道： 
 
-* 支付宝web/wap/刷卡
+* 支付宝web/wap/扫码/刷卡
 * 微信扫码/微信内JSAPI/微信WAP/刷卡
 * 银联web/wap
 * 京东web/wap

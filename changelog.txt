@@ -1,5 +1,9 @@
 ﻿BeeCloud .Net Changelog
 ==========================
+V2.6.2 发布时间：2016年9月20日
+新增BC_ALI_QRCODE渠道
+BC_WX_NATIVE渠道新增returnURL参数
+
 v2.6.1 发布时间：2016年9月9日
 新增微信/支付宝线下刷卡(扫用户二维码)渠道
 

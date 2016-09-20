@@ -163,6 +163,10 @@
                     <img src="http://beeclouddoc.qiniudn.com/icon-bcwxsm.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
+                    <input type="radio" value="bc_ali_qrcode" name="paytype"/>
+                    <img src="http://beeclouddoc.qiniudn.com/icon-bcalism.png" alt=""/>
+                </li>
+                <li onclick="paySwitch(this)">
                     <input type="radio" value="bc_wx_wap" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon-bcwxwap.png" alt=""/>
                 </li>
@@ -174,10 +178,6 @@
                     <input type="radio" value="bc_ali_scan" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon-bczfbsk.png" alt=""/>
                 </li>
-                <%--<li onclick="paySwitch(this)">
-                    <input type="radio" value="bc_ali_qrcode" name="paytype"/>
-                    <img src="http://beeclouddoc.qiniudn.com/icon-zfbbs.png" alt=""/>
-                </li>--%>
             </ul>
         </div>
         <div>
