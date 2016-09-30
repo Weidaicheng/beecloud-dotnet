@@ -453,7 +453,7 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "bccjtransfer")
             {
-                BCCJTransferWithBackCard transfer = new BCCJTransferWithBackCard(BCUtil.GetUUID(), ".net测试代付", 100, "钱志浩", "中国银行", "6217856101000584461", "中国银行苏州金阊分行", "江苏省", "苏州市", "DEBIT", "C");
+                BCCJTransferWithBackCard transfer = new BCCJTransferWithBackCard(BCUtil.GetUUID(), ".net测试代付", 100, "姓名", "银行名", "卡号", "支行名", "省", "市", "DEBIT", "C");
                 try
                 {
                     transfer = BCPay.BCCJBankCardTransfer(transfer);
