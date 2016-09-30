@@ -16,6 +16,7 @@
         public const string transfersURL = "rest/transfers";
         public const string internationalURL = "rest/international/bill";
         public const string bctransferURL = "rest/bc_transfer";
+        public const string cjtransferURL = "rest/cj_transfer";
         public const string bctransferBanks = "rest/bc_transfer/banks";
 
         //subscription API

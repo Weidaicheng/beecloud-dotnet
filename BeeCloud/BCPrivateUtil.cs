@@ -12,8 +12,8 @@ namespace BeeCloud
         private delegate void getBestHostDelegate();
         
         public static List<string> mLocalDefaultHosts = new List<string>(){
-            //"http://192.168.1.118:8080"
-            //"http://123.56.82.71:8080"
+            //"http://192.168.1.113:8080"
+            //"http://120.24.222.220:8080"
             "https://apisz.beecloud.cn",   //深圳
             "https://apihz.beecloud.cn",    //杭州
             "https://apiqd.beecloud.cn",    //青岛

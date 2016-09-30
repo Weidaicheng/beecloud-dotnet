@@ -298,7 +298,7 @@
                     <img src="http://beeclouddoc.qiniudn.com/wx_redpack.png" alt=""/>
                 </li>
                 <li onclick="paySwitch(this)">
-                    <input type="radio" value="bctransfer" name="paytype"/>
+                    <input type="radio" value="bccjtransfer" name="paytype"/>
                     <img src="http://beeclouddoc.qiniudn.com/icon-companypay.png" alt=""/>
                 </li>
             </ul>

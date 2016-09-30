@@ -451,6 +451,19 @@ namespace BeeCloudSDKDemo
                     Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
                 }
             }
+            else if (type == "bccjtransfer")
+            {
+                BCCJTransferWithBackCard transfer = new BCCJTransferWithBackCard(BCUtil.GetUUID(), ".net测试代付", 100, "钱志浩", "中国银行", "6217856101000584461", "中国银行苏州金阊分行", "江苏省", "苏州市", "DEBIT", "C");
+                try
+                {
+                    transfer = BCPay.BCCJBankCardTransfer(transfer);
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>已代付</span><br/>");
+                }
+                catch (Exception excption)
+                {
+                    Response.Write("<span style='color:#00CD00;font-size:20px'>" + excption.Message + "</span><br/>");
+                }
+            }
             Response.Write("<span style='color:#00CD00;font-size:20px'>" + type + "</span>");
         }
 

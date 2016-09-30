@@ -1889,6 +1889,65 @@ namespace BeeCloud
         }
         #endregion
 
+        #region BeeCloud_CJ企业打款
+
+        public static BCCJTransferWithBackCard BCCJBankCardTransfer(BCCJTransferWithBackCard transfer)
+        {
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.cjtransferURL;
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+
+            data["total_fee"] = transfer.totalFee;
+            data["bill_no"] = transfer.billNo;
+            data["title"] = transfer.title;
+            data["bank_branch"] = transfer.bankBranch;
+            data["bank_name"] = transfer.bankName;
+            data["province"] = transfer.province;
+            data["city"] = transfer.city;
+            data["card_type"] = transfer.cardType;
+            data["card_attribute"] = transfer.cardAttribute;
+            data["bank_account_no"] = transfer.bankAccountNo;
+            data["account_name"] = transfer.accountName;
+
+            if (transfer.optional != null && transfer.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in transfer.optional.Keys)
+                {
+                    data["optional"][key] = transfer.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    transfer.id = responseData["id"].ToString();
+                    return transfer;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+        #endregion
+
         #region BeeCloud订阅
         /// <summary>
         /// 给用户发送验证码
