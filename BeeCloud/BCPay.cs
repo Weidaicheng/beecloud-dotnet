@@ -692,6 +692,7 @@ namespace BeeCloud
             data["refund_no"] = refund.refundNo;
             data["bill_no"] = refund.billNo;
             data["refund_fee"] = refund.refundFee;
+            data["refund_account"] = refund.refundAccount;
             if (refund.optional != null && refund.optional.Count > 0)
             {
                 data["optional"] = new JsonData();
@@ -756,6 +757,11 @@ namespace BeeCloud
         /// <param name="refundFee">退款金额
         ///     只能为整数，单位为分
         ///     DIRECT_REFUND和PRE_REFUND时必填
+        /// </param>
+        /// <param name="refundAccount">
+        ///     微信渠道退款资金来源
+        ///     1:可用余额退款 
+        ///     0:未结算资金退款（默认使用未结算资金退款）
         /// </param>
         /// <param name="optional">附加数据
         ///     用户自定义的参数，将会在webhook通知中原样返回，该字段主要用于商户携带订单的自定义数据
@@ -1880,6 +1886,65 @@ namespace BeeCloud
                 HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
                 string respString = BCPrivateUtil.GetResponseString(response);
                 return handleBCTransferWithBankCardResult(respString, transfer);
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region BeeCloud_CJ企业打款
+
+        public static BCCJTransferWithBackCard BCCJBankCardTransfer(BCCJTransferWithBackCard transfer)
+        {
+            string transferUrl = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.cjtransferURL;
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignatureByMasterSecret(BCCache.Instance.appId, BCCache.Instance.masterSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+
+            data["total_fee"] = transfer.totalFee;
+            data["bill_no"] = transfer.billNo;
+            data["title"] = transfer.title;
+            data["bank_branch"] = transfer.bankBranch;
+            data["bank_name"] = transfer.bankName;
+            data["province"] = transfer.province;
+            data["city"] = transfer.city;
+            data["card_type"] = transfer.cardType;
+            data["card_attribute"] = transfer.cardAttribute;
+            data["bank_account_no"] = transfer.bankAccountNo;
+            data["account_name"] = transfer.accountName;
+
+            if (transfer.optional != null && transfer.optional.Count > 0)
+            {
+                data["optional"] = new JsonData();
+                foreach (string key in transfer.optional.Keys)
+                {
+                    data["optional"][key] = transfer.optional[key];
+                }
+            }
+
+            string paraString = data.ToJson();
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(transferUrl, paraString, BCCache.Instance.networkTimeout);
+                string respString = BCPrivateUtil.GetResponseString(response);
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    transfer.id = responseData["id"].ToString();
+                    return transfer;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
             }
             catch (Exception e)
             {

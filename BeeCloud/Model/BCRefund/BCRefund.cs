@@ -76,6 +76,12 @@ namespace BeeCloud.Model
         /// 标识该笔是预退款还是直接退款
         /// </summary>
         public bool needApproval { get; set; }
+        /// <summary>
+        /// 微信渠道退款资金来源
+        /// 1:可用余额退款 
+        /// 0:未结算资金退款（默认使用未结算资金退款）
+        /// </summary>
+        public int refundAccount { get; set; }
 
     }
 }

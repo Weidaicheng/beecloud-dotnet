@@ -126,7 +126,7 @@ namespace BeeCloud.Tests
             BCRefund refund = new BCRefund("10000000", "20000000", 100);
             refund.channel = "WX";
             refund.optional = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
-            string paraString = "\"channel\":\"WX\",\"refund_no\":\"20000000\",\"bill_no\":\"10000000\",\"refund_fee\":100,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"},\"need_approval\":false}";
+            string paraString = "\"channel\":\"WX\",\"refund_no\":\"20000000\",\"bill_no\":\"10000000\",\"refund_fee\":100,\"refund_account\":0,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"},\"need_approval\":false}";
             BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
             string actual = BCPay.prepareRefundParameters(refund);
             Assert.IsTrue(actual.Contains(paraString));
