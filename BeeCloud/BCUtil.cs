@@ -31,17 +31,20 @@ namespace BeeCloud
         }
 
         /// <summary>
-        /// webhook 验签
+        /// webhook验签
         /// </summary>
-        /// <param name="timestamp">时间戳</param>
+        /// <param name="transactionID">交易单号，对应支付请求的bill_no或者退款请求的refund_no,对于秒支付button为传入的out_trade_no</param>
+        /// <param name="transactionType">交易类型</param>
+        /// <param name="channelType">渠道</param>
+        /// <param name="transactionFee">交易金额</param>
         /// <returns></returns>
-        public static string GetSign(string timestamp)
+        public static string GetSign(string transactionID, string transactionType, string channelType, int transactionFee)
         {
-            if (BCCache.Instance.appId == null || BCCache.Instance.appSecret == null)
+            if (BCCache.Instance.appId == null || BCCache.Instance.masterSecret == null)
             {
-                throw new BCException("app id或app Secret为空，请调用registerApp方法");
+                throw new BCException("app id或master Secret为空，请调用registerApp方法");
             }
-            string input = BCCache.Instance.appId + BCCache.Instance.appSecret + timestamp;
+            string input = BCCache.Instance.appId + transactionID + transactionType + channelType + transactionFee + BCCache.Instance.masterSecret;
             string sign = FormsAuthentication.HashPasswordForStoringInConfigFile(input, "MD5").ToLower();
             return sign;
         }

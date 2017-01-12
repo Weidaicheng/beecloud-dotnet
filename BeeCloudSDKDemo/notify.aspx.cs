@@ -25,8 +25,9 @@ namespace BeeCloudSDKDemo
 
             JsonData requestData = JsonMapper.ToObject(req);
 
-            string sign = requestData["sign"].ToString();//签名
+            string signature = requestData["signature"].ToString();//签名
             long timestamp = long.Parse(requestData["timestamp"].ToString());//时间戳
+            string transactionID = requestData["transaction_id"].ToString();//交易单号
             string channelType = requestData["channel_type"].ToString();//渠道
             string subChannelType = requestData["sub_channel_type"].ToString();//子渠道
             string transactionType = requestData["transaction_type"].ToString();//支付还是退款还是打款或者订阅
@@ -41,9 +42,9 @@ namespace BeeCloudSDKDemo
             //验签， 确保来自BeeCloud
             //根据当前模式使用验签方法
             //生产环境：
-            string mySign = BCUtil.GetSign(requestData["timestamp"].ToString());
+            string mySign = BCUtil.GetSign(transactionID, transactionType, channelType, transactionFee);
             //测试环境：  string mySign = BCUtil.GetSignByTestMode(requestData["timestamp"].ToString());
-            if (ts.TotalSeconds < 300 && mySign == sign)
+            if (ts.TotalSeconds < 300 && mySign == signature)
             {
                 //在处理自己的业务逻辑前，要做以下几步
                 // 1. 过滤重复的webhook，如果该webhook的订单之前已经处理过，则忽略新的webhook（渠道有一定几率重复发送相同的webhook）

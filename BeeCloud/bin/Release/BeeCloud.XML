@@ -631,11 +631,14 @@
             获取请求的数据
             </summary>
         </member>
-        <member name="M:BeeCloud.BCUtil.GetSign(System.String)">
+        <member name="M:BeeCloud.BCUtil.GetSign(System.String,System.String,System.String,System.Int32)">
             <summary>
-            webhook 验签
+            webhook验签
             </summary>
-            <param name="timestamp">时间戳</param>
+            <param name="transactionID">交易单号，对应支付请求的bill_no或者退款请求的refund_no,对于秒支付button为传入的out_trade_no</param>
+            <param name="transactionType">交易类型</param>
+            <param name="channelType">渠道</param>
+            <param name="transactionFee">交易金额</param>
             <returns></returns>
         </member>
         <member name="M:BeeCloud.BCUtil.GetSignByTestMode(System.String)">
