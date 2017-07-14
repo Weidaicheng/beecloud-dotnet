@@ -26,10 +26,24 @@ namespace BeeCloud.Tests
             BeeCloud.registerApp("c5d1cba1-5e3f-4ba0-941d-9b0a371fe719", "39a7a518-9ac8-4a9e-87bc-7885f33cf18c", "e14ae2db-608c-4f8b-b863-c8c18953eef2", null);
             BCBill bill = new BCBill("ALI", 100, "10000000", "UT");
             bill.optional = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
+            Analysis anaylsis = new Analysis();
+            anaylsis.product = new List<Product>();
+            Product p1 = new Product();
+            p1.name = "apple";
+            p1.count = 10;
+            p1.price = 1000;
+            Product p2 = new Product();
+            p2.name = "pair";
+            p2.count = 2;
+            p2.price = 2500;
+            anaylsis.product.Add(p1);
+            anaylsis.product.Add(p2);
+            anaylsis.ip = "111.123.1.12";
+            bill.analysis = anaylsis;
             bill.returnUrl = "http://www.test.com";
             bill.billTimeout = 360;
 
-            string paraString = "\"channel\":\"ALI\",\"total_fee\":100,\"bill_no\":\"10000000\",\"title\":\"UT\",\"return_url\":\"http://www.test.com\",\"bill_timeout\":360,\"openid\":null,\"show_url\":null,\"qr_pay_mode\":null,\"identity_id\":null,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"}}";
+            string paraString = "\"channel\":\"ALI\",\"total_fee\":100,\"bill_no\":\"10000000\",\"title\":\"UT\",\"return_url\":\"http://www.test.com\",\"bill_timeout\":360,\"openid\":null,\"show_url\":null,\"qr_pay_mode\":null,\"identity_id\":null,\"optional\":{\"key1\":\"value1\",\"key2\":\"value2\"},\"analysis\":{\"product\":[{\"name\":\"apple\",\"count\":10,\"price\":1000},{\"name\":\"pair\",\"count\":2,\"price\":2500}],\"ip\":\"111.123.1.12\"},\"bc_analysis\":{\"sdk_version\":\"2.7.0\"}}";
             string actual = BCPay.preparePayParameters(bill);
             Assert.IsTrue(actual.Contains(paraString));
         }
@@ -347,6 +361,60 @@ namespace BeeCloud.Tests
             //BCPlan plan = BCPay.queryPlanByID("0cbdb971-b592-4899-908d-943b94b77cf8");
             //Console.WriteLine(plan);
             //Assert.Fail();
+        }
+        #endregion
+
+        #region
+        [Test()]
+        public void BCUserRegisterTest()
+        {
+            BeeCloud.registerApp("beacfdf5-badd-4a11-9b23-9ef3801732d1", "0fa599d9-b0ae-41b3-85de-d3153809004d", "e14ae2db-608c-4f8b-b863-c8c18953eef2", "4bfdd244-574d-4bf3-b034-0c751ed34fee");
+            bool result = false;
+            try
+            {
+                result = BCPay.BCUserRegister("18211111113");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Assert.IsTrue(result);
+        }
+
+        [Test()]
+        public void BCUsersRegisterTest()
+        {
+            BeeCloud.registerApp("beacfdf5-badd-4a11-9b23-9ef3801732d1", "0fa599d9-b0ae-41b3-85de-d3153809004d", "e14ae2db-608c-4f8b-b863-c8c18953eef2", "4bfdd244-574d-4bf3-b034-0c751ed34fee");
+            bool result = false;
+            List<string> users = new List<string>();
+            users.Add("18111111113");
+            users.Add("18111111114");
+            try
+            {
+                result = BCPay.BCUsersRegister(users);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Assert.IsTrue(result);
+        }
+
+        [Test()]
+        public void BCUserInfoQueryTest()
+        {
+            BeeCloud.registerApp("beacfdf5-badd-4a11-9b23-9ef3801732d1", "0fa599d9-b0ae-41b3-85de-d3153809004d", "e14ae2db-608c-4f8b-b863-c8c18953eef2", "4bfdd244-574d-4bf3-b034-0c751ed34fee");
+            List<string> users = new List<string>();
+            try
+            {
+                users = BCPay.BCUserInfoQuery("test@beecloud.cn", new DateTime(2017,6,2), new DateTime(2017,6,2,23,59,59));
+                Console.WriteLine(users.Count);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Assert.IsTrue(users.Count > 0);
         }
         #endregion
     }

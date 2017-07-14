@@ -67,6 +67,10 @@ namespace BeeCloud.Model
         /// </summary>
         public Dictionary<string, string> optional { get; set; }
         /// <summary>
+        /// 	用于统计分析的数据，将会在控制台的统计分析报表中展示，用户自愿上传
+        /// </summary>
+        public Analysis analysis { get; set; }
+        /// <summary>
         /// 可自定义webhook的发送地址，选填
         /// </summary>
         public string notifyURL { get; set; }

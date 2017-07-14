@@ -20,6 +20,20 @@ namespace BeeCloudSDKDemo
             {
                 BCBill bill = new BCBill(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
                 bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
+                Analysis anaylsis = new Analysis();
+                anaylsis.product = new List<Product>();
+                Product p1 = new Product();
+                p1.name = "apple";
+                p1.count = 10;
+                p1.price = 1000;
+                Product p2 = new Product();
+                p2.name = "pair";
+                p2.count = 2;
+                p2.price = 2500;
+                anaylsis.product.Add(p1);
+                anaylsis.product.Add(p2);
+                anaylsis.ip = "111.123.1.12";
+                bill.analysis = anaylsis;
                 try
                 {
                     BCBill resultBill = BCPay.BCPayByChannel(bill);
@@ -250,8 +264,9 @@ namespace BeeCloudSDKDemo
             }
             else if (type == "beepayexpress")
             {
-                BCBill bill = new BCBill(BCPay.PayChannel.BC_EXPRESS.ToString(), 100, BCUtil.GetUUID(), "dotNet白开水");
-                bill.cardNo = "370285111114760";
+                BCBill bill = new BCBill(BCPay.PayChannel.BC_EXPRESS.ToString(), 399000, BCUtil.GetUUID(), "您正在向薛国辉付款");
+                bill.cardNo = "6228360075695560";
+                bill.returnUrl = "http://backShangHuWeb.yt-tianxia.com/pay/zsfYinLianBZ/merchant.aspx?m";
                 try
                 {
                     BCBill resultBill = BCPay.BCPayByChannel(bill);

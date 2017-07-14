@@ -2,6 +2,8 @@
 {
     internal static class BCConstants
     {
+        public const string SDKVersion = "2.7.0";
+
         public const string version = "/2/";
 
         //pay & transfer
@@ -35,5 +37,11 @@
         //offline API
         public const string offlineBillURL = "rest/offline/bill";
         public const string offlineStatusURL = "rest/offline/bill/status";
+
+        //user system API
+        public const string userURL = "rest/user";
+        public const string usersURL = "rest/users";
+        public const string historyBillsURL = "rest/history_bills";
+
     }
 }

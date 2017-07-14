@@ -176,6 +176,13 @@ namespace BeeCloud
                     data["optional"][key] = bill.optional[key];
                 }
             }
+            if (bill.analysis != null)
+            {
+                data["analysis"] = JsonMapper.ToObject(JsonMapper.ToJson(bill.analysis));
+            }
+
+            data["bc_analysis"] = new JsonData();
+            data["bc_analysis"]["sdk_version"] = BCConstants.SDKVersion;
 
             string paraString = data.ToJson();
             return paraString;
@@ -2854,6 +2861,163 @@ namespace BeeCloud
             }
         }
 
+        #endregion
+
+        #region 用户系统
+        /// <summary>
+        /// 在BeeCloud平台注册用户信息，推荐在用户注册的时候同时调用。
+        /// </summary>
+        /// <param name="buyerID">商户为自己的用户分配的ID。可以是email、手机号、随机字符串等。最长32位。在商户自己系统内必须保证唯一。</param>
+        /// <returns></returns>
+        public static bool BCUserRegister(string buyerID)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["buyer_id"] = buyerID;
+            string paraString = data.ToJson();
+
+            string userRegisterURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.userURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(userRegisterURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["errMsg"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 批量在BeeCloud平台注册用户信息，可以定时导入用户数据时使用。
+        /// </summary>
+        /// <param name="buyeIDs">用户列表</param>
+        /// <returns></returns>
+        public static bool BCUsersRegister(List<string> buyeIDs)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["buyer_ids"] = JsonMapper.ToObject(JsonMapper.ToJson(buyeIDs));
+            string paraString = data.ToJson();
+
+            string usersRegisterURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.usersURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(usersRegisterURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["errMsg"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 商户用户批量查询接口
+        /// </summary>
+        /// <param name="email">企业注册邮箱</param>
+        /// <param name="startTime">查询时间范围开始时间</param>
+        /// <param name="endTime">查询时间范围结束时间</param>
+        /// <returns></returns>
+        public static List<string> BCUserInfoQuery(string email, DateTime? startTime, DateTime? endTime)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            if (email != null)
+            {
+                data["email"] = email;
+            }
+            if (startTime != null)
+            {
+                DateTime time = startTime.Value;
+                data["start_time"] = BCUtil.GetTimeStamp(startTime.Value);
+            }
+            if (endTime != null)
+            {
+                data["end_time"] = BCUtil.GetTimeStamp(endTime.Value);
+            }
+            string paraString = data.ToJson();
+
+            string usersQueryURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.usersURL + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(usersQueryURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<string> users = new List<string>();
+                    if (responseData["users"].IsArray)
+                    {
+                        foreach (JsonData userData in responseData["users"])
+                        {
+                            users.Add(userData.ToString());
+                        }
+                        return users;
+                    }
+                    else
+                    {
+                        return users;
+                    }
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
         #endregion
     }
 }

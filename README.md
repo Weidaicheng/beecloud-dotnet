@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.6.3-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.7.0-blue.svg)
 
 
 ## 简介
@@ -12,14 +12,12 @@ SDK支持以下支付渠道：
 * 微信扫码/微信内JSAPI/微信WAP/刷卡
 * 银联web/wap
 * 京东web/wap
-* 易宝web/wap
-* 百度web/wap
 * paypal
 * BeeCloud网关支付/快捷支付/微信扫码支付
 * BeeCloud订阅支付
 
 
-提供（国内/国际）支付、（预）退款、 查询、 打款功能
+提供支付、退款、 查询、 打款功能
 
 ## 准备
 
@@ -136,54 +134,6 @@ bill.authCode = "283024351597694002";
 BCBill resultBill = BCPay.BCOfflinePayByChannel(bill);
 ```
 
-- 境外支付
-
-方法原型：
-
-```.net
-public static BCInternationlBill BCInternationalPay(BCInternationlBill bill)
-```
-
-调用：
-
-```.net
-//通过登录paypal账号付款
-BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_PAYPAL.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
-bill.returnUrl = "http://localhost:50003/paypal/return_paypal_url.aspx";
-try
-{
-    bill = BCPay.BCInternationalPay(bill);
-}
-catch (Exception excption)
-{
-    //错误处理
-}
-
-//使用信用卡付款
-BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
-bill.info = info;
-try
-{
-    bill = BCPay.BCInternationalPay(bill);
-}
-catch (Exception excption)
-{
-    //错误处理
-}
-
-//使用存储的信用卡信息付款
-BCInternationlBill bill = new BCInternationlBill(BCPay.InternationalPay.PAYPAL_SAVED_CREDITCARD.ToString(), 1, BCUtil.GetUUID(), "dotnet paypal", "USD");
-//这里填入你在信用卡付款后获得的信用卡id。
-bill.creditCardId = "CARD-1K997489XXXXXXXXXXXXXXX";
-try
-{
-    bill = BCPay.BCInternationalPay(bill);
-}
-catch (Exception excption)
-{
-    //错误处理
-}
-```
 
 - 订阅支付
 
@@ -213,10 +163,9 @@ BCSubscription sub = BCPay.createSubscription(smsid,
 
 >更多订阅支付的内容请参考[文档](https://github.com/beecloud/beecloud-rest-api/blob/master/subscription/%E8%AE%A2%E9%98%85%E7%B3%BB%E7%BB%9F%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md)
 
-### 2.(预)退款
+### 2.退款
 
 退款的含义是商户直接发起退款，钱直接推到用户原来账户  
-预退款的含义是用户可以发起预退款请求，商户收到预退款请求后批准退款，钱才能真正实现退款，需要与退款审核方法联合使用
 
 方法原型：
 
@@ -239,29 +188,8 @@ catch (Exception excption)
 }
 ```
 
-### 3.退款审核
 
-方法原型
-
-```.net
-public static BCApproveRefundResult BCApproveRefund(string channel, List<string> ids, bool agree, string denyReason)
-```
-
-调用：
-
-```.net
-BCApproveRefundResult result = new BCApproveRefundResult();
-try
-{
-    result = BCPay.BCApproveRefund("WX", list, true, null);
-}
-catch (Exception excption)
-{
-    //错误处理
-}
-```
-
-### 4.查询 
+### 3.查询 
 
 * 查询支付订单
 
@@ -317,27 +245,8 @@ catch (Exception excption)
     //错误处理
 }
 ```
-* 查询退款状态（支持微信，易宝，快钱，百度）
 
-方法原型：
-
-```.net
-public static string BCRefundStatusQuery(string channel, string refundNo)
-```
-调用：
-
-```.net
-try
-{
-    //拿常用渠道 易宝 举例
-    string status = BCPay.BCRefundStatusQuery("YEE", refundNo);
-}
-catch (Exception excption)
-{
-    //错误处理
-}
-```
-### 5.企业打款
+### 4.企业打款
 * （支付宝）批量打款
 
 在支付宝需要开通《批量付款到支付宝》的产品，并联系客服要求开通API的版本
@@ -485,7 +394,7 @@ catch (Exception excption)
 }
 ```
 
-### 6.身份实名验证
+### 5.身份实名验证
 
 * 用于商户对用户信息做实名认证或者鉴别用户的银行卡是否匹配，提供二要素（姓名+身份证），三要素（姓名+身份证+银行卡号），四要素（姓名+身份证+银行卡号+银行卡预留电话），用户可以根据自己需求选取模式
 * 本接口调用收费
@@ -502,6 +411,31 @@ public static bool BCAuthentication(string name, string IDNo, string cardNo, str
 bool result = BCPay.BCAuthentication(姓名, 身份证号, 银行卡号, 银行卡预留电话号);
 ```
 
+### 6. 用户系统
+
+* 在BeeCloud注册商家的用户信息
+
+方法原型：
+
+```C#
+public static bool BCUserRegister(string buyerID)
+```
+
+* 在BeeCloud批量注册商家的用户信息
+
+方法原型：
+
+```C#
+public static bool BCUsersRegister(List<string> buyeIDs)
+```
+
+* 查询用户信息
+
+方法原型：
+
+```C#
+public static List<string> BCUserInfoQuery(string email, DateTime? startTime, DateTime? endTime)
+```
 
 ## Demo
 项目中的`BeeCloudSDKDemo`工程为我们的demo  
