@@ -26,7 +26,7 @@ namespace BeeCloud.Model
         /// </summary>
         public string billNo { get; set; }
         /// <summary>
-        /// 订单金额，单位为分
+        /// 实付金额，单位为分
         /// </summary>
         public int totalFee { get; set; }
         /// <summary>
@@ -197,5 +197,22 @@ namespace BeeCloud.Model
         /// 当商户用扫码枪扫用户的条形码时得到的字符串 
         /// </summary>
         public string authCode { get; set; }
+
+        /// <summary>
+        /// 用户ID，用来标示下单客户，需要与用户系统注册过的用户ID一致
+        /// </summary>
+        public string buyerID { get; set; }
+        /// <summary>
+        /// 卡券id, 传入卡券id，下单时会自动扣除优惠金额再发起支付
+        /// </summary>
+        public string couponID { get; set; }
+        /// <summary>
+        /// 订单金额,单位为分
+        /// </summary>
+        public int billFee { get; set; }
+        /// <summary>
+        /// 优惠金额
+        /// </summary>
+        public int discount { get; set; }
     }
 }

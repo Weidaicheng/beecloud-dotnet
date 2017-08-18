@@ -12,7 +12,7 @@
         <Columns>
             <asp:BoundField DataField="billNo" HeaderText="订单号" />
             <asp:BoundField DataField="title" HeaderText="订单标题" />
-            <asp:BoundField DataField="totalFee" HeaderText="总金额" />
+            <asp:BoundField DataField="totalFee" HeaderText="实付金额" />
             <asp:BoundField DataField="channel" HeaderText="渠道" />
             <asp:BoundField DataField="result" HeaderText="订单是否成功" />
             <asp:BoundField DataField="createdTime" HeaderText="创建时间" />
@@ -21,6 +21,9 @@
             <asp:BoundField DataField="optional" HeaderText="optional" NullDisplayText="NULL" />--%>
             <asp:BoundField DataField="refundResult" HeaderText="已经退款?" />
             <asp:BoundField DataField="revertResult" HeaderText="已撤销？" />
+            <asp:BoundField DataField="billFee" HeaderText="订单金额" />
+            <asp:BoundField DataField="discount" HeaderText="优惠金额" />
+            <asp:BoundField DataField="couponID" HeaderText="优惠券编号" />
         </Columns>
     </asp:GridView>
     </form>

@@ -56,6 +56,8 @@
     <Compile Include="Model\BCBill\Analysis.cs" />
     <Compile Include="Model\BCBill\BCCreditCardInfo.cs" />
     <Compile Include="Model\BCBill\BCInternationlBill.cs" />
+    <Compile Include="Model\BCMarketing\BCCoupon.cs" />
+    <Compile Include="Model\BCMarketing\BCCouponTemplate.cs" />
     <Compile Include="Model\BCQuery\BCQueryBillParameter.cs" />
     <Compile Include="Model\BCQuery\BCQueryRefundParameter.cs" />
     <Compile Include="Model\BCSubscription\BCPlan.cs" />

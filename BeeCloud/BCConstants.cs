@@ -2,7 +2,7 @@
 {
     internal static class BCConstants
     {
-        public const string SDKVersion = "2.7.0";
+        public const string SDKVersion = "2.8.0";
 
         public const string version = "/2/";
 
@@ -43,5 +43,8 @@
         public const string usersURL = "rest/users";
         public const string historyBillsURL = "rest/history_bills";
 
+        //marketing system API
+        public const string couponURL = "rest/coupon";
+        public const string couponTemplateURL = "rest/coupon/template";
     }
 }

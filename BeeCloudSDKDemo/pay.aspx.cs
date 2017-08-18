@@ -18,7 +18,7 @@ namespace BeeCloudSDKDemo
             string type = Request.Form["paytype"];
             if (type == "alipay")
             {
-                BCBill bill = new BCBill(BCPay.PayChannel.ALI_WEB.ToString(), 1, BCUtil.GetUUID(), "dotNet自来水");
+                BCBill bill = new BCBill(BCPay.PayChannel.ALI_WEB.ToString(), 300, BCUtil.GetUUID(), "dotNet自来水");
                 bill.returnUrl = "http://localhost:50003/return_ali_url.aspx";
                 Analysis anaylsis = new Analysis();
                 anaylsis.product = new List<Product>();
@@ -34,6 +34,8 @@ namespace BeeCloudSDKDemo
                 anaylsis.product.Add(p2);
                 anaylsis.ip = "111.123.1.12";
                 bill.analysis = anaylsis;
+                //bill.couponID = "d1689c07-16cd-46ad-aa3a-841a884c199c";
+                //bill.buyerID = "201708111";
                 try
                 {
                     BCBill resultBill = BCPay.BCPayByChannel(bill);
