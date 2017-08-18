@@ -1,5 +1,5 @@
 ## BeeCloud .Net SDK (Open Source)
-[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.7.0-blue.svg)
+[![Build Status](https://travis-ci.org/beecloud/beecloud-dotnet.svg?branch=dev)](https://travis-ci.org/beecloud/beecloud-dotnet) ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg) ![version](https://img.shields.io/badge/version-v2.8.0-blue.svg)
 
 
 ## 简介
@@ -18,6 +18,8 @@ SDK支持以下支付渠道：
 
 
 提供支付、退款、 查询、 打款功能
+
+支持用户系统与营销卡券功能
 
 ## 准备
 
@@ -435,6 +437,24 @@ public static bool BCUsersRegister(List<string> buyeIDs)
 
 ```C#
 public static List<string> BCUserInfoQuery(string email, DateTime? startTime, DateTime? endTime)
+```
+
+#### 7. 营销系统
+
+* 下发优惠券
+
+方法原型：
+
+```C#
+public static BCCoupon BCMarketingDeliverCoupons(string templateID, string buyerID)
+```
+
+* 查询用户可用优惠券
+
+方法原型：
+
+```C#
+public static List<BCCoupon> BCMarketingQueryCoupons(string buyerID, int? limitFee, int? status, int? limit, int? skip)
 ```
 
 ## Demo

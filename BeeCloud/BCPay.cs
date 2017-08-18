@@ -7,6 +7,7 @@ using BeeCloud.Model;
 using System;
 using BeeCloud.Model.BCTransferWithBankCard;
 using BeeCloud.Model.BCSubscription;
+using BeeCloud.Model.BCMarketing;
 
 namespace BeeCloud
 {
@@ -179,6 +180,14 @@ namespace BeeCloud
             if (bill.analysis != null)
             {
                 data["analysis"] = JsonMapper.ToObject(JsonMapper.ToJson(bill.analysis));
+            }
+            if (bill.buyerID != null)
+            {
+                data["buyer_id"] = bill.buyerID;
+            }
+            if (bill.couponID != null)
+            {
+                data["coupon_id"] = bill.couponID;
             }
 
             data["bc_analysis"] = new JsonData();
@@ -953,6 +962,14 @@ namespace BeeCloud
                         }
                         bill.revertResult = (bool)billData["revert_result"];
                         bill.refundResult = (bool)billData["refund_result"];
+
+                        bill.billFee = int.Parse(billData["bill_fee"].ToString());
+                        bill.discount = int.Parse(billData["discount"].ToString());
+                        if (billData["coupon_id"] != null)
+                        {
+                            bill.couponID = billData["coupon_id"].ToString();
+                        }
+
                         bills.Add(bill);
                     }
                 }
@@ -1009,6 +1026,13 @@ namespace BeeCloud
                 bill.messageDetail = billData["message_detail"].ToString();
                 bill.revertResult = (bool)billData["revert_result"];
                 bill.refundResult = (bool)billData["refund_result"];
+
+                bill.billFee = int.Parse(billData["bill_fee"].ToString());
+                bill.discount = int.Parse(billData["discount"].ToString());
+                if (billData["coupon_id"] != null)
+                {
+                    bill.couponID = billData["coupon_id"].ToString();
+                }
             }
             else
             {
@@ -3004,6 +3028,224 @@ namespace BeeCloud
                     else
                     {
                         return users;
+                    }
+                }
+                else
+                {
+                    var ex = new BCException(responseData["err_detail"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region 营销卡券
+        /// <summary>
+        /// 向客户发放卡券
+        /// </summary>
+        /// 卡券的创建与支付应用绑定，发放时也需要用和支付应用对应的appid来调用
+        /// <param name="templateID">卡券模板ID</param>
+        /// <param name="buyerID">用户ID（下单时的buyer_id），用户需要先注册才能下发</param>
+        /// <returns>成功发放优惠券的详情</returns>
+        public static BCCoupon BCMarketingDeliverCoupons(string templateID, string buyerID)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            data["template_id"] = templateID;
+            data["user_id"] = buyerID;
+            string paraString = data.ToJson();
+
+            string couponURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.couponURL;
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreatePostHttpResponse(couponURL, paraString, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    BCCoupon coupon = new BCCoupon();
+                    coupon.id = responseData["coupon"]["id"].ToString();
+                    coupon.template.name = responseData["coupon"]["template"]["name"].ToString();
+                    coupon.template.limitFee = int.Parse(responseData["coupon"]["template"]["limit_fee"].ToString());
+                    if (responseData["coupon"]["template"]["delivery_valid_days"] != null)
+                    {
+                        coupon.template.deliveryValidDays = int.Parse(responseData["coupon"]["template"]["delivery_valid_days"].ToString());
+                    }
+                    coupon.template.maxCountPerUser = int.Parse(responseData["coupon"]["template"]["max_count_per_user"].ToString());
+                    coupon.template.id = responseData["coupon"]["template"]["id"].ToString();
+                    coupon.template.type = int.Parse(responseData["coupon"]["template"]["type"].ToString());
+                    coupon.template.useCount = int.Parse(responseData["coupon"]["template"]["use_count"].ToString());
+                    coupon.template.expiryType = int.Parse(responseData["coupon"]["template"]["expiry_type"].ToString());
+                    coupon.template.deliverCount = int.Parse(responseData["coupon"]["template"]["deliver_count"].ToString());
+                    coupon.template.appID = responseData["coupon"]["template"]["app_id"].ToString();
+                    coupon.template.discount = int.Parse(responseData["coupon"]["template"]["discount"].ToString());
+                    coupon.template.totalCount = int.Parse(responseData["coupon"]["template"]["deliver_count"].ToString());
+                    coupon.template.status = int.Parse(responseData["coupon"]["template"]["status"].ToString());
+                    coupon.template.mchAccount = responseData["coupon"]["template"]["mch_account"].ToString();
+                    if (responseData["coupon"]["template"]["start_time"] != null)
+                    {
+                        coupon.template.startTime = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["template"]["start_time"].ToString()));
+                    }
+                    if (responseData["coupon"]["template"]["end_time"] != null)
+                    {
+                        coupon.template.endTime = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["template"]["end_time"].ToString()));
+                    }
+                    coupon.buyerID = responseData["coupon"]["user_id"].ToString();
+                    coupon.appID = responseData["coupon"]["app_id"].ToString();
+                    coupon.status = int.Parse(responseData["coupon"]["status"].ToString());
+                    coupon.createdAt = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["created_at"].ToString()));
+                    coupon.updatedAt = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["updated_at"].ToString()));
+                    if (responseData["coupon"]["start_time"] != null)
+                    {
+                        coupon.startTime = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["start_time"].ToString()));
+                    }
+                    if (responseData["coupon"]["end_time"] != null)
+                    {
+                        coupon.startTime = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["end_time"].ToString()));
+                    }
+                    if (responseData["coupon"]["use_time"] != null)
+                    {
+                        coupon.startTime = BCUtil.GetDateTime(long.Parse(responseData["coupon"]["use_time"].ToString()));
+                    }
+                    coupon.id = responseData["coupon"]["id"].ToString();
+
+                    return coupon;
+                }
+                else
+                {
+                    var ex = new BCException(responseData["errMsg"].ToString());
+                    throw ex;
+                }
+            }
+            catch (Exception e)
+            {
+                var ex = new BCException(e.Message);
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 查询用户可用优惠券
+        /// </summary>
+        /// <param name="buyerID">用户ID</param>
+        /// <param name="limitFee">返回满足limitFee才能使用的优惠券，直接传订单金额即可</param>
+        /// <param name="status">卡券状态，0表示未使用，1表示已使用</param>
+        /// <param name="limit">返回卡券数量，默认为10，最大50</param>
+        /// <param name="skip">需要跳过的数量，和limit配合选择超过50的数量</param>
+        /// <returns></returns>
+        public static List<BCCoupon> BCMarketingQueryCoupons(string buyerID, int? limitFee, int? status, int? limit, int? skip)
+        {
+            long timestamp = BCUtil.GetTimeStamp(DateTime.Now);
+
+            JsonData data = new JsonData();
+            data["app_id"] = BCCache.Instance.appId;
+            data["app_sign"] = BCPrivateUtil.getAppSignature(BCCache.Instance.appId, BCCache.Instance.appSecret, timestamp.ToString());
+            data["timestamp"] = timestamp;
+            if (buyerID != null)
+            {
+                data["user_id"] = buyerID;
+            }
+            if (limitFee != null)
+            {
+                data["limit_fee"] = limitFee.Value;
+            }
+            if (status != null)
+            {
+                data["status"] = status.Value;
+            }
+            if (status != null)
+            {
+                data["limit"] = limit.Value;
+            }
+            if (status != null)
+            {
+                data["skip"] = skip.Value;
+            }
+            string paraString = data.ToJson();
+
+            string conponsQueryURL = BCPrivateUtil.getHost() + BCConstants.version + BCConstants.couponURL + "?para=" + HttpUtility.UrlEncode(paraString, Encoding.UTF8);
+
+            try
+            {
+                HttpWebResponse response = BCPrivateUtil.CreateGetHttpResponse(conponsQueryURL, BCCache.Instance.networkTimeout);
+
+                string respString = BCPrivateUtil.GetResponseString(response);
+
+                JsonData responseData = JsonMapper.ToObject(respString);
+
+                if (responseData["result_code"].ToString() == "0")
+                {
+                    List<BCCoupon> coupons = new List<BCCoupon>();
+                    if (responseData["coupons"].IsArray)
+                    {
+                        foreach (JsonData userData in responseData["coupons"])
+                        {
+                            BCCoupon coupon = new BCCoupon();
+                            coupon.id = userData["id"].ToString();
+                            coupon.template.name = userData["template"]["name"].ToString();
+                            coupon.template.limitFee = int.Parse(userData["template"]["limit_fee"].ToString());
+                            if (userData["template"]["delivery_valid_days"] != null)
+                            {
+                                coupon.template.deliveryValidDays = int.Parse(userData["template"]["delivery_valid_days"].ToString());
+                            }
+                            coupon.template.maxCountPerUser = int.Parse(userData["template"]["max_count_per_user"].ToString());
+                            coupon.template.id = userData["template"]["id"].ToString();
+                            coupon.template.type = int.Parse(userData["template"]["type"].ToString());
+                            coupon.template.useCount = int.Parse(userData["template"]["use_count"].ToString());
+                            coupon.template.expiryType = int.Parse(userData["template"]["expiry_type"].ToString());
+                            coupon.template.deliverCount = int.Parse(userData["template"]["deliver_count"].ToString());
+                            coupon.template.appID = userData["template"]["app_id"].ToString();
+                            coupon.template.discount = int.Parse(userData["template"]["discount"].ToString());
+                            coupon.template.totalCount = int.Parse(userData["template"]["deliver_count"].ToString());
+                            coupon.template.status = int.Parse(userData["template"]["status"].ToString());
+                            coupon.template.mchAccount = userData["template"]["mch_account"].ToString();
+                            if (userData["template"]["start_time"] != null)
+                            {
+                                coupon.template.startTime = BCUtil.GetDateTime(long.Parse(userData["template"]["start_time"].ToString()));
+                            }
+                            if (userData["template"]["end_time"] != null)
+                            {
+                                coupon.template.endTime = BCUtil.GetDateTime(long.Parse(userData["template"]["end_time"].ToString()));
+                            }
+                            coupon.buyerID = userData["user_id"].ToString();
+                            coupon.appID = userData["app_id"].ToString();
+                            coupon.status = int.Parse(userData["status"].ToString());
+                            coupon.createdAt = BCUtil.GetDateTime(long.Parse(userData["created_at"].ToString()));
+                            coupon.updatedAt = BCUtil.GetDateTime(long.Parse(userData["updated_at"].ToString()));
+                            if (userData["start_time"] != null)
+                            {
+                                coupon.startTime = BCUtil.GetDateTime(long.Parse(userData["start_time"].ToString()));
+                            }
+                            if (userData["end_time"] != null)
+                            {
+                                coupon.startTime = BCUtil.GetDateTime(long.Parse(userData["end_time"].ToString()));
+                            }
+                            if (userData["use_time"] != null)
+                            {
+                                coupon.startTime = BCUtil.GetDateTime(long.Parse(userData["use_time"].ToString()));
+                            }
+                            coupon.id = userData["id"].ToString();
+
+                            coupons.Add(coupon);
+                        }
+                        return coupons;
+                    }
+                    else
+                    {
+                        return coupons;
                     }
                 }
                 else
