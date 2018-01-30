@@ -8,6 +8,7 @@ using System.Linq;
 namespace BeeCloud
 {
 
+    [Obsolete("不要再使用此类进行配置，配置之后也会无效！")]
     public static class BeeCloud
     {
         /// <summary>

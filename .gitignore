@@ -155,3 +155,7 @@ BeeCloudTest/bin/Release/BeeCloudTest.dll.VisualState.xml
 BeeCloudTest/bin/Release/BeeCloud.dll.VisualState.xml
 BeeCloudTest/bin/Release/TestResult.xml
 BeeCloud/bin/Release/BeeCloud.dll.VisualState.xml
+/.vs/BeeCloud/v15/Server/sqlite3
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/.vs/config
